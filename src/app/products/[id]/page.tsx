@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
@@ -154,7 +154,7 @@ const products = [
   },
 ];
 
-export default function ProductDetailsPage() {
+function ProductDetailsContent() {
   const params = useParams<{ id: string }>();
   const product = products.find((item) => item.id === params.id);
 
@@ -486,5 +486,21 @@ export default function ProductDetailsPage() {
 
       <Footer />
     </>
+  );
+}
+
+export default function ProductDetailsPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <Header />
+          <main className="min-h-[60vh] bg-white" />
+          <Footer />
+        </>
+      }
+    >
+      <ProductDetailsContent />
+    </Suspense>
   );
 }
