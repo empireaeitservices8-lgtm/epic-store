@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Inter, Syne } from "next/font/google";
 
@@ -29,10 +29,11 @@ const messages = [
 
 const links = [
   { label: "Home", href: "/", id: "home" },
+  { label: "Shop", href: "/shop", id: "shop" },
   { label: "Categories", href: "/#categories", id: "categories" },
-  { label: "New Arrivals", href: "/#new-arrivals", id: "new-arrivals" },
   { label: "Collections", href: "/#collections", id: "collections" },
-  { label: "Custom Prints", href: "/#custom", id: "custom" },
+  { label: "About", href: "/about", id: "about" },
+  { label: "Contact", href: "/contact", id: "contact" },
 ];
 
 const popular = ["Abstract", "Typography", "Minimal", "Nature", "Custom Prints"];
@@ -104,6 +105,7 @@ export default function Header({
   cartCount?: number;
   wishlistCount?: number;
 }) {
+  const pathname = usePathname();
   const router = useRouter();
   const [barOpen, setBarOpen] = useState(true);
   const [msg, setMsg] = useState(0);
@@ -114,6 +116,18 @@ export default function Header({
   const [active, setActive] = useState("home");
   const inputRef = useRef<HTMLInputElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
+
+  /* Sync active link with current route */
+  const routeActive =
+    pathname === "/shop" || pathname.startsWith("/products")
+      ? "shop"
+      : pathname === "/about"
+        ? "about"
+        : pathname === "/contact"
+          ? "contact"
+          : pathname === "/"
+            ? active
+            : "";
 
   /* Rotating announcement */
   useEffect(() => {
@@ -131,17 +145,18 @@ export default function Header({
       if (progressRef.current) {
         progressRef.current.style.transform = `scaleX(${p})`;
       }
-      if (window.scrollY < 200) setActive("home");
+      if (pathname === "/" && window.scrollY < 200) setActive("home");
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
-  /* Highlight the nav link for the section in view */
+  /* Highlight the nav link for the section in view on homepage */
   useEffect(() => {
+    if (pathname !== "/") return;
     const els = links
-      .filter((l) => l.id !== "home")
+      .filter((l) => l.href.startsWith("/#"))
       .map((l) => document.getElementById(l.id))
       .filter(Boolean) as HTMLElement[];
     if (!els.length) return;
@@ -152,7 +167,7 @@ export default function Header({
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [pathname]);
 
   /* Lock page scroll while the mobile drawer is open */
   useEffect(() => {
@@ -266,14 +281,14 @@ export default function Header({
           {/* Desktop navigation */}
           <nav
             aria-label="Main navigation"
-            className="hidden items-center gap-10 text-[13px] font-medium uppercase tracking-[0.12em] lg:flex"
+            className="hidden items-center gap-7 text-[13px] font-medium uppercase tracking-[0.12em] lg:flex xl:gap-9"
           >
             {links.map((l) => (
               <Link
                 key={l.id}
                 href={l.href}
-                className={`relative px-0.5 py-2 no-underline transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:rounded after:bg-[#78d94f] after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 ${focus} ${
-                  active === l.id
+                className={`relative whitespace-nowrap px-0.5 py-2 no-underline transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:rounded after:bg-[#78d94f] after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 ${focus} ${
+                  routeActive === l.id
                     ? "text-white after:scale-x-100"
                     : "text-[#c9c9d0] after:scale-x-0"
                 }`}
@@ -310,13 +325,13 @@ export default function Header({
               <span className={badge(wishlistCount)}>{wishlistCount}</span>
             </button>
 
-            <button type="button" aria-label="Shopping cart" className={iconBtn}>
+            <Link href="/cart" aria-label="Shopping cart" className={iconBtn}>
               <Icon
                 name="bag"
                 className="transition-transform duration-300 group-hover:scale-110"
               />
               <span className={badge(cartCount)}>{cartCount}</span>
-            </button>
+            </Link>
 
             <Link
               href="/login"
@@ -459,7 +474,7 @@ export default function Header({
                 href={l.href}
                 onClick={() => setMenuOpen(false)}
                 className={`${head} block py-4 text-[22px] font-bold tracking-tight no-underline transition-[color,padding] duration-300 hover:pl-2 hover:text-[#78d94f] sm:py-5 sm:text-[26px] ${focus} ${
-                  active === l.id ? "text-[#78d94f]" : "text-white"
+                  routeActive === l.id ? "text-[#78d94f]" : "text-white"
                 }`}
               >
                 {l.label}
