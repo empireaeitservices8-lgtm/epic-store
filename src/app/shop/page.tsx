@@ -151,20 +151,26 @@ export default function ShopPage() {
 
   /* Read ?category= and ?q= (used by the header search and category links) */
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cat = params.get("category");
-    const q = params.get("q");
-    if (cat && slugToCategory[cat]) setCategory(slugToCategory[cat]);
-    if (q) setSearch(q);
-    setReady(true);
+    const raf = requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get("category");
+      const q = params.get("q");
+      if (cat && slugToCategory[cat]) setCategory(slugToCategory[cat]);
+      if (q) setSearch(q);
+      setReady(true);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   /* Brief fade when results change */
   useEffect(() => {
     if (!ready) return;
-    setFade(true);
+    const raf = requestAnimationFrame(() => setFade(true));
     const t = setTimeout(() => setFade(false), 180);
-    return () => clearTimeout(t);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+    };
   }, [category, search, sort, maxPrice, ready]);
 
   /* Lock scroll while the mobile filter sheet is open; Esc closes it */

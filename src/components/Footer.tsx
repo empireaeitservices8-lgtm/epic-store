@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Inter, Syne } from "next/font/google";
 
 /* Fonts: Syne for headings, Inter for body/UI */
@@ -66,17 +66,18 @@ const head = "font-[family-name:var(--font-syne)]";
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F]";
 
+const subscribe = () => () => {};
+const getClientYear = () => new Date().getFullYear();
+const getServerYear = () => 2026;
+
 export default function Footer() {
   const [openCol, setOpenCol] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const [showTop, setShowTop] = useState(false);
   const footerRef = useRef<HTMLDivElement>(null);
 
-  /* Current year is read after mount (reading the date during render breaks prerendering) */
-  const [year, setYear] = useState(2026);
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
+  /* Current year is read on the client (reading the date during render breaks prerendering) */
+  const year = useSyncExternalStore(subscribe, getClientYear, getServerYear);
 
   /* Reveal on scroll */
   useEffect(() => {

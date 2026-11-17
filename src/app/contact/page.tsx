@@ -80,7 +80,7 @@ export default function ContactPage() {
             </p>
 
             <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-tight text-white md:text-6xl">
-              Let's Start a
+              Let&apos;s Start a
               <span className="text-[#78D94F]"> Conversation.</span>
             </h1>
 
@@ -317,7 +317,7 @@ export default function ContactPage() {
                 </p>
 
                 <h2 className="mt-3 text-3xl font-bold text-[#17171B]">
-                  We'd Love to Hear From You
+                  We&apos;d Love to Hear From You
                 </h2>
 
                 <p className="mt-5 leading-8 text-gray-600">
@@ -375,7 +375,7 @@ export default function ContactPage() {
                   Find Epic Store
                 </h3>
                 <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
-                  Add the client's actual business address and Google Maps
+                  Add the client&apos;s actual business address and Google Maps
                   embed here.
                 </p>
               </div>

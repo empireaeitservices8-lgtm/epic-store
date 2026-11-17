@@ -131,8 +131,9 @@ export default function CartPage() {
   const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setReady(true);
+    const raf = requestAnimationFrame(() => setReady(true));
     return () => {
+      cancelAnimationFrame(raf);
       if (removeTimer.current) clearTimeout(removeTimer.current);
       if (undoTimer.current) clearTimeout(undoTimer.current);
     };
@@ -293,7 +294,7 @@ export default function CartPage() {
                       </>
                     ) : (
                       <strong className="text-green-700">
-                        You've unlocked free delivery!
+                        You&apos;ve unlocked free delivery!
                       </strong>
                     )}
                   </p>
@@ -443,7 +444,7 @@ export default function CartPage() {
                   Your cart is empty
                 </h2>
                 <p className="mt-3 text-gray-500">
-                  Looks like you haven't added anything to your cart yet.
+                  Looks like you haven&apos;t added anything to your cart yet.
                 </p>
 
                 <Link
@@ -504,7 +505,7 @@ export default function CartPage() {
 
               {totalSavings > 0 && (
                 <p className="mt-4 rounded-xl bg-[#78D94F]/15 px-4 py-3 text-center text-xs font-semibold text-[#17171B]">
-                  🎉 You're saving {rupee(totalSavings)} on this order
+                  🎉 You&apos;re saving {rupee(totalSavings)} on this order
                 </p>
               )}
 

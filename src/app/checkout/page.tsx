@@ -165,8 +165,9 @@ export default function CheckoutPage() {
   const placeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setReady(true);
+    const raf = requestAnimationFrame(() => setReady(true));
     return () => {
+      cancelAnimationFrame(raf);
       if (placeTimer.current) clearTimeout(placeTimer.current);
     };
   }, []);

@@ -89,13 +89,16 @@ export default function OrderSuccessPage() {
 
   /* Read ?orderId= and ?payment= without needing a Suspense wrapper */
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const id = p.get("orderId");
-    const pay = p.get("payment");
-    if (id) setOrderId(id.slice(0, 40));
-    if (pay) setPaymentMethod(pay);
+    const raf = requestAnimationFrame(() => {
+      const p = new URLSearchParams(window.location.search);
+      const id = p.get("orderId");
+      const pay = p.get("payment");
+      if (id) setOrderId(id.slice(0, 40));
+      if (pay) setPaymentMethod(pay);
+    });
     const t = setTimeout(() => setReady(true), 80);
     return () => {
+      cancelAnimationFrame(raf);
       clearTimeout(t);
       if (copyTimer.current) clearTimeout(copyTimer.current);
     };
