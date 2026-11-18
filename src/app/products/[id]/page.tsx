@@ -491,7 +491,15 @@ function ProductDetailsContent() {
 
 export default function ProductDetailsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+    <Suspense
+      fallback={
+        <>
+          <Header />
+          <main className="min-h-[60vh] bg-white" />
+          <Footer />
+        </>
+      }
+    >
       <ProductDetailsContent />
     </Suspense>
   );
