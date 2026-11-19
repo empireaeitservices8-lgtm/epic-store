@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Inter, Syne } from "next/font/google";
+import { ArrowRight, Check, Heart, Plus, Star } from "lucide-react";
+import LoadingImage from "@/components/LoadingImage";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -28,7 +30,8 @@ const products = [
     rating: 4.8,
     reviews: 124,
     discount: "38% OFF",
-    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=700&q=85",
+    image:
+      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=700&q=85",
     badge: "BESTSELLER",
   },
   {
@@ -40,7 +43,8 @@ const products = [
     rating: 4.7,
     reviews: 89,
     discount: "33% OFF",
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=700&q=85",
+    image:
+      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=700&q=85",
     badge: "NEW",
   },
   {
@@ -52,7 +56,8 @@ const products = [
     rating: 4.9,
     reviews: 156,
     discount: "33% OFF",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=700&q=85",
+    image:
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=700&q=85",
     badge: "POPULAR",
   },
   {
@@ -64,13 +69,16 @@ const products = [
     rating: 4.8,
     reviews: 72,
     discount: "31% OFF",
-    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=700&q=85",
+    image:
+      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=700&q=85",
     badge: "NEW",
   },
 ];
 
 const filters = ["ALL", "NEW", "BESTSELLER", "POPULAR"];
 const head = "font-[family-name:var(--font-syne)]";
+const focus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
 export default function ProductSection() {
   const [filter, setFilter] = useState("ALL");
@@ -97,18 +105,22 @@ export default function ProductSection() {
     return () => io.disconnect();
   }, []);
 
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    []
+  );
 
   const toggleWish = (id: number) =>
-    setWishlist((w) => (w.includes(id) ? w.filter((x) => x !== id) : [...w, id]));
+    setWishlist((w) =>
+      w.includes(id) ? w.filter((x) => x !== id) : [...w, id]
+    );
 
   const addToCart = (id: number) => {
     setAdded(id);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setAdded(null), 1600);
-    /* TODO: connect to your cart state / API */
   };
 
   const list = products.filter((p) => filter === "ALL" || p.badge === filter);
@@ -116,68 +128,66 @@ export default function ProductSection() {
   return (
     <section
       id="new-arrivals"
-      className={`${syne.variable} ${inter.variable} w-full bg-[#F7F7F5] px-5 py-16 font-[family-name:var(--font-inter)] sm:px-8 sm:py-20 lg:px-16 lg:py-24`}
+      className={`${syne.variable} ${inter.variable} w-full overflow-hidden bg-[#F7F7F5] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
     >
       <div className="mx-auto max-w-7xl">
-        {/* Section Heading */}
-        <div className="mb-8 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        {/* Section Heading + Filter Bar */}
+        <div className="mb-6 flex flex-col justify-between gap-4 sm:mb-8 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-4 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
-              <span className="h-0.5 w-10 bg-[#78D94F]" />
+            <p className="mb-2 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-green-700 sm:tracking-[0.25em]">
+              <span className="h-0.5 w-8 bg-[#78D94F] sm:w-10" />
               Fresh drops. Fresh vibes.
             </p>
 
             <h2
-              className={`${head} text-4xl font-extrabold leading-[1.02] tracking-tight text-[#17171B] sm:text-5xl lg:text-6xl`}
+              className={`${head} m-0 text-3xl font-extrabold leading-[1.04] tracking-tight text-[#17171B] sm:text-4xl lg:text-5xl`}
             >
               NEW <span className="text-[#78D94F]">ARRIVALS.</span>
             </h2>
-
-            <p className="mt-5 max-w-xl text-sm leading-7 text-gray-500 sm:text-base">
-              Discover our latest designs and bring something extraordinary to
-              your space.
-            </p>
           </div>
 
-          <Link
-            href="/shop"
-            className="group inline-flex w-fit items-center gap-3 rounded-full border border-[#17171B]/15 bg-white px-6 py-3 text-xs font-bold tracking-[0.14em] text-[#17171B] transition duration-300 hover:border-[#17171B] hover:bg-[#17171B] hover:text-white"
-          >
-            VIEW ALL PRODUCTS
-            <span className="text-lg transition-transform duration-300 group-hover:translate-x-1.5">
-              →
-            </span>
-          </Link>
-        </div>
-
-        {/* Filter tabs */}
-        <div
-          role="tablist"
-          aria-label="Filter products"
-          className="mb-10 flex flex-wrap gap-2.5"
-        >
-          {filters.map((f) => (
-            <button
-              key={f}
-              type="button"
-              role="tab"
-              aria-selected={filter === f}
-              onClick={() => setFilter(f)}
-              className={`cursor-pointer rounded-full border px-5 py-2.5 text-[11px] font-bold tracking-[0.16em] transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F] ${
-                filter === f
-                  ? "border-[#17171B] bg-[#17171B] text-white"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
-              }`}
+          <div className="flex flex-wrap items-center justify-between gap-3 lg:justify-end">
+            {/* Filter tabs */}
+            <div
+              role="tablist"
+              aria-label="Filter products"
+              className="flex flex-wrap gap-1.5 sm:gap-2"
             >
-              {f}
-            </button>
-          ))}
+              {filters.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  role="tab"
+                  aria-selected={filter === f}
+                  onClick={() => setFilter(f)}
+                  className={`cursor-pointer rounded-full border px-3.5 py-2 text-[10px] font-bold tracking-[0.14em] transition duration-300 sm:px-4 sm:text-[11px] ${focus} ${
+                    filter === f
+                      ? "border-[#17171B] bg-[#17171B] text-white"
+                      : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+
+            <Link
+              href="/shop"
+              className={`group inline-flex items-center gap-2 rounded-full border border-[#17171B]/15 bg-white px-4 py-2 text-[11px] font-bold tracking-[0.12em] text-[#17171B] no-underline transition duration-300 hover:border-[#17171B] hover:bg-[#17171B] hover:text-white sm:px-5 ${focus}`}
+            >
+              VIEW ALL
+              <ArrowRight
+                className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
         </div>
 
-        {/* Product Grid */}
+        {/* Compact 2-col Mobile / 4-col Desktop Product Grid */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4"
         >
           {list.map((p, i) => {
             const liked = wishlist.includes(p.id);
@@ -185,124 +195,111 @@ export default function ProductSection() {
             return (
               <article
                 key={p.id}
-                style={{ transitionDelay: visible ? `${i * 90}ms` : "0ms" }}
-                className={`group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_24px_48px_rgba(0,0,0,0.12)] ${
-                  visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                style={{ transitionDelay: visible ? `${i * 80}ms` : "0ms" }}
+                className={`group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-500 hover:-translate-y-1 hover:border-[#78D94F] hover:shadow-[0_18px_36px_rgba(0,0,0,0.08)] sm:rounded-3xl ${
+                  visible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-8 opacity-0"
                 }`}
               >
-                {/* Image */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
-                  />
+                {/* Compact Square Image */}
+                <div className="relative aspect-square overflow-hidden bg-gray-100">
+                  <Link href={`/products/${p.id}`} className="block h-full w-full">
+                    <LoadingImage
+                      src={p.image}
+                      alt={p.name}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </Link>
 
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                  <span className="absolute left-4 top-4 rounded-full bg-[#78D94F] px-3 py-1.5 text-[10px] font-extrabold tracking-wider text-[#17171B]">
+                  <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-3.5 sm:top-3.5 sm:px-3 sm:text-[10px]">
                     {p.badge}
                   </span>
 
-                  <span className="absolute bottom-4 left-4 rounded-full bg-[#17171B] px-3 py-1.5 text-xs font-bold text-white transition-opacity duration-300 group-hover:opacity-0">
+                  <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded-full bg-[#17171B]/90 px-2.5 py-1 text-[10px] font-bold text-white sm:bottom-3.5 sm:left-3.5">
                     {p.discount}
                   </span>
 
                   {/* Wishlist */}
                   <button
                     type="button"
-                    aria-label={`${liked ? "Remove" : "Add"} ${p.name} ${liked ? "from" : "to"} wishlist`}
+                    aria-label={`${liked ? "Remove" : "Add"} ${p.name} ${
+                      liked ? "from" : "to"
+                    } wishlist`}
                     aria-pressed={liked}
                     onClick={() => toggleWish(p.id)}
-                    className={`absolute right-4 top-4 grid h-10 w-10 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F] ${
-                      liked ? "bg-[#78D94F] text-[#17171B]" : "bg-white text-[#17171B]"
+                    className={`absolute right-2.5 top-2.5 grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 sm:right-3.5 sm:top-3.5 sm:h-9 sm:w-9 ${focus} ${
+                      liked
+                        ? "bg-[#78D94F] text-[#17171B]"
+                        : "bg-white text-[#17171B]"
                     }`}
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill={liked ? "currentColor" : "none"}
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                    <Heart
+                      className={`h-4 w-4 ${liked ? "fill-current" : ""}`}
                       aria-hidden="true"
-                      className={`transition-transform duration-300 ${liked ? "scale-110" : ""}`}
-                    >
-                      <path d="M12 20.5s-7.5-4.6-9.6-9.4A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.6 4.9c-2.1 4.8-9.6 9.4-9.6 9.4z" />
-                    </svg>
-                  </button>
-
-                  {/* Quick add (slides up on hover; always visible on touch) */}
-                  <button
-                    type="button"
-                    onClick={() => addToCart(p.id)}
-                    className="absolute inset-x-4 bottom-4 hidden translate-y-4 cursor-pointer rounded-xl bg-white/95 py-3 text-[11px] font-bold tracking-[0.16em] text-[#17171B] opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-[#78D94F] group-hover:translate-y-0 group-hover:opacity-100 lg:block"
-                  >
-                    QUICK ADD +
+                    />
                   </button>
                 </div>
 
-                {/* Details */}
-                <div className="p-5">
-                  <p className="mb-2 text-[10px] font-bold tracking-[0.15em] text-gray-400">
-                    {p.category}
-                  </p>
-
-                  <h3
-                    className={`${head} min-h-12 text-base font-bold leading-snug text-[#17171B] transition-colors duration-300 group-hover:text-green-700`}
-                  >
-                    {p.name}
-                  </h3>
-
-                  {/* Rating with partial stars */}
-                  <div className="mt-2 flex items-center gap-2">
-                    <span
-                      className="relative inline-block text-sm leading-none tracking-tight text-gray-200"
-                      aria-label={`Rated ${p.rating} out of 5`}
-                    >
-                      ★★★★★
-                      <span
-                        className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-yellow-400"
-                        style={{ width: `${(p.rating / 5) * 100}%` }}
-                      >
-                        ★★★★★
-                      </span>
-                    </span>
-                    <span className="text-xs font-semibold text-gray-600">
+                {/* Compact Details */}
+                <div className="p-3 sm:p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="m-0 truncate text-[9px] font-bold tracking-[0.12em] text-gray-400 sm:text-[10px]">
+                      {p.category}
+                    </p>
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-gray-600">
+                      <Star
+                        className="h-3 w-3 fill-amber-400 text-amber-400"
+                        aria-hidden="true"
+                      />
                       {p.rating}
                     </span>
-                    <span className="text-xs text-gray-400">({p.reviews})</span>
                   </div>
 
-                  {/* Price */}
-                  <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className={`${head} text-2xl font-extrabold text-[#17171B]`}>
-                      ₹{p.price}
-                    </span>
-                    <span className="text-sm text-gray-400 line-through">
-                      ₹{p.oldPrice}
-                    </span>
-                    <span className="rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700">
-                      Save ₹{p.oldPrice - p.price}
-                    </span>
-                  </div>
+                  <Link href={`/products/${p.id}`} className="no-underline">
+                    <h3
+                      className={`${head} m-0 mt-1.5 truncate text-sm font-bold text-[#17171B] transition-colors duration-300 group-hover:text-green-700 sm:text-base`}
+                    >
+                      {p.name}
+                    </h3>
+                  </Link>
 
-                  {/* Add to Cart */}
-                  <button
-                    type="button"
-                    onClick={() => addToCart(p.id)}
-                    className={`mt-5 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-xs font-bold tracking-[0.16em] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F] ${
-                      isAdded
-                        ? "bg-[#78D94F] text-[#17171B]"
-                        : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
-                    }`}
-                  >
-                    {isAdded ? "ADDED ✓" : "ADD TO CART +"}
-                  </button>
+                  {/* Price + Inline Add Button */}
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <div className="flex items-baseline gap-1.5">
+                      <span
+                        className={`${head} text-base font-extrabold text-[#17171B] sm:text-xl`}
+                      >
+                        ₹{p.price}
+                      </span>
+                      <span className="text-[11px] text-gray-400 line-through sm:text-xs">
+                        ₹{p.oldPrice}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => addToCart(p.id)}
+                      aria-label={`Add ${p.name} to cart`}
+                      className={`inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border-0 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] transition-all duration-300 sm:px-3.5 sm:py-2 sm:text-[11px] ${focus} ${
+                        isAdded
+                          ? "bg-[#78D94F] text-[#17171B]"
+                          : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
+                      }`}
+                    >
+                      {isAdded ? (
+                        <>
+                          <Check className="h-3 w-3" aria-hidden="true" />
+                          <span className="hidden sm:inline">Added</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-3 w-3" aria-hidden="true" />
+                          <span>Add</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </article>
             );
@@ -310,7 +307,7 @@ export default function ProductSection() {
         </div>
 
         {list.length === 0 && (
-          <p className="py-16 text-center text-sm text-gray-500">
+          <p className="py-12 text-center text-sm text-gray-500">
             No products in this filter yet.
           </p>
         )}

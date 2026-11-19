@@ -69,7 +69,7 @@ export default function PromoBanner() {
   return (
     <section
       id="custom"
-      className={`${syne.variable} ${inter.variable} px-4 py-12 font-[family-name:var(--font-inter)] sm:px-6 lg:px-10 lg:py-20`}
+      className={`${syne.variable} ${inter.variable} px-4 py-8 font-[family-name:var(--font-inter)] sm:px-6 sm:py-12 lg:px-10 lg:py-14`}
     >
       <div
         ref={cardRef}
@@ -85,29 +85,28 @@ export default function PromoBanner() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,70%)_var(--y,30%),rgba(120,217,79,0.12),transparent_40%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
 
-        <div className="relative grid items-center gap-12 px-7 py-14 sm:px-12 lg:grid-cols-2 lg:px-16 lg:py-20">
+        <div className="relative grid items-center gap-6 px-5 py-8 sm:gap-10 sm:px-10 sm:py-12 lg:grid-cols-2 lg:px-14 lg:py-14">
           {/* Text content */}
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#78D94F]/50 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-[#78D94F]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#78D94F]" />
+            <span className="inline-flex items-center rounded-full border border-[#78D94F]/50 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-[#78D94F] sm:text-xs sm:tracking-[0.2em]">
               MAKE IT PERSONAL
             </span>
 
             <h2
-              className={`${head} mt-6 text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl`}
+              className={`${head} mt-4 text-3xl font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:mt-5 sm:text-4xl lg:text-5xl`}
             >
               Your space.
               <br />
               Your <span className="text-[#78D94F]">story.</span>
             </h2>
 
-            <p className="mt-6 max-w-md text-base leading-7 text-gray-300 sm:text-lg">
+            <p className="mt-4 max-w-md text-sm leading-6 text-gray-300 sm:text-base sm:leading-7">
               Turn your favourite memories, ideas, and creativity into
               something special with our custom-designed prints.
             </p>
 
             {/* Steps */}
-            <ol className="mt-8 grid max-w-md grid-cols-3 gap-3">
+            <ol className="mt-6 grid max-w-md grid-cols-3 gap-2.5 sm:gap-3">
               {steps.map((s) => (
                 <li
                   key={s.n}
@@ -130,7 +129,7 @@ export default function PromoBanner() {
 
             <Link
               href="/custom-prints"
-              className="group relative mt-9 inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#78D94F] px-7 py-4 text-sm font-bold tracking-[0.1em] text-[#17171B] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F]"
+              className="group relative mt-6 inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#78D94F] px-6 py-3 text-xs font-bold tracking-[0.1em] text-[#17171B] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] sm:mt-7 sm:px-7 sm:py-3.5 sm:text-sm"
             >
               <span
                 aria-hidden="true"
@@ -157,19 +156,19 @@ export default function PromoBanner() {
               src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1000&q=85"
               alt="Creative wall art and interior decor"
               loading="lazy"
-              className="relative h-72 w-full rounded-2xl object-cover shadow-2xl transition-transform duration-700 hover:scale-[1.02] sm:h-96"
+              className="relative h-56 w-full rounded-2xl object-cover shadow-2xl transition-transform duration-700 hover:scale-[1.02] sm:h-72 lg:h-80"
             />
 
-            <div className="absolute -bottom-5 -left-4 rounded-xl bg-white px-5 py-4 shadow-xl transition-transform duration-300 hover:-translate-y-1 sm:-left-8">
-              <p className="text-xs font-medium tracking-[0.12em] text-gray-500">
+            <div className="absolute -bottom-4 left-2 rounded-xl bg-white px-4 py-2.5 shadow-xl transition-transform duration-300 hover:-translate-y-1 sm:-bottom-5 sm:-left-8 sm:px-5 sm:py-4">
+              <p className="text-[10px] font-medium tracking-[0.12em] text-gray-500 sm:text-xs">
                 DESIGNED BY YOU
               </p>
-              <p className={`${head} mt-1 text-lg font-extrabold text-[#17171B]`}>
+              <p className={`${head} mt-0.5 text-sm font-extrabold text-[#17171B] sm:mt-1 sm:text-lg`}>
                 Made Personal.
               </p>
             </div>
 
-            <div className="absolute -right-3 -top-4 grid h-20 w-20 place-items-center rounded-full bg-[#78D94F] text-center text-[10px] font-extrabold leading-tight tracking-wider text-[#17171B] shadow-xl transition-transform duration-500 hover:rotate-12 sm:-right-6 sm:h-24 sm:w-24 sm:text-xs">
+            <div className="absolute -top-3 right-2 grid h-16 w-16 place-items-center rounded-full bg-[#78D94F] text-center text-[9px] font-extrabold leading-tight tracking-wider text-[#17171B] shadow-xl transition-transform duration-500 hover:rotate-12 sm:-right-6 sm:-top-4 sm:h-24 sm:w-24 sm:text-xs">
               100%
               <br />
               CUSTOM

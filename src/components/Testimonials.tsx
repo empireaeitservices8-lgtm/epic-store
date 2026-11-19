@@ -88,7 +88,7 @@ export default function Testimonials() {
 
   return (
     <section
-      className={`${syne.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] px-4 py-16 font-[family-name:var(--font-inter)] sm:px-6 lg:px-10 lg:py-24`}
+      className={`${syne.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-6 sm:py-14 lg:px-10 lg:py-16`}
     >
       {/* Decoration */}
       <div className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-[#78D94F]/10 blur-3xl" />
@@ -101,26 +101,26 @@ export default function Testimonials() {
         }`}
       >
         {/* Section heading */}
-        <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-14">
-          <p className="mb-4 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-[#78D94F]">
+        <div className="mx-auto mb-7 max-w-2xl text-center sm:mb-10">
+          <p className="mb-3 inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-[#78D94F]">
             <span className="h-0.5 w-10 bg-[#78D94F]" />
             Customer Stories
             <span className="h-0.5 w-10 bg-[#78D94F]" />
           </p>
 
           <h2
-            className={`${head} text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl`}
+            className={`${head} text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl`}
           >
             Loved by Our Customers<span className="text-[#78D94F]">.</span>
           </h2>
 
-          <p className="mt-5 text-base leading-7 text-gray-400">
+          <p className="mt-3 text-sm leading-6 text-gray-400 sm:text-base">
             Every print tells a story. Here is what our customers say about
             their Epic Store experience.
           </p>
 
           {/* Rating summary */}
-          <div className="mt-7 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3">
+          <div className="mt-5 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2">
             <span className={`${head} text-xl font-extrabold text-white`}>5.0</span>
             <span className="text-lg tracking-widest text-[#78D94F]">★★★★★</span>
             <span className="text-xs font-medium text-gray-400">
@@ -135,7 +135,7 @@ export default function Testimonials() {
           onMouseLeave={() => setPaused(false)}
           onFocus={() => setPaused(true)}
           onBlur={() => setPaused(false)}
-          className="relative mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur-sm sm:p-12"
+          className="relative mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm sm:p-8 lg:p-10"
         >
           {/* Big quote mark */}
           <span
@@ -167,16 +167,16 @@ export default function Testimonials() {
                 </div>
 
                 <p
-                  className={`${head} mt-7 text-xl font-semibold leading-relaxed text-white sm:text-2xl lg:text-[28px]`}
+                  className={`${head} mt-4 text-lg font-semibold leading-relaxed text-white sm:mt-6 sm:text-2xl lg:text-[26px]`}
                 >
                   “{t.review}”
                 </p>
 
-                <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
                   Purchased: {t.product}
                 </p>
 
-                <div className="my-6 h-px bg-white/10" />
+                <div className="my-4 h-px bg-white/10" />
 
                 <div className="flex items-center gap-4">
                   <div
@@ -195,7 +195,7 @@ export default function Testimonials() {
         </div>
 
         {/* Selector + controls */}
-        <div className="mx-auto mt-8 flex max-w-4xl flex-col gap-4 sm:flex-row sm:items-stretch">
+        <div className="mx-auto mt-5 flex max-w-4xl flex-col gap-3 sm:mt-6 sm:flex-row sm:items-stretch sm:gap-4">
           <div
             role="tablist"
             aria-label="Choose a testimonial"
@@ -271,7 +271,7 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <p className="mt-8 text-center text-xs text-gray-500">
+        <p className="mt-5 text-center text-xs text-gray-500">
           *Sample testimonial content for the homepage design. Replace with
           genuine customer reviews and verified-purchase status before launch.
         </p>

@@ -552,41 +552,41 @@ export default function AboutPage() {
         </section>
 
         {/* ================= FINAL CTA ================= */}
-        <section className="bg-white px-4 py-20 sm:px-6 lg:px-10">
+        <section className="bg-white px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
           <div
             data-reveal
             onMouseMove={spot}
-            className={`${rv} group relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-[#17171B] px-7 py-16 text-center sm:px-12 lg:py-24`}
+            className={`${rv} group relative mx-auto max-w-7xl overflow-hidden rounded-2xl bg-[#17171B] px-5 py-9 text-center sm:rounded-3xl sm:px-10 sm:py-12 lg:px-12 lg:py-14`}
           >
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(500px_circle_at_var(--x,50%)_var(--y,0%),rgba(120,217,79,0.16),transparent_60%)]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
             <div className="relative">
               <span className={`${eyebrow} justify-center text-[#78D94F]`}>
-                <span className="h-0.5 w-10 bg-[#78D94F]" />
+                <span className="h-0.5 w-6 bg-[#78D94F] sm:w-10" />
                 Make It Epic
-                <span className="h-0.5 w-10 bg-[#78D94F]" />
+                <span className="h-0.5 w-6 bg-[#78D94F] sm:w-10" />
               </span>
 
               <h2
-                className={`${head} mx-auto mt-5 max-w-3xl text-4xl font-extrabold uppercase leading-[1.03] tracking-tight text-white sm:text-5xl lg:text-6xl`}
+                className={`${head} mx-auto mt-3 max-w-2xl text-2xl font-extrabold uppercase leading-[1.06] tracking-tight text-white sm:mt-4 sm:text-4xl md:max-w-3xl lg:text-5xl`}
               >
                 Find Something That
                 <span className="text-[#78D94F]"> Speaks to You.</span>
               </h2>
 
-              <p className="mx-auto mt-6 max-w-xl leading-7 text-gray-400">
+              <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-gray-400 sm:mt-4 sm:text-base sm:leading-7">
                 Explore our collections and discover designs that bring your
                 ideas and spaces to life.
               </p>
 
-              <Link href="/shop" className={`${btnGreen} mt-9`}>
+              <Link href="/shop" className={`${btnGreen} mt-5 !px-6 !py-3 text-xs sm:mt-7 sm:!px-7 sm:!py-3.5 sm:text-sm`}>
                 <span
                   aria-hidden="true"
                   className="absolute inset-0 -translate-x-[120%] bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.6)_50%,transparent_70%)] transition-transform duration-700 group-hover:translate-x-[120%]"
                 />
                 <span className="relative">SHOP NOW</span>
-                <span className="relative text-lg transition-transform duration-300 group-hover:translate-x-1.5">
+                <span className="relative text-base transition-transform duration-300 group-hover:translate-x-1.5 sm:text-lg">
                   →
                 </span>
               </Link>

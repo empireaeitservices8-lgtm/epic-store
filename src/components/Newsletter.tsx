@@ -131,8 +131,7 @@ export default function Newsletter() {
             </svg>
           </div>
 
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#78D94F]/40 bg-[#78D94F]/[0.06] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#78D94F] sm:px-4 sm:py-2 sm:text-xs">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#78D94F]" />
+          <span className="inline-flex items-center rounded-full border border-[#78D94F]/40 bg-[#78D94F]/[0.06] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#78D94F] sm:px-4 sm:py-2 sm:text-xs">
             Stay Connected
           </span>
 

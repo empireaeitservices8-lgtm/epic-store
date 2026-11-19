@@ -127,37 +127,37 @@ export default function CustomPrints() {
           </div>
 
           {/* Caption card */}
-          <div className="absolute -bottom-5 left-4 rounded-xl bg-white px-5 py-4 shadow-xl transition-transform duration-300 hover:-translate-y-1 sm:-left-6">
-            <p className="text-xs font-semibold tracking-widest text-gray-400">
+          <div className="absolute -bottom-4 left-2 rounded-xl bg-white px-4 py-3 shadow-xl transition-transform duration-300 hover:-translate-y-1 sm:-bottom-5 sm:-left-6 sm:px-5 sm:py-4">
+            <p className="text-[10px] font-semibold tracking-widest text-gray-400 sm:text-xs">
               YOUR MEMORIES
             </p>
-            <p className={`${head} mt-1 text-lg font-extrabold text-[#17171B]`}>
+            <p className={`${head} mt-1 text-base font-extrabold text-[#17171B] sm:text-lg`}>
               Your Personal Art.
             </p>
           </div>
 
           {/* Floating label */}
-          <div className="absolute -right-3 -top-5 rounded-2xl bg-[#78D94F] px-5 py-4 shadow-lg transition-transform duration-500 hover:rotate-3 sm:-right-5">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#17171B]">
+          <div className="absolute -top-4 right-2 rounded-2xl bg-[#78D94F] px-4 py-3 shadow-lg transition-transform duration-500 hover:rotate-3 sm:-right-5 sm:-top-5 sm:px-5 sm:py-4">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-[#17171B] sm:text-xs">
               Made for you
             </p>
-            <p className={`${head} mt-1 text-2xl font-extrabold text-[#17171B]`}>
+            <p className={`${head} mt-0.5 text-xl font-extrabold text-[#17171B] sm:mt-1 sm:text-2xl`}>
               100%
             </p>
-            <p className="text-xs font-medium text-[#17171B]">Personalised</p>
+            <p className="text-[11px] font-medium text-[#17171B] sm:text-xs">Personalised</p>
           </div>
         </div>
 
         {/* Right: Content */}
         <div className="max-w-xl">
           <div {...reveal(100)} className={reveal(100).className}>
-            <span className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
-              <span className="h-0.5 w-10 bg-[#78D94F]" />
+            <span className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-green-700 sm:tracking-[0.25em]">
+              <span className="h-0.5 w-8 bg-[#78D94F] sm:w-10" />
               Create Something Unique
             </span>
 
             <h2
-              className={`${head} mt-4 text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-[#17171B] sm:text-5xl lg:text-[clamp(36px,6.4svh,58px)]`}
+              className={`${head} mt-4 text-3xl font-extrabold uppercase leading-[1.04] tracking-tight text-[#17171B] sm:text-5xl lg:text-[clamp(36px,6.4svh,58px)]`}
             >
               Your Photos.
               <br />

@@ -30,8 +30,9 @@ const messages = [
 const links = [
   { label: "Home", href: "/", id: "home" },
   { label: "Shop", href: "/shop", id: "shop" },
-  { label: "Categories", href: "/#categories", id: "categories" },
-  { label: "Collections", href: "/#collections", id: "collections" },
+  { label: "Categories", href: "/categories", id: "categories" },
+  { label: "Collections", href: "/collections", id: "collections" },
+  { label: "Custom Prints", href: "/custom-prints", id: "custom-prints" },
   { label: "About", href: "/about", id: "about" },
   { label: "Contact", href: "/contact", id: "contact" },
 ];
@@ -121,13 +122,19 @@ export default function Header({
   const routeActive =
     pathname === "/shop" || pathname.startsWith("/products")
       ? "shop"
-      : pathname === "/about"
-        ? "about"
-        : pathname === "/contact"
-          ? "contact"
-          : pathname === "/"
-            ? active
-            : "";
+      : pathname === "/categories"
+        ? "categories"
+        : pathname === "/collections"
+          ? "collections"
+          : pathname === "/custom-prints"
+            ? "custom-prints"
+            : pathname === "/about"
+              ? "about"
+              : pathname === "/contact"
+                ? "contact"
+                : pathname === "/"
+                  ? active
+                  : "";
 
   /* Rotating announcement */
   useEffect(() => {
@@ -281,7 +288,7 @@ export default function Header({
           {/* Desktop navigation */}
           <nav
             aria-label="Main navigation"
-            className="hidden items-center gap-7 text-[13px] font-medium uppercase tracking-[0.12em] lg:flex xl:gap-9"
+            className="hidden items-center gap-5 text-[12px] font-medium uppercase tracking-[0.11em] lg:flex xl:gap-7 xl:text-[13px]"
           >
             {links.map((l) => (
               <Link
@@ -313,8 +320,8 @@ export default function Header({
               />
             </button>
 
-            <button
-              type="button"
+            <Link
+              href="/wishlist"
               aria-label="Wishlist"
               className={`${iconBtn} !hidden sm:!grid`}
             >
@@ -323,7 +330,7 @@ export default function Header({
                 className="transition-transform duration-300 group-hover:scale-110"
               />
               <span className={badge(wishlistCount)}>{wishlistCount}</span>
-            </button>
+            </Link>
 
             <Link href="/cart" aria-label="Shopping cart" className={iconBtn}>
               <Icon

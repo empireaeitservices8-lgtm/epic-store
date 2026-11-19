@@ -319,8 +319,7 @@ export default function FAQPage() {
               <span className="text-white">FAQ</span>
             </nav>
 
-            <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#78D94F]/40 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#78D94F]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#78D94F]" />
+            <span className="mb-5 inline-flex items-center rounded-full border border-[#78D94F]/40 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#78D94F]">
               Help Centre
             </span>
 

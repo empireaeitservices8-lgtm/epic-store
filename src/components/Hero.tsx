@@ -39,7 +39,7 @@ const slides = [
     description:
       "From bold typography to calm minimal prints, explore collections made to fit the way you live.",
     tag: "MADE TO BE SEEN",
-    image: "/Home-page/hero-slide-1.jpg",
+    image: "/Home-page/hero-slide-2.jpg",
     position: "object-center lg:object-right",
   },
   {
@@ -49,7 +49,7 @@ const slides = [
     description:
       "Rich colours, crisp detail and long-lasting prints that keep their character year after year.",
     tag: "PRINTED TO LAST",
-    image: "/Home-page/epic-store-hero-bg.png",
+    image: "/Home-page/hero-slide-3.jpg",
     position: "object-center lg:object-right",
   },
   {
@@ -59,7 +59,7 @@ const slides = [
     description:
       "New artwork lands regularly. Be the first to find the piece that finally completes your wall.",
     tag: "NEW THIS WEEK",
-    image: "/Home-page/hero-slide-1.jpg",
+    image: "/Home-page/epic-store-hero-bg.png",
     position: "object-center lg:object-right",
   },
 ];
@@ -270,20 +270,20 @@ export default function Hero() {
       </div>
 
       {/* Benefits */}
-      <section className="grid grid-cols-1 gap-2 bg-[#17171b] px-4 py-4 min-[360px]:grid-cols-2 sm:gap-[15px] sm:px-[4%] sm:py-5 lg:grid-cols-4">
+      <section className="grid grid-cols-4 gap-1 bg-[#17171b] px-2 py-3 sm:gap-3 sm:px-[4%] sm:py-5">
         {benefits.map((b) => (
           <div
             key={b.title}
-            className="group flex items-center justify-start gap-3 rounded-xl px-2 py-2.5 transition duration-300 hover:-translate-y-[3px] hover:bg-white/[0.03] sm:justify-center sm:gap-[18px] sm:border-r sm:border-[#3a3a3f] sm:px-[15px] sm:py-3.5 sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:last:border-r-0"
+            className="group flex flex-col items-center justify-center gap-1.5 border-r border-[#3a3a3f] px-1 py-1.5 text-center transition duration-300 last:border-r-0 hover:-translate-y-[3px] hover:bg-white/[0.03] sm:rounded-xl sm:px-3 sm:py-3 lg:flex-row lg:gap-[18px] lg:text-left"
           >
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#78d94f]/15 text-lg text-[#78d94f] transition duration-300 group-hover:-rotate-[8deg] group-hover:scale-[1.06] group-hover:bg-[#78d94f] group-hover:text-[#17171b] sm:h-14 sm:w-14 sm:text-2xl">
+            <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#78d94f]/15 text-sm text-[#78d94f] transition duration-300 group-hover:-rotate-[8deg] group-hover:scale-[1.06] group-hover:bg-[#78d94f] group-hover:text-[#17171b] sm:h-12 sm:w-12 sm:text-xl lg:h-14 lg:w-14 lg:text-2xl">
               {b.icon}
             </div>
-            <div>
-              <h3 className={`${head} mb-0.5 text-xs font-bold tracking-[-0.01em] text-white sm:mb-1 sm:text-[15px]`}>
+            <div className="min-w-0">
+              <h3 className={`${head} m-0 text-[10px] font-bold leading-tight tracking-[-0.01em] text-white sm:mb-1 sm:text-xs lg:text-[15px]`}>
                 {b.title}
               </h3>
-              <p className="m-0 text-[11px] text-[#bdbdbd] sm:text-[13px]">
+              <p className="m-0 hidden text-[10px] text-[#bdbdbd] sm:block sm:text-[11px] lg:text-[13px]">
                 {b.description}
               </p>
             </div>

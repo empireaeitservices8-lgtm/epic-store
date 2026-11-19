@@ -22,15 +22,17 @@ const categories = [
   {
     name: "Posters",
     subtitle: "Art that speaks your style",
-    image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=900&q=85",
+    image:
+      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=900&q=85",
     href: "/shop?category=posters",
     number: "01",
-    span: "lg:col-span-2 lg:row-span-2",
+    span: "col-span-2 sm:col-span-1",
   },
   {
     name: "Canvas Prints",
     subtitle: "Bring your walls to life",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
+    image:
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
     href: "/shop?category=canvas-prints",
     number: "02",
     span: "",
@@ -38,7 +40,8 @@ const categories = [
   {
     name: "Metal Posters",
     subtitle: "Bold art. Modern finish.",
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900&q=85",
+    image:
+      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900&q=85",
     href: "/shop?category=metal-posters",
     number: "03",
     span: "",
@@ -46,15 +49,17 @@ const categories = [
   {
     name: "Custom Prints",
     subtitle: "Make it personal",
-    image: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=900&q=85",
-    href: "/shop?category=custom-prints",
+    image:
+      "https://images.unsplash.com/photo-1549490349-8643362247b5?w=900&q=85",
+    href: "/custom-prints",
     number: "04",
     span: "",
   },
   {
     name: "Tapestries",
     subtitle: "Give your space a new vibe",
-    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=85",
+    image:
+      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=85",
     href: "/shop?category=tapestries",
     number: "05",
     span: "",
@@ -62,10 +67,11 @@ const categories = [
   {
     name: "Stickers",
     subtitle: "Little details. Big personality.",
-    image: "https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=900&q=85",
+    image:
+      "https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=900&q=85",
     href: "/shop?category=stickers",
     number: "06",
-    span: "lg:col-span-4",
+    span: "col-span-2 sm:col-span-1",
   },
 ];
 
@@ -109,44 +115,39 @@ export default function CategorySection() {
   return (
     <section
       id="categories"
-      className={`${syne.variable} ${inter.variable} w-full bg-[#fafaf7] px-5 py-16 font-[family-name:var(--font-inter)] sm:px-8 sm:py-20 lg:px-16 lg:py-24`}
+      className={`${syne.variable} ${inter.variable} w-full overflow-hidden bg-[#fafaf7] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Heading */}
-        <div className="mb-10 flex flex-col justify-between gap-6 sm:mb-14 sm:flex-row sm:items-end">
+        <div className="mb-6 flex flex-col justify-between gap-4 sm:mb-8 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-4 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
-              <span className="h-0.5 w-10 bg-[#78D94F]" />
+            <p className="mb-2 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-green-700 sm:tracking-[0.25em]">
+              <span className="h-0.5 w-8 bg-[#78D94F] sm:w-10" />
               Explore our collections
             </p>
 
             <h2
-              className={`${head} text-4xl font-extrabold leading-[1.02] tracking-tight text-[#17171B] sm:text-5xl lg:text-6xl`}
+              className={`${head} text-3xl font-extrabold leading-[1.04] tracking-tight text-[#17171B] sm:text-4xl lg:text-5xl`}
             >
               SHOP BY <span className="text-[#78D94F]">CATEGORY.</span>
             </h2>
-
-            <p className="mt-5 max-w-xl text-sm leading-7 text-gray-500 sm:text-base">
-              Discover something that matches your personality. Explore our
-              collection of creative art and lifestyle products.
-            </p>
           </div>
 
           <Link
-            href="/shop"
-            className="group inline-flex w-fit items-center gap-3 rounded-full border border-[#17171B]/15 bg-white px-6 py-3 text-xs font-bold tracking-[0.14em] text-[#17171B] transition duration-300 hover:border-[#17171B] hover:bg-[#17171B] hover:text-white"
+            href="/categories"
+            className="group inline-flex w-fit items-center gap-2.5 rounded-full border border-[#17171B]/15 bg-white px-5 py-2.5 text-[11px] font-bold tracking-[0.14em] text-[#17171B] no-underline transition duration-300 hover:border-[#17171B] hover:bg-[#17171B] hover:text-white"
           >
             VIEW ALL CATEGORIES
-            <span className="text-lg transition-transform duration-300 group-hover:translate-x-1.5">
+            <span className="text-base transition-transform duration-300 group-hover:translate-x-1.5">
               →
             </span>
           </Link>
         </div>
 
-        {/* Category Grid */}
+        {/* Compact Category Grid (2 rows on desktop, 2-col on mobile) */}
         <div
           ref={gridRef}
-          className="grid auto-rows-[300px] grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:auto-rows-[280px] lg:grid-cols-4"
+          className="grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[200px] sm:gap-4 lg:auto-rows-[220px] lg:grid-cols-3 lg:gap-5"
         >
           {categories.map((c, i) => (
             <Link
@@ -154,10 +155,10 @@ export default function CategorySection() {
               href={c.href}
               onMouseMove={onCardMove}
               onMouseLeave={onCardLeave}
-              style={{ transitionDelay: visible ? `${i * 80}ms` : "0ms" }}
-              className={`group relative overflow-hidden rounded-2xl bg-[#17171B] shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-[opacity,transform,box-shadow] duration-500 will-change-transform hover:shadow-[0_25px_50px_rgba(0,0,0,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] ${
+              style={{ transitionDelay: visible ? `${i * 70}ms` : "0ms" }}
+              className={`group relative overflow-hidden rounded-2xl bg-[#17171B] shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-[opacity,transform,box-shadow] duration-500 will-change-transform hover:shadow-[0_20px_40px_rgba(0,0,0,0.22)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] ${
                 c.span
-              } ${i === 0 ? "sm:col-span-2" : ""} ${
+              } ${
                 visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
             >
@@ -168,36 +169,36 @@ export default function CategorySection() {
               />
 
               {/* Overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/5 transition-colors duration-300 group-hover:from-black/95" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/5 transition-colors duration-300 group-hover:from-black/95" />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(120,217,79,0.22),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
               {/* Number */}
               <span
-                className={`${head} absolute right-5 top-5 rounded-full border border-white/40 bg-black/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm transition-colors duration-300 group-hover:border-[#78D94F] group-hover:bg-[#78D94F] group-hover:text-[#17171B]`}
+                className={`${head} absolute right-3 top-3 rounded-full border border-white/40 bg-black/25 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm transition-colors duration-300 group-hover:border-[#78D94F] group-hover:bg-[#78D94F] group-hover:text-[#17171B] sm:right-4 sm:top-4 sm:px-3 sm:text-xs`}
               >
                 {c.number}
               </span>
 
               {/* Details */}
-              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#78D94F]">
+              <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-5">
+                <p className="mb-1 hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#78D94F] sm:block">
                   EPIC COLLECTION
                 </p>
 
                 <h3
-                  className={`${head} text-2xl font-extrabold text-white transition-transform duration-500 group-hover:-translate-y-1 sm:text-3xl ${
-                    i === 0 ? "lg:text-5xl" : ""
-                  }`}
+                  className={`${head} m-0 text-base font-extrabold text-white transition-transform duration-500 group-hover:-translate-y-0.5 sm:text-2xl`}
                 >
                   {c.name}
                 </h3>
 
-                <p className="mt-2 text-sm text-white/75">{c.subtitle}</p>
+                <p className="m-0 mt-1 hidden text-xs text-white/75 sm:block">
+                  {c.subtitle}
+                </p>
 
-                <div className="mt-5 flex items-center gap-3 text-xs font-bold tracking-[0.14em] text-white">
-                  <span className="relative h-px w-8 bg-white/50 transition-all duration-500 group-hover:w-14 group-hover:bg-[#78D94F]" />
-                  EXPLORE NOW
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-[#78D94F] text-lg text-[#17171B] transition duration-300 group-hover:translate-x-2 group-hover:bg-white">
+                <div className="mt-2 flex items-center gap-2 text-[10px] font-bold tracking-[0.12em] text-white sm:mt-3 sm:gap-2.5 sm:text-xs">
+                  <span className="relative h-px w-5 bg-white/50 transition-all duration-500 group-hover:w-10 group-hover:bg-[#78D94F] sm:w-7" />
+                  EXPLORE
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-[#78D94F] text-xs text-[#17171B] transition duration-300 group-hover:translate-x-1.5 group-hover:bg-white sm:h-7 sm:w-7 sm:text-sm">
                     →
                   </span>
                 </div>
