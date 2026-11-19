@@ -281,12 +281,20 @@ export default function ContactPage() {
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-20 sm:px-6 md:py-28 lg:px-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/contact-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-85"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#17171B]/90 via-[#17171B]/55 to-[#17171B]/15" />
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="absolute -bottom-32 left-10 h-72 w-72 rounded-full bg-[#78D94F]/10 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
           <span
             aria-hidden="true"
-            className={`${head} pointer-events-none absolute -right-6 bottom-0 select-none text-[clamp(90px,18vw,280px)] font-extrabold leading-[0.8] text-white/[0.03]`}
+            className={`${head} pointer-events-none absolute -right-6 bottom-0 select-none text-[clamp(90px,18vw,280px)] font-extrabold leading-[0.8] text-white/[0.04]`}
           >
             HELLO
           </span>
@@ -321,7 +329,7 @@ export default function ContactPage() {
               style={delay(160)}
               className={`${rv} ${head} mt-5 max-w-3xl text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl`}
             >
-              Let's Start a
+              Let&apos;s Start a
               <br />
               <span className="text-[#78D94F]">Conversation.</span>
             </h1>
@@ -633,7 +641,7 @@ export default function ContactPage() {
                 <h2
                   className={`${head} mt-3 text-3xl font-extrabold text-[#17171B] sm:text-4xl`}
                 >
-                  We'd Love to Hear From You
+                  We&apos;d Love to Hear From You
                 </h2>
 
                 <p className="mt-5 leading-8 text-gray-600">
@@ -691,7 +699,7 @@ export default function ContactPage() {
                   Find Epic Store
                 </h3>
                 <p className="relative mt-2 max-w-sm text-sm leading-6 text-gray-500">
-                  Add the client's actual business address and Google Maps
+                  Add the client&apos;s actual business address and Google Maps
                   embed here.
                 </p>
               </div>

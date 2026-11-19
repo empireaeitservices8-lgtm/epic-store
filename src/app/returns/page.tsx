@@ -225,6 +225,14 @@ export default function ReturnsPage() {
           onMouseMove={onHeroMove}
           className="relative overflow-hidden bg-[#17171B] px-4 py-14 text-white sm:px-6 sm:py-20 md:py-28"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/custom-prints-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-80"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#17171B]/55 via-[#17171B]/45 to-[#17171B]/75" />
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-[#78D94F]/10 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,70%)_var(--y,30%),rgba(120,217,79,0.12),transparent_40%)]" />

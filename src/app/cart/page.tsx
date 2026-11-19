@@ -195,6 +195,14 @@ export default function CartPage() {
       >
         {/* ================= PAGE HEADING ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/cart-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-85"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#17171B]/90 via-[#17171B]/55 to-[#17171B]/15" />
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
 

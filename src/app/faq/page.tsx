@@ -290,6 +290,14 @@ export default function FAQPage() {
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-20 text-white sm:px-6 md:py-28">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/faq-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-80"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#17171B]/55 via-[#17171B]/45 to-[#17171B]/75" />
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#78D94F]/10 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
@@ -398,7 +406,7 @@ export default function FAQPage() {
             <div className="mb-10 text-center lg:text-left">
               <p className="m-0 flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700 lg:justify-start">
                 <span className="h-0.5 w-10 bg-[#78D94F]" />
-                We're Here to Help
+                We&apos;re Here to Help
               </p>
               <h2
                 className={`${head} mt-3 text-3xl font-extrabold text-[#17171B] md:text-4xl`}
@@ -449,7 +457,7 @@ export default function FAQPage() {
 
                 <div className="mt-6 hidden rounded-3xl bg-[#F7F8F5] p-5 lg:block">
                   <p className={`${head} m-0 text-sm font-bold text-[#17171B]`}>
-                    Can't find it?
+                    Can&apos;t find it?
                   </p>
                   <p className="mt-2 text-xs leading-5 text-gray-500">
                     Our team is happy to help with anything not covered here.
@@ -630,7 +638,7 @@ export default function FAQPage() {
               </h2>
 
               <p className="mx-auto mt-4 max-w-xl leading-8 text-gray-300">
-                Can't find what you're looking for? Our support team is ready
+                Can&apos;t find what you&apos;re looking for? Our support team is ready
                 to help you with your questions and concerns.
               </p>
 

@@ -173,6 +173,14 @@ export default function TermsPage() {
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-5 py-12 text-center md:py-16 print:bg-white print:py-8">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/faq-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-80 print:hidden"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#17171B]/55 via-[#17171B]/45 to-[#17171B]/75 print:hidden" />
           <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#78D94F]/15 blur-3xl print:hidden" />
           <div className="absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-[#78D94F]/10 blur-3xl print:hidden" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)] print:hidden" />

@@ -316,11 +316,19 @@ export default function ShopPage() {
       >
         {/* ================= SHOP HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/shop-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-85"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#17171B]/90 via-[#17171B]/55 to-[#17171B]/15" />
           <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
           <span
             aria-hidden="true"
-            className={`${head} pointer-events-none absolute -right-4 bottom-0 select-none text-[clamp(100px,20vw,300px)] font-extrabold leading-[0.8] text-white/[0.03]`}
+            className={`${head} pointer-events-none absolute -right-4 bottom-0 select-none text-[clamp(100px,20vw,300px)] font-extrabold leading-[0.8] text-white/[0.04]`}
           >
             SHOP
           </span>
