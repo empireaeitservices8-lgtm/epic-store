@@ -549,9 +549,18 @@ export default function CartPage() {
                 </span>
               </Link>
 
-              <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500">
+              {cartItems.length > 0 && (
+                <Link
+                  href="/checkout"
+                  className="mt-3 flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-[#F7F8F5] px-5 py-2.5 text-xs font-bold text-[#17171B] no-underline transition hover:border-[#17171B] hover:bg-white"
+                >
+                  Continue as Guest • No Account Needed
+                </Link>
+              )}
+
+              <div className="mt-5 flex items-center justify-center gap-2 text-xs text-gray-500">
                 <Icon name="lock" size={14} />
-                Secure checkout experience
+                Secure guest &amp; account checkout
               </div>
             </div>
           </aside>

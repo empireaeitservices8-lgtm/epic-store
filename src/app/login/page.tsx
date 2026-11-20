@@ -387,7 +387,17 @@ export default function LoginPage() {
                 </p>
               )}
 
-              <div className="mt-8 border-t border-gray-100 pt-6 text-center">
+              <div className="mt-6">
+                <Link
+                  href="/checkout"
+                  className={`flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-[#F7F8F5] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-[#17171B] no-underline transition hover:border-[#17171B] hover:bg-[#17171B] hover:text-white ${focus}`}
+                >
+                  Continue with Guest Checkout
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="mt-6 border-t border-gray-100 pt-6 text-center">
                 <p className="m-0 text-xs leading-6 text-gray-500">
                   By continuing, you agree to our{" "}
                   <Link

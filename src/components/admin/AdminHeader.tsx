@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   Search,
@@ -16,6 +17,7 @@ import {
   Star,
   CheckCheck,
   X,
+  LogOut,
 } from "lucide-react";
 
 type AdminHeaderProps = {
@@ -86,6 +88,17 @@ export default function AdminHeader({
   const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const [filterTab, setFilterTab] = useState<"all" | "unread">("all");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setProfileOpen(false);
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+    } finally {
+      router.replace("/admin/login");
+      router.refresh();
+    }
+  };
 
   useEffect(() => {
     void (async () => {
@@ -546,6 +559,14 @@ export default function AdminHeader({
                 <Store size={15} />
                 View Live Store
               </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="mt-1 flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 border-t border-gray-100 bg-transparent px-3 py-2.5 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                <LogOut size={15} />
+                Sign Out
+              </button>
             </div>
           )}
         </div>

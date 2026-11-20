@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -51,7 +51,19 @@ export default function AdminSidebar({
   onClose,
 }: AdminSidebarProps) {
   const pathname = usePathname();
-  const [logoutNotice, setLogoutNotice] = useState(false);
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+    } finally {
+      onClose?.();
+      router.replace("/admin/login");
+      router.refresh();
+    }
+  };
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -144,21 +156,13 @@ export default function AdminSidebar({
 
         <button
           type="button"
-          onClick={() => setLogoutNotice((v) => !v)}
-          className="mt-1 flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-3.5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="mt-1 flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-3.5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
         >
           <LogOut size={18} />
-          Logout
+          {loggingOut ? "Signing out..." : "Logout"}
         </button>
-
-        {logoutNotice && (
-          <p
-            role="status"
-            className="mt-2 rounded-xl border border-gray-200 bg-[#F7F8F5] px-3 py-2 text-xs leading-5 text-gray-600"
-          >
-            Demo logout. Authentication is not connected yet.
-          </p>
-        )}
       </div>
     </>
   );

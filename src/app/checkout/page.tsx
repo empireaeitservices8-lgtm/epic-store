@@ -158,6 +158,8 @@ function Icon({ name, size = 20 }: { name: keyof typeof icons; size?: number }) 
 export default function CheckoutPage() {
   const storeCart = useStoreCart();
   const products = storeCart.length > 0 ? storeCart : fallbackProducts;
+  const [checkoutMode, setCheckoutMode] = useState<"guest" | "account">("guest");
+  const [saveGuestInfo, setSaveGuestInfo] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [sameAsBilling, setSameAsBilling] = useState(true);
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -169,7 +171,20 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setReady(true));
+    const raf = requestAnimationFrame(() => {
+      try {
+        const saved = localStorage.getItem("epic_store_guest_profile_v1");
+        if (saved) {
+          const parsed = JSON.parse(saved) as Record<string, string>;
+          if (parsed && typeof parsed === "object") {
+            setFormData((prev) => ({ ...prev, ...parsed }));
+          }
+        }
+      } catch {
+        /* ignore storage read errors */
+      }
+      setReady(true);
+    });
     return () => cancelAnimationFrame(raf);
   }, []);
 
@@ -219,6 +234,7 @@ export default function CheckoutPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             type: "order",
+            checkoutMode,
             orderId: generatedId,
             ...formData,
             paymentMethod,
@@ -233,6 +249,45 @@ export default function CheckoutPage() {
       } catch {
         /* Fallback cleanly if offline */
       } finally {
+        try {
+          if (saveGuestInfo && checkoutMode === "guest") {
+            localStorage.setItem(
+              "epic_store_guest_profile_v1",
+              JSON.stringify({
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone,
+                address: formData.address,
+                landmark: formData.landmark,
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.pincode,
+              })
+            );
+          } else if (!saveGuestInfo) {
+            localStorage.removeItem("epic_store_guest_profile_v1");
+          }
+          const prevOrders = JSON.parse(
+            localStorage.getItem("epic_store_guest_orders_v1") || "[]"
+          ) as Array<Record<string, unknown>>;
+          localStorage.setItem(
+            "epic_store_guest_orders_v1",
+            JSON.stringify([
+              {
+                orderId: generatedId,
+                checkoutMode,
+                email: formData.email,
+                total,
+                paymentMethod,
+                createdAt: new Date().toISOString(),
+              },
+              ...(Array.isArray(prevOrders) ? prevOrders.slice(0, 9) : []),
+            ])
+          );
+        } catch {
+          /* ignore storage write errors */
+        }
         clearStoreCart();
         setOrderId(generatedId);
         setPlacing(false);
@@ -426,16 +481,22 @@ export default function CheckoutPage() {
               <strong className="text-[#17171B]">store.epicsports@gmail.com</strong>.
             </p>
 
-            <div className="mt-8 space-y-3 rounded-2xl bg-[#F7F8F5] p-5 text-left">
+            <div className="mt-6 space-y-3 rounded-2xl bg-[#F7F8F5] p-4 text-left sm:mt-8 sm:p-5">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Checkout Type</span>
+                <span className="rounded-full bg-[#17171B] px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-[#78D94F]">
+                  {checkoutMode === "guest" ? "Guest Checkout" : "Account Order"}
+                </span>
+              </div>
               {orderId && (
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-500">Order ID</span>
-                  <span className="font-bold text-[#17171B]">{orderId}</span>
+                  <span className={`${valueFont} font-bold text-[#17171B]`}>{orderId}</span>
                 </div>
               )}
               <div className="flex justify-between">
                 <span className="text-sm text-gray-500">Order Amount</span>
-                <span className="font-bold text-[#17171B]">{rupee(total)}</span>
+                <span className={`${valueFont} font-bold text-[#17171B]`}>{rupee(total)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-500">Payment Method</span>
@@ -445,15 +506,23 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <Link
-              href="/shop"
-              className={`group mt-8 inline-flex items-center gap-3 rounded-full bg-[#78D94F] px-8 py-4 text-sm font-bold tracking-[0.1em] text-[#17171B] no-underline shadow-[0_10px_30px_rgba(120,217,79,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white ${focus}`}
-            >
-              CONTINUE SHOPPING
-              <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                →
-              </span>
-            </Link>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href={`/track-order?orderId=${encodeURIComponent(orderId)}&email=${encodeURIComponent(formData.email)}`}
+                className={`inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#17171B] bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-[#17171B] no-underline transition hover:bg-[#17171B] hover:text-white ${focus}`}
+              >
+                Track Guest Order →
+              </Link>
+              <Link
+                href="/shop"
+                className={`group inline-flex items-center justify-center gap-3 rounded-full bg-[#78D94F] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-[#17171B] no-underline shadow-[0_10px_30px_rgba(120,217,79,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white ${focus}`}
+              >
+                CONTINUE SHOPPING
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </Link>
+            </div>
           </div>
         </main>
 
@@ -571,6 +640,86 @@ export default function CheckoutPage() {
 
           {/* Form */}
           <div className="space-y-4 sm:space-y-6 lg:col-span-2">
+            {/* Guest vs Account Checkout Mode */}
+            <div
+              className={`rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] sm:rounded-3xl sm:p-5`}
+            >
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="m-0 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-green-700">
+                    <span className="h-0.5 w-5 bg-[#78D94F]" />
+                    Express Checkout
+                  </p>
+                  <h2 className={`${head} mt-1 text-base font-extrabold text-[#17171B] sm:text-lg`}>
+                    {checkoutMode === "guest"
+                      ? "Checking Out as Guest"
+                      : "Account Checkout"}
+                  </h2>
+                  <p className="mt-0.5 text-xs text-gray-500">
+                    {checkoutMode === "guest"
+                      ? "No account or password needed — track your order anytime via email."
+                      : "Sign in to sync your order with your Epic Store account."}
+                  </p>
+                </div>
+
+                <div
+                  role="tablist"
+                  aria-label="Checkout mode"
+                  className="inline-flex shrink-0 rounded-full border border-gray-200 bg-[#F7F8F5] p-1"
+                >
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={checkoutMode === "guest"}
+                    onClick={() => setCheckoutMode("guest")}
+                    className={`${head} cursor-pointer rounded-full border-0 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] transition ${
+                      checkoutMode === "guest"
+                        ? "bg-[#17171B] text-[#78D94F]"
+                        : "bg-transparent text-gray-600 hover:text-[#17171B]"
+                    } ${focus}`}
+                  >
+                    Guest
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={checkoutMode === "account"}
+                    onClick={() => setCheckoutMode("account")}
+                    className={`${head} cursor-pointer rounded-full border-0 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.1em] transition ${
+                      checkoutMode === "account"
+                        ? "bg-[#17171B] text-[#78D94F]"
+                        : "bg-transparent text-gray-600 hover:text-[#17171B]"
+                    } ${focus}`}
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </div>
+
+              {checkoutMode === "account" && (
+                <div className="mt-3.5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-[#F7F8F5] px-4 py-3 text-xs">
+                  <span className="text-gray-600">
+                    Have an Epic Store account? Sign in with your mobile OTP or continue as guest.
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="/login"
+                      className={`${head} rounded-full bg-[#78D94F] px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#17171B] no-underline transition hover:bg-[#17171B] hover:text-white`}
+                    >
+                      Go to Sign In →
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutMode("guest")}
+                      className="cursor-pointer border-0 bg-transparent text-[11px] font-bold text-gray-500 underline hover:text-[#17171B]"
+                    >
+                      Use Guest Instead
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Contact */}
             <div
               className={`${card} transition-all duration-700 ${
@@ -579,6 +728,17 @@ export default function CheckoutPage() {
             >
               {sectionHead("Step 01", "Contact Information", "Enter your details for order updates.")}
               <div className="grid grid-cols-2 gap-3 sm:gap-x-5 sm:gap-y-4">{contactFields.map(field)}</div>
+              {checkoutMode === "guest" && (
+                <label className="mt-3 flex cursor-pointer items-center gap-2.5 text-xs font-medium text-gray-600 sm:mt-4 sm:text-sm">
+                  <input
+                    type="checkbox"
+                    checked={saveGuestInfo}
+                    onChange={(e) => setSaveGuestInfo(e.target.checked)}
+                    className="h-4 w-4 cursor-pointer accent-[#78D94F]"
+                  />
+                  Save my contact &amp; delivery details on this device for faster guest checkout
+                </label>
+              )}
             </div>
 
             {/* Delivery address */}
