@@ -169,9 +169,8 @@ export default function Hero() {
               key={s.tag}
               src={s.image}
               alt=""
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out lg:object-contain ${s.position} ${
-                i === index ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out lg:object-contain ${s.position} ${i === index ? "opacity-100" : "opacity-0"
+                }`}
             />
           ))}
         </div>
@@ -242,7 +241,6 @@ export default function Hero() {
               className="group inline-flex items-center gap-3.5 text-[13px] font-semibold tracking-[0.08em] text-white no-underline transition-colors duration-300 hover:text-[#78d94f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78d94f]"
             >
               <span className="relative grid h-[46px] w-[46px] place-items-center rounded-full border border-white/70 pl-[3px] text-xs transition-colors duration-300 group-hover:border-[#78d94f] group-hover:bg-[#78d94f] group-hover:text-[#17171b]">
-                <span className="absolute inset-[-1px] animate-ping rounded-full border border-[#78d94f] motion-reduce:animate-none" />
                 ▶
               </span>
               EXPLORE COLLECTIONS
