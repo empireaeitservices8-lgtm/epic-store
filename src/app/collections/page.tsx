@@ -219,7 +219,10 @@ export default function CollectionsPage() {
                 {...reveal(120 + Math.min(index, 5) * 60)}
                 className={`${revealCls} group overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-1 hover:border-[#78D94F] hover:shadow-[0_10px_30px_rgba(120,217,79,0.15)]`}
               >
-                <div className="relative h-72 overflow-hidden">
+                <Link
+                  href={`/shop?collection=${encodeURIComponent(collection.name)}`}
+                  className="relative block h-72 overflow-hidden"
+                >
                   <LoadingImage
                     src={collection.image}
                     alt={collection.name}
@@ -230,17 +233,22 @@ export default function CollectionsPage() {
                   >
                     COLLECTION 0{index + 1}
                   </span>
-                </div>
+                </Link>
 
                 <div className="p-7">
                   <p className="m-0 text-xs font-bold uppercase tracking-[0.15em] text-green-700">
                     {collection.subtitle}
                   </p>
-                  <h3
-                    className={`${head} m-0 mt-2 text-2xl font-extrabold text-[#17171B]`}
+                  <Link
+                    href={`/shop?collection=${encodeURIComponent(collection.name)}`}
+                    className="no-underline"
                   >
-                    {collection.name}
-                  </h3>
+                    <h3
+                      className={`${head} m-0 mt-2 text-2xl font-extrabold text-[#17171B] transition hover:text-green-700`}
+                    >
+                      {collection.name}
+                    </h3>
+                  </Link>
                   <p className="m-0 mt-2.5 text-sm leading-7 text-gray-500">
                     {collection.description}
                   </p>

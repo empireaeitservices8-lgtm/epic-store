@@ -25,6 +25,7 @@ const products = [
     id: 1,
     name: "Football Stadium Legends Metal Poster (A3)",
     category: "Metal Posters (A4, A3, A2)",
+    collection: "Football",
     price: 699,
     oldPrice: 999,
     rating: 4.9,
@@ -36,6 +37,7 @@ const products = [
     id: 2,
     name: "F1 Circuit Telemetry XXL Desk Pad",
     category: "Desk Pad",
+    collection: "Cars, Bike & F1",
     price: 899,
     oldPrice: 1299,
     rating: 4.8,
@@ -47,6 +49,7 @@ const products = [
     id: 3,
     name: "Autographed Football Signed Jersey Frame",
     category: "Signed Jersey Frame",
+    collection: "Football",
     price: 1499,
     oldPrice: 1999,
     rating: 4.9,
@@ -58,6 +61,7 @@ const products = [
     id: 4,
     name: "Marvel & DC Superhero Metal Poster (A2)",
     category: "Metal Posters (A4, A3, A2)",
+    collection: "Movie, Series & Characters (DC, Marvel)",
     price: 999,
     oldPrice: 1399,
     rating: 4.8,
@@ -69,6 +73,7 @@ const products = [
     id: 5,
     name: "Anime Shonen Neon Metal Poster (A4)",
     category: "Metal Posters (A4, A3, A2)",
+    collection: "Anime",
     price: 499,
     oldPrice: 799,
     rating: 4.9,
@@ -80,6 +85,7 @@ const products = [
     id: 6,
     name: "Pro Gaming & Characters Micro-Weave Desk Pad",
     category: "Desk Pad",
+    collection: "Games and Characters",
     price: 949,
     oldPrice: 1349,
     rating: 4.8,
@@ -91,6 +97,7 @@ const products = [
     id: 7,
     name: "World Cricket Icon Signed Jersey Frame",
     category: "Signed Jersey Frame",
+    collection: "Cricket",
     price: 1499,
     oldPrice: 2199,
     rating: 4.9,
@@ -102,12 +109,109 @@ const products = [
     id: 8,
     name: "Gym & Motivation Mindset Metal Poster (A3)",
     category: "Metal Posters (A4, A3, A2)",
+    collection: "Gym and Motivation",
     price: 649,
     oldPrice: 949,
     rating: 4.8,
     reviews: 93,
     badge: "SALE",
     image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=85",
+  },
+  {
+    id: 9,
+    name: "Lady Boss Executive Statement Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Lady Boss",
+    price: 699,
+    oldPrice: 999,
+    rating: 4.9,
+    reviews: 78,
+    badge: "NEW",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=700&q=85",
+  },
+  {
+    id: 10,
+    name: "Championship Cricket Victory Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Cricket",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.8,
+    reviews: 65,
+    badge: "TRENDING",
+    image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=700&q=85",
+  },
+  {
+    id: 11,
+    name: "Superhero Multiverse Gaming Desk Pad",
+    category: "Desk Pad",
+    collection: "Movie, Series & Characters (DC, Marvel)",
+    price: 899,
+    oldPrice: 1249,
+    rating: 4.7,
+    reviews: 59,
+    badge: "",
+    image: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=700&q=85",
+  },
+  {
+    id: 12,
+    name: "Anime Cyberpunk Wide Desk Pad",
+    category: "Desk Pad",
+    collection: "Anime",
+    price: 849,
+    oldPrice: 1199,
+    rating: 4.9,
+    reviews: 118,
+    badge: "POPULAR",
+    image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=700&q=85",
+  },
+  {
+    id: 13,
+    name: "Supercar GT Carbon Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Cars, Bike & F1",
+    price: 949,
+    oldPrice: 1349,
+    rating: 4.9,
+    reviews: 104,
+    badge: "BESTSELLER",
+    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&q=85",
+  },
+  {
+    id: 14,
+    name: "Next-Gen Open World Character Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Games and Characters",
+    price: 699,
+    oldPrice: 999,
+    rating: 4.8,
+    reviews: 87,
+    badge: "NEW",
+    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=700&q=85",
+  },
+  {
+    id: 15,
+    name: "Lady Boss Workspace Edition Desk Pad",
+    category: "Desk Pad",
+    collection: "Lady Boss",
+    price: 849,
+    oldPrice: 1199,
+    rating: 4.8,
+    reviews: 62,
+    badge: "POPULAR",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700&q=85",
+  },
+  {
+    id: 16,
+    name: "Relentless Hustle Gym Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Gym and Motivation",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.9,
+    reviews: 115,
+    badge: "BESTSELLER",
+    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=700&q=85",
   },
 ];
 
@@ -118,6 +222,18 @@ const categories = [
   "Signed Jersey Frame",
 ];
 
+const collectionsList = [
+  "All Collections",
+  "Football",
+  "Cricket",
+  "Movie, Series & Characters (DC, Marvel)",
+  "Anime",
+  "Cars, Bike & F1",
+  "Games and Characters",
+  "Lady Boss",
+  "Gym and Motivation",
+];
+
 /* URL slug -> category name (matches the links used on the home page) */
 const slugToCategory: Record<string, string> = {
   "metal-posters": "Metal Posters (A4, A3, A2)",
@@ -125,8 +241,36 @@ const slugToCategory: Record<string, string> = {
   "signed-jersey-frame": "Signed Jersey Frame",
 };
 
+function resolveCollectionParam(raw: string | null): string | null {
+  if (!raw) return null;
+  const cleaned = raw.trim().toLowerCase();
+  const direct = collectionsList.find(
+    (c) => c !== "All Collections" && c.toLowerCase() === cleaned
+  );
+  if (direct) return direct;
+
+  const slugMap: Record<string, string> = {
+    football: "Football",
+    cricket: "Cricket",
+    "movie-series-characters": "Movie, Series & Characters (DC, Marvel)",
+    "movie, series & characters (dc,marvel)": "Movie, Series & Characters (DC, Marvel)",
+    "movie, series & characters (dc, marvel)": "Movie, Series & Characters (DC, Marvel)",
+    anime: "Anime",
+    "cars-bike-f1": "Cars, Bike & F1",
+    "cars, bike & f1": "Cars, Bike & F1",
+    "games-and-characters": "Games and Characters",
+    "games and characters": "Games and Characters",
+    "games and characters -30": "Games and Characters",
+    "lady-boss": "Lady Boss",
+    "lady boss": "Lady Boss",
+    "gym-and-motivation": "Gym and Motivation",
+    "gym and motivation": "Gym and Motivation",
+  };
+  return slugMap[cleaned] ?? null;
+}
+
 const MIN_PRICE = 300;
-const MAX_PRICE = 1500;
+const MAX_PRICE = 2000;
 
 const head = "font-[family-name:var(--font-syne)]";
 const focus =
@@ -134,6 +278,7 @@ const focus =
 
 export default function ShopPage() {
   const [category, setCategory] = useState("All Products");
+  const [collection, setCollection] = useState("All Collections");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("featured");
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
@@ -145,13 +290,32 @@ export default function ShopPage() {
   const [fade, setFade] = useState(false);
   const addTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /* Read ?category= and ?q= (used by the header search and category links) */
+  /* Read ?category=, ?collection=, and ?q= (used by header search, category links, and collection links) */
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       const params = new URLSearchParams(window.location.search);
       const cat = params.get("category");
+      const col = params.get("collection");
       const q = params.get("q");
-      if (cat && slugToCategory[cat]) setCategory(slugToCategory[cat]);
+
+      if (cat) {
+        if (slugToCategory[cat]) {
+          setCategory(slugToCategory[cat]);
+        } else {
+          const matchedCategory = categories.find(
+            (c) => c.toLowerCase() === cat.trim().toLowerCase()
+          );
+          const matchedColFromCat = resolveCollectionParam(cat);
+          if (matchedCategory) setCategory(matchedCategory);
+          else if (matchedColFromCat) setCollection(matchedColFromCat);
+        }
+      }
+
+      const matchedCollection = resolveCollectionParam(col);
+      if (matchedCollection) {
+        setCollection(matchedCollection);
+      }
+
       if (q) setSearch(q);
       setReady(true);
     });
@@ -167,7 +331,7 @@ export default function ShopPage() {
       cancelAnimationFrame(raf);
       clearTimeout(t);
     };
-  }, [category, search, sort, maxPrice, ready]);
+  }, [category, collection, search, sort, maxPrice, ready]);
 
   /* Lock scroll while the mobile filter sheet is open; Esc closes it */
   useEffect(() => {
@@ -191,14 +355,16 @@ export default function ShopPage() {
     let result = products.filter(
       (p) =>
         (category === "All Products" || p.category === category) &&
-        p.name.toLowerCase().includes(search.trim().toLowerCase()) &&
+        (collection === "All Collections" || p.collection === collection) &&
+        (p.name.toLowerCase().includes(search.trim().toLowerCase()) ||
+          p.collection.toLowerCase().includes(search.trim().toLowerCase())) &&
         p.price <= maxPrice
     );
     if (sort === "price-low") result = [...result].sort((a, b) => a.price - b.price);
     else if (sort === "price-high") result = [...result].sort((a, b) => b.price - a.price);
     else if (sort === "rating") result = [...result].sort((a, b) => b.rating - a.rating);
     return result;
-  }, [category, search, sort, maxPrice]);
+  }, [category, collection, search, sort, maxPrice]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { "All Products": products.length };
@@ -206,13 +372,21 @@ export default function ShopPage() {
     return c;
   }, []);
 
+  const collectionCounts = useMemo(() => {
+    const c: Record<string, number> = { "All Collections": products.length };
+    products.forEach((p) => (c[p.collection] = (c[p.collection] ?? 0) + 1));
+    return c;
+  }, []);
+
   const activeCount =
     (category !== "All Products" ? 1 : 0) +
+    (collection !== "All Collections" ? 1 : 0) +
     (maxPrice < MAX_PRICE ? 1 : 0) +
     (search.trim() ? 1 : 0);
 
   const resetAll = () => {
     setCategory("All Products");
+    setCollection("All Collections");
     setMaxPrice(MAX_PRICE);
     setSearch("");
     setSort("featured");
@@ -269,6 +443,46 @@ export default function ShopPage() {
                   className={`text-xs ${on ? "text-[#78D94F]" : "text-gray-400"}`}
                 >
                   {counts[item] ?? 0}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="my-6 h-px bg-gray-100" />
+
+      <div>
+        <h4 className="text-sm font-bold text-[#17171B]">Collections</h4>
+        <div className="mt-3 space-y-1">
+          {collectionsList.map((item) => {
+            const on = collection === item;
+            return (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setCollection(item)}
+                aria-pressed={on}
+                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2 text-left text-xs transition duration-300 ${focus} ${
+                  on
+                    ? "bg-[#17171B] font-bold text-white"
+                    : "bg-transparent text-gray-600 hover:bg-[#F7F8F5] hover:text-[#17171B]"
+                }`}
+              >
+                <span className="flex items-center gap-2 truncate pr-2">
+                  <span
+                    className={`h-1.5 shrink-0 rounded-full bg-[#78D94F] transition-all duration-300 ${
+                      on ? "w-3.5" : "w-0"
+                    }`}
+                  />
+                  <span className="truncate">{item}</span>
+                </span>
+                <span
+                  className={`shrink-0 text-xs ${
+                    on ? "text-[#78D94F]" : "text-gray-400"
+                  }`}
+                >
+                  {collectionCounts[item] ?? 0}
                 </span>
               </button>
             );
@@ -386,7 +600,9 @@ export default function ShopPage() {
                 <h2
                   className={`${head} mt-2 text-3xl font-extrabold text-[#17171B] sm:text-4xl`}
                 >
-                  {category}
+                  {collection !== "All Collections"
+                    ? `${collection} Collection`
+                    : category}
                 </h2>
                 <p className="mt-2 text-sm text-gray-500">
                   Discover products that match your style.
@@ -476,6 +692,17 @@ export default function ShopPage() {
                         {category}
                         <span aria-hidden="true">✕</span>
                         <span className="sr-only">Remove category filter</span>
+                      </button>
+                    )}
+                    {collection !== "All Collections" && (
+                      <button
+                        type="button"
+                        onClick={() => setCollection("All Collections")}
+                        className={`group inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#78D94F]/50 bg-[#78D94F]/10 px-4 py-1.5 text-xs font-semibold text-[#17171B] transition hover:bg-[#78D94F] ${focus}`}
+                      >
+                        Collection: {collection}
+                        <span aria-hidden="true">✕</span>
+                        <span className="sr-only">Remove collection filter</span>
                       </button>
                     )}
                     {maxPrice < MAX_PRICE && (
@@ -602,7 +829,7 @@ export default function ShopPage() {
                           {/* Details */}
                           <div className="mt-2.5 px-0.5 sm:mt-4 sm:px-0">
                             <p className="m-0 truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 sm:text-[11px] sm:tracking-[0.15em]">
-                              {product.category}
+                              {product.collection} · {product.category}
                             </p>
 
                             <Link

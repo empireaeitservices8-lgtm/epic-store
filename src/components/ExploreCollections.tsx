@@ -141,7 +141,7 @@ export default function ExploreCollections() {
             return (
               <Link
                 key={c.name}
-                href={`/collections?category=${encodeURIComponent(c.name)}`}
+                href={`/shop?collection=${encodeURIComponent(c.name)}`}
                 onMouseEnter={() => setActive(i)}
                 onFocus={() => setActive(i)}
                 aria-label={`${c.name}: ${c.subtitle}`}
