@@ -229,58 +229,38 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-2 text-xs">
-              <label className="flex cursor-pointer items-center gap-2 font-medium text-gray-600">
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer accent-[#78D94F]"
-                />
-                Keep me signed in (7 days)
-              </label>
+              <div className="flex items-center text-xs">
+                <label className="flex cursor-pointer items-center gap-2 font-medium text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                    className="h-4 w-4 cursor-pointer accent-[#78D94F]"
+                  />
+                  Keep me signed in (7 days)
+                </label>
+              </div>
+
+              {error && (
+                <p
+                  role="alert"
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"
+                >
+                  {error}
+                </p>
+              )}
 
               <button
-                type="button"
-                onClick={() => {
-                  setEmail("admin@epicstore.in");
-                  setPassword("EpicAdmin@2026");
-                  setError("");
-                }}
-                className="cursor-pointer border-0 bg-transparent font-bold text-green-700 hover:underline"
+                type="submit"
+                disabled={loading}
+                className={`${head} group inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-[#78D94F] px-7 py-3.5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#17171B] shadow-[0_10px_28px_rgba(120,217,79,0.28)] transition hover:bg-[#17171B] hover:text-white disabled:cursor-wait disabled:opacity-75 ${focus}`}
               >
-                Fill Demo Credentials
+                {loading ? "Signing In..." : "Sign In to Admin"}
+                {!loading && (
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                )}
               </button>
-            </div>
-
-            {error && (
-              <p
-                role="alert"
-                className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"
-              >
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`${head} group inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-[#78D94F] px-7 py-3.5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#17171B] shadow-[0_10px_28px_rgba(120,217,79,0.28)] transition hover:bg-[#17171B] hover:text-white disabled:cursor-wait disabled:opacity-75 ${focus}`}
-            >
-              {loading ? "Signing In..." : "Sign In to Admin"}
-              {!loading && (
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              )}
-            </button>
           </form>
-
-          <div className="mt-6 rounded-2xl border border-gray-200 bg-[#F7F8F5] p-4 text-xs text-gray-600">
-            <p className="m-0 font-bold text-[#17171B]">Default Admin Access</p>
-            <p className="m-0 mt-1">
-              Email: <code className="font-semibold text-[#17171B]">admin@epicstore.in</code> • Password:{" "}
-              <code className="font-semibold text-[#17171B]">EpicAdmin@2026</code>
-            </p>
-          </div>
         </div>
       </div>
     </main>
