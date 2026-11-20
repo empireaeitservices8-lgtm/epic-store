@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Inter, Syne } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  addToStoreCart,
+  toggleStoreWishlist,
+  useStoreWishlist,
+} from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -282,7 +287,7 @@ export default function ShopPage() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("featured");
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
-  const [wishlist, setWishlist] = useState<number[]>([]);
+  const wishlist = useStoreWishlist();
   const [cart, setCart] = useState<number[]>([]);
   const [justAdded, setJustAdded] = useState<number | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -392,11 +397,14 @@ export default function ShopPage() {
     setSort("featured");
   };
 
-  const toggleWishlist = (id: number) =>
-    setWishlist((w) => (w.includes(id) ? w.filter((x) => x !== id) : [...w, id]));
+  const toggleWishlist = (id: number) => toggleStoreWishlist(id);
 
   const addToCart = (id: number) => {
-    setCart((c) => [...c, id]); /* TODO: connect to your real cart */
+    const p = products.find((item) => item.id === id);
+    if (p) {
+      addToStoreCart(p, 1);
+    }
+    setCart((c) => [...c, id]);
     setJustAdded(id);
     if (addTimer.current) clearTimeout(addTimer.current);
     addTimer.current = setTimeout(() => setJustAdded(null), 1600);
@@ -972,11 +980,17 @@ export default function ShopPage() {
         <span className="grid h-8 w-8 place-items-center rounded-full bg-[#78D94F] text-[#17171B]">
           ✓
         </span>
-        {cart.length} item{cart.length === 1 ? "" : "s"} added to demo cart
+        {cart.length} item{cart.length === 1 ? "" : "s"} added to cart
+        <Link
+          href="/cart"
+          className="font-bold text-[#78D94F] no-underline hover:underline"
+        >
+          View Cart
+        </Link>
         <button
           type="button"
           onClick={() => setCart([])}
-          className="cursor-pointer border-0 bg-transparent text-[#78D94F] hover:underline"
+          className="cursor-pointer border-0 bg-transparent text-gray-400 hover:text-white hover:underline"
         >
           Dismiss
         </button>

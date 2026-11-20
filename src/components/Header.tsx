@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { Inter, Syne } from "next/font/google";
+import { useStoreCart, useStoreWishlist } from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -116,6 +117,12 @@ export default function Header({
   cartCount?: number;
   wishlistCount?: number;
 }) {
+  const storeCart = useStoreCart();
+  const storeWishlist = useStoreWishlist();
+  const liveCartCount =
+    storeCart.reduce((sum, item) => sum + item.quantity, 0) || cartCount;
+  const liveWishlistCount = storeWishlist.length || wishlistCount;
+
   const pathname = useSyncExternalStore(
     subscribePathname,
     getClientPathname,
@@ -343,7 +350,7 @@ export default function Header({
                 name="heart"
                 className="transition-transform duration-300 group-hover:scale-110"
               />
-              <span className={badge(wishlistCount)}>{wishlistCount}</span>
+              <span className={badge(liveWishlistCount)}>{liveWishlistCount}</span>
             </Link>
 
             <Link href="/cart" aria-label="Shopping cart" className={iconBtn}>
@@ -351,7 +358,7 @@ export default function Header({
                 name="bag"
                 className="transition-transform duration-300 group-hover:scale-110"
               />
-              <span className={badge(cartCount)}>{cartCount}</span>
+              <span className={badge(liveCartCount)}>{liveCartCount}</span>
             </Link>
 
             <Link

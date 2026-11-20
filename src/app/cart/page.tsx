@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Inter, Syne } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getStoreCart, setStoreCart } from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -131,7 +132,15 @@ export default function CartPage() {
   const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setReady(true));
+    const raf = requestAnimationFrame(() => {
+      const stored = getStoreCart();
+      if (stored.length > 0) {
+        setCartItems(stored);
+      } else {
+        setStoreCart(initialCart);
+      }
+      setReady(true);
+    });
     return () => {
       cancelAnimationFrame(raf);
       if (removeTimer.current) clearTimeout(removeTimer.current);
@@ -140,13 +149,15 @@ export default function CartPage() {
   }, []);
 
   const updateQuantity = (id: number, amount: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
+    setCartItems((items) => {
+      const next = items.map((item) =>
         item.id === id
           ? { ...item, quantity: Math.min(MAX_QTY, Math.max(1, item.quantity + amount)) }
           : item
-      )
-    );
+      );
+      setStoreCart(next);
+      return next;
+    });
   };
 
   /* Collapse the row, then remove it and offer Undo */
@@ -158,7 +169,9 @@ export default function CartPage() {
         const index = items.findIndex((i) => i.id === id);
         if (index === -1) return items;
         setUndo({ item: items[index], index });
-        return items.filter((i) => i.id !== id);
+        const next = items.filter((i) => i.id !== id);
+        setStoreCart(next);
+        return next;
       });
       setRemoving(null);
       if (undoTimer.current) clearTimeout(undoTimer.current);
@@ -171,6 +184,7 @@ export default function CartPage() {
     setCartItems((items) => {
       const next = [...items];
       next.splice(Math.min(undo.index, next.length), 0, undo.item);
+      setStoreCart(next);
       return next;
     });
     setUndo(null);

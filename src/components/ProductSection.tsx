@@ -5,6 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { Inter, Syne } from "next/font/google";
 import { ArrowRight, Check, Heart, Plus, Star } from "lucide-react";
 import LoadingImage from "@/components/LoadingImage";
+import {
+  addToStoreCart,
+  toggleStoreWishlist,
+  useStoreWishlist,
+} from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -82,7 +87,7 @@ const focus =
 
 export default function ProductSection() {
   const [filter, setFilter] = useState("ALL");
-  const [wishlist, setWishlist] = useState<number[]>([]);
+  const wishlist = useStoreWishlist();
   const [added, setAdded] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -112,12 +117,13 @@ export default function ProductSection() {
     []
   );
 
-  const toggleWish = (id: number) =>
-    setWishlist((w) =>
-      w.includes(id) ? w.filter((x) => x !== id) : [...w, id]
-    );
+  const toggleWish = (id: number) => toggleStoreWishlist(id);
 
   const addToCart = (id: number) => {
+    const p = products.find((item) => item.id === id);
+    if (p) {
+      addToStoreCart(p, 1);
+    }
     setAdded(id);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setAdded(null), 1600);

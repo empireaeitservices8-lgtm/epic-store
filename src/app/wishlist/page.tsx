@@ -14,6 +14,7 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LoadingImage from "@/components/LoadingImage";
+import { addToStoreCart } from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -115,7 +116,8 @@ export default function WishlistPage() {
   };
 
   const addToCart = (product: WishlistProduct) => {
-    setCartMessage(`${product.name} added to your demo cart.`);
+    addToStoreCart(product, 1);
+    setCartMessage(`${product.name} added to your cart.`);
   };
 
   return (

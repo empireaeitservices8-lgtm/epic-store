@@ -1,182 +1,506 @@
-
 "use client";
 
 import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { Inter, Syne } from "next/font/google";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Heart,
+  Layers,
+  PackageCheck,
+  RotateCcw,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Star,
+  Truck,
+} from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LoadingImage from "@/components/LoadingImage";
+import {
+  addToStoreCart,
+  toggleStoreWishlist,
+  useStoreWishlist,
+} from "@/lib/store";
 
-const products = [
+/* Fonts: Syne for headings, Inter for body/UI & numeric values */
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-syne",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const head = "font-[family-name:var(--font-syne)]";
+const valueFont = "font-[family-name:var(--font-inter)] tabular-nums";
+const focus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
+
+type ProductItem = {
+  id: string;
+  name: string;
+  category: string;
+  collection: string;
+  price: number;
+  oldPrice: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  gallery?: string[];
+  description: string;
+  sku: string;
+  material: string;
+  finish: string;
+  dimensions: string;
+  availability: string;
+  badge: string;
+};
+
+const products: ProductItem[] = [
   {
     id: "1",
-    name: "Astronaut Space Poster",
-    category: "Posters",
-    price: 499,
-    oldPrice: 799,
-    rating: 4.8,
-    reviews: 124,
+    name: "Football Stadium Legends Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Football",
+    price: 699,
+    oldPrice: 999,
+    rating: 4.9,
+    reviews: 142,
     image:
-      "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=1000",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1000&q=85",
+    ],
     description:
-      "Bring the beauty of space into your home with this stunning astronaut-inspired wall poster. Designed to add a modern and creative touch to your bedroom, living room or workspace.",
-    sku: "EP-POST-001",
-    material: "Premium poster paper",
-    finish: "Matte finish",
+      "Celebrate iconic matchday nights with this HD brushed-aluminum Football Stadium Legends metal poster. Infused with fade-resistant archival inks and a tool-free magnetic wall mount for effortless installation.",
+    sku: "EP-MP-FB01",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "HD Satin Metallic & UV Protective Coating",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
     availability: "In Stock",
     badge: "BESTSELLER",
   },
   {
     id: "2",
-    name: "Abstract Modern Art",
-    category: "Canvas Prints",
-    price: 599,
-    oldPrice: 899,
-    rating: 4.7,
-    reviews: 89,
+    name: "F1 Circuit Telemetry XXL Desk Pad",
+    category: "Desk Pad",
+    collection: "Cars, Bike & F1",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.8,
+    reviews: 98,
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1000",
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1000&q=85",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1000&q=85",
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&q=85",
+    ],
     description:
-      "Give your walls a contemporary look with this abstract modern art print. A beautiful choice for homes, offices and creative spaces.",
-    sku: "EP-CAN-002",
-    material: "Premium canvas",
-    finish: "Textured finish",
+      "Engineered for precision gaming and high-performance workspaces, this F1 Circuit Telemetry XXL Desk Pad features a high-density micro-weave surface, anti-fray 360° stitched edges, and a non-slip natural rubber base.",
+    sku: "EP-DP-F102",
+    material: "High-Density Micro-Weave Cloth & Natural Rubber Base",
+    finish: "Water-Resistant Smooth Glide Surface",
+    dimensions: "900mm × 400mm × 4mm (XXL Extended)",
     availability: "In Stock",
     badge: "NEW",
   },
   {
     id: "3",
-    name: "Vintage Aesthetic Poster",
-    category: "Posters",
-    price: 399,
-    oldPrice: 599,
+    name: "Autographed Football Signed Jersey Frame",
+    category: "Signed Jersey Frame",
+    collection: "Football",
+    price: 1499,
+    oldPrice: 1999,
     rating: 4.9,
-    reviews: 156,
+    reviews: 164,
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1000",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
+      "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1000&q=85",
+    ],
     description:
-      "Add a timeless vintage aesthetic to your room with this carefully selected art print.",
-    sku: "EP-POST-003",
-    material: "Premium poster paper",
-    finish: "Matte finish",
+      "Museum-grade shadowbox display showcasing a tribute autographed football jersey with double-matting, laser-engraved championship plaque, and shatterproof UV-filtering acrylic glass.",
+    sku: "EP-JF-FB03",
+    material: "Solid Matte Black Hardwood & UV-Protected Acrylic",
+    finish: "Gallery Shadowbox Display with Velvet Backing",
+    dimensions: "32 in × 24 in × 1.5 in (Full Collector Size)",
     availability: "In Stock",
     badge: "POPULAR",
   },
   {
     id: "4",
-    name: "Nature Landscape Print",
-    category: "Canvas Prints",
-    price: 549,
-    oldPrice: 799,
+    name: "Marvel & DC Superhero Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Movie, Series & Characters (DC, Marvel)",
+    price: 999,
+    oldPrice: 1399,
     rating: 4.8,
-    reviews: 72,
+    reviews: 112,
     image:
-      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1000",
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=1000&q=85",
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1000&q=85",
+      "https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=1000&q=85",
+    ],
     description:
-      "Bring a peaceful natural atmosphere into your space with this beautiful landscape artwork.",
-    sku: "EP-CAN-004",
-    material: "Premium canvas",
-    finish: "Matte finish",
+      "Command your wall with cinematic Marvel & DC superhero artwork printed on high-luminance aluminum metal. Deep blacks and electric highlights pop off the surface with zero glare.",
+    sku: "EP-MP-MD04",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "High-Contrast Gloss Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "TRENDING",
+  },
+  {
+    id: "5",
+    name: "Anime Shonen Neon Metal Poster (A4)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Anime",
+    price: 499,
+    oldPrice: 799,
+    rating: 4.9,
+    reviews: 136,
+    image:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&q=85",
+      "https://images.unsplash.com/photo-1563089145-599997674d42?w=1000&q=85",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1000&q=85",
+    ],
+    description:
+      "Bring electric shonen energy to your battle station or bedroom with this razor-sharp Anime Neon metal poster. Comes complete with peel-and-stick magnetic mounting — zero nails or drilling required.",
+    sku: "EP-MP-AN05",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "Vibrant Neon-Infused Sublimation Coat",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "BESTSELLER",
+  },
+  {
+    id: "6",
+    name: "Pro Gaming & Characters Micro-Weave Desk Pad",
+    category: "Desk Pad",
+    collection: "Games and Characters",
+    price: 949,
+    oldPrice: 1349,
+    rating: 4.8,
+    reviews: 108,
+    image:
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&q=85",
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&q=85",
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1000&q=85",
+    ],
+    description:
+      "Designed for competitive esports and immersive gaming setups, this extra-wide desk pad delivers pixel-accurate mouse tracking, plush 4mm wrist cushioning, and vibrant character artwork.",
+    sku: "EP-DP-GC06",
+    material: "Pro-Grade Micro-Textured Cloth & Anti-Slip Rubber",
+    finish: "Spill-Repellent Matte Coating with Stitched Seam",
+    dimensions: "900mm × 400mm × 4mm (XXL Extended)",
     availability: "In Stock",
     badge: "NEW",
   },
   {
-    id: "5",
-    name: "Minimalist Wall Art",
-    category: "Metal Posters",
+    id: "7",
+    name: "World Cricket Icon Signed Jersey Frame",
+    category: "Signed Jersey Frame",
+    collection: "Cricket",
+    price: 1499,
+    oldPrice: 2199,
+    rating: 4.9,
+    reviews: 84,
+    image:
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1000&q=85",
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1000&q=85",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+    ],
+    description:
+      "A centerpiece collector display for true cricket fans. Features a tribute signed championship jersey mounted inside a deep hardwood frame with archival mat boards and commemorative stats.",
+    sku: "EP-JF-CR07",
+    material: "Solid Hardwood Frame & Archival Acid-Free Matting",
+    finish: "Crystal-Clear UV-Blocking Acrylic Front",
+    dimensions: "32 in × 24 in × 1.5 in (Full Collector Size)",
+    availability: "In Stock",
+    badge: "POPULAR",
+  },
+  {
+    id: "8",
+    name: "Gym & Motivation Mindset Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Gym and Motivation",
+    price: 649,
+    oldPrice: 949,
+    rating: 4.8,
+    reviews: 93,
+    image:
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1000&q=85",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1000&q=85",
+      "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1000&q=85",
+    ],
+    description:
+      "Fuel discipline and daily grit in your home gym or office with bold, high-contrast typography and athletic imagery forged onto durable aluminum metal.",
+    sku: "EP-MP-GM08",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "Sweat-Proof & Moisture-Resistant Matte Metallic",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "SALE",
+  },
+  {
+    id: "9",
+    name: "Lady Boss Executive Statement Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Lady Boss",
     price: 699,
     oldPrice: 999,
-    rating: 4.6,
-    reviews: 64,
+    rating: 4.9,
+    reviews: 78,
     image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=1000",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1000&q=85",
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&q=85",
+    ],
     description:
-      "A clean and minimal art piece designed for modern interiors and stylish workspaces.",
-    sku: "EP-MET-005",
-    material: "Metal",
-    finish: "Premium finish",
+      "Designed for founders, leaders, and modern studios — this Lady Boss statement metal poster pairs editorial aesthetics with sleek brushed aluminum durability.",
+    sku: "EP-MP-LB09",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "Satin Editorial Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "NEW",
+  },
+  {
+    id: "10",
+    name: "Championship Cricket Victory Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Cricket",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.8,
+    reviews: 65,
+    image:
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1000&q=85",
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1000&q=85",
+    ],
+    description:
+      "Relive unforgettable stadium roars and championship victories with this large-format A2 cricket metal poster crafted with ultra-vivid thermal sublimation.",
+    sku: "EP-MP-CR10",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "HD Gloss Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "TRENDING",
+  },
+  {
+    id: "11",
+    name: "Superhero Multiverse Gaming Desk Pad",
+    category: "Desk Pad",
+    collection: "Movie, Series & Characters (DC, Marvel)",
+    price: 899,
+    oldPrice: 1249,
+    rating: 4.7,
+    reviews: 59,
+    image:
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1000&q=85",
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=1000&q=85",
+    ],
+    description:
+      "Transform your desk setup with iconic DC & Marvel multiverse artwork across an expansive 900×400mm micro-weave gaming surface.",
+    sku: "EP-DP-MD11",
+    material: "High-Density Micro-Weave Cloth & Rubber Base",
+    finish: "Anti-Fray Stitched Edges & Water-Resistant Coat",
+    dimensions: "900mm × 400mm × 4mm (XXL Extended)",
     availability: "In Stock",
     badge: "FEATURED",
   },
   {
-    id: "6",
-    name: "Creative Art Print",
-    category: "Posters",
-    price: 449,
-    oldPrice: 699,
+    id: "12",
+    name: "Anime Cyberpunk Wide Desk Pad",
+    category: "Desk Pad",
+    collection: "Anime",
+    price: 849,
+    oldPrice: 1199,
     rating: 4.9,
-    reviews: 108,
+    reviews: 118,
     image:
-      "https://images.unsplash.com/photo-1549490349-8643362247b5?w=1000",
+      "https://images.unsplash.com/photo-1563089145-599997674d42?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1563089145-599997674d42?w=1000&q=85",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&q=85",
+    ],
     description:
-      "A colourful creative art print to make your walls more expressive and inspiring.",
-    sku: "EP-POST-006",
-    material: "Premium poster paper",
-    finish: "Matte finish",
+      "Pair your mechanical keyboard and gaming mouse with neon cyberpunk anime artistry on a silky-smooth, zero-drag desk mat.",
+    sku: "EP-DP-AN12",
+    material: "Micro-Textured Speed Cloth & Non-Slip Rubber",
+    finish: "Vibrant Sublimation Print with Overlock Stitching",
+    dimensions: "900mm × 400mm × 4mm (XXL Extended)",
     availability: "In Stock",
     badge: "POPULAR",
   },
   {
-    id: "7",
-    name: "Modern Room Decor",
-    category: "Tapestries",
-    price: 799,
-    oldPrice: 1199,
-    rating: 4.7,
-    reviews: 52,
+    id: "13",
+    name: "Supercar GT Carbon Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Cars, Bike & F1",
+    price: 949,
+    oldPrice: 1349,
+    rating: 4.9,
+    reviews: 104,
     image:
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1000",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1000&q=85",
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=1000&q=85",
+    ],
     description:
-      "Refresh your interior with a modern decorative piece that adds character to your room.",
-    sku: "EP-TAP-007",
-    material: "Fabric",
-    finish: "Printed finish",
+      "Precision automotive photography infused directly onto brushed metal. Captures every aerodynamic curve and carbon-fiber detail with metallic sheen.",
+    sku: "EP-MP-CF13",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "Automotive Gloss Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "BESTSELLER",
+  },
+  {
+    id: "14",
+    name: "Next-Gen Open World Character Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Games and Characters",
+    price: 699,
+    oldPrice: 999,
+    rating: 4.8,
+    reviews: 87,
+    image:
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&q=85",
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&q=85",
+    ],
+    description:
+      "Level up your gaming room walls with iconic open-world character artwork rendered in high-definition metallic color.",
+    sku: "EP-MP-GC14",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "HD Satin Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
     availability: "In Stock",
     badge: "NEW",
   },
   {
-    id: "8",
-    name: "Colorful Abstract Art",
-    category: "Stickers",
-    price: 299,
-    oldPrice: 499,
+    id: "15",
+    name: "Lady Boss Workspace Edition Desk Pad",
+    category: "Desk Pad",
+    collection: "Lady Boss",
+    price: 849,
+    oldPrice: 1199,
     rating: 4.8,
-    reviews: 93,
+    reviews: 62,
     image:
-      "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=1000",
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&q=85",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1000&q=85",
+    ],
     description:
-      "Add a fun splash of colour to your everyday accessories and creative spaces.",
-    sku: "EP-STK-008",
-    material: "Self-adhesive material",
-    finish: "Glossy finish",
+      "Elevate your executive desk setup with a refined, spill-proof desk pad engineered for effortless daily productivity and modern style.",
+    sku: "EP-DP-LB15",
+    material: "Premium Micro-Weave Surface & Non-Slip Rubber Base",
+    finish: "Matte Smooth-Touch Finish with Stitched Edges",
+    dimensions: "900mm × 400mm × 4mm (XXL Extended)",
     availability: "In Stock",
     badge: "POPULAR",
   },
+  {
+    id: "16",
+    name: "Relentless Hustle Gym Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    collection: "Gym and Motivation",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.9,
+    reviews: 115,
+    image:
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1000&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1000&q=85",
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1000&q=85",
+    ],
+    description:
+      "Built for relentless training environments. Heavy-duty aluminum metal poster that resists humidity and inspires peak performance every rep.",
+    sku: "EP-MP-GM16",
+    material: "1.15mm Aircraft-Grade Aluminum Sheet",
+    finish: "High-Contrast Matte Metallic Finish",
+    dimensions: "A4 (8.3×11.7 in) / A3 (11.7×16.5 in) / A2 (16.5×23.4 in)",
+    availability: "In Stock",
+    badge: "BESTSELLER",
+  },
 ];
+
+const METAL_SIZES = ["A4 (8.3 × 11.7 in)", "A3 (11.7 × 16.5 in)", "A2 (16.5 × 23.4 in)"];
+
+function rupee(n: number) {
+  return `₹${n.toLocaleString("en-IN")}`;
+}
 
 function ProductDetailsContent() {
   const params = useParams<{ id: string }>();
   const product = products.find((item) => item.id === params.id);
+  const wishlist = useStoreWishlist();
 
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(METAL_SIZES[1]);
   const [selectedImage, setSelectedImage] = useState("");
-  const [cartMessage, setCartMessage] = useState("");
+  const [justAdded, setJustAdded] = useState(false);
 
   if (!product) {
     return (
       <>
         <Header />
-        <main className="flex min-h-[60vh] flex-col items-center justify-center px-5 text-center">
-          <h1 className="text-3xl font-bold text-[#17171B]">
+        <main
+          className={`${syne.variable} ${inter.variable} flex min-h-[70vh] flex-col items-center justify-center bg-[#F7F8F5] px-5 py-20 text-center font-[family-name:var(--font-inter)]`}
+        >
+          <span className="grid h-16 w-16 place-items-center rounded-2xl bg-[#17171B] text-[#78D94F]">
+            <ShoppingBag className="h-7 w-7" />
+          </span>
+          <h1
+            className={`${head} mt-6 text-3xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-4xl`}
+          >
             Product Not Found
           </h1>
-          <p className="mt-3 text-gray-500">
-            The product you are looking for does not exist.
+          <p className="mt-3 max-w-md text-sm leading-6 text-gray-500">
+            The product you are looking for might have been moved or is no longer available.
           </p>
           <Link
             href="/shop"
-            className="mt-6 rounded-full bg-[#78D94F] px-7 py-3 font-semibold text-[#17171B] transition hover:bg-[#65c83d]"
+            className={`mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#17171B] px-8 py-4 text-xs font-bold uppercase tracking-[0.16em] text-white no-underline transition hover:bg-[#78D94F] hover:text-[#17171B] ${focus}`}
           >
+            <ArrowLeft className="h-4 w-4" />
             Back to Shop
           </Link>
         </main>
@@ -185,300 +509,650 @@ function ProductDetailsContent() {
     );
   }
 
+  const numericId = Number(product.id);
+  const isWishlisted = wishlist.includes(numericId);
+  const isMetalPoster = product.category.toLowerCase().includes("metal poster");
+
   const discount = Math.round(
     ((product.oldPrice - product.price) / product.oldPrice) * 100
   );
 
-  const galleryImages = [
-    product.image,
-    product.image.replace("w=1000", "w=800"),
-    product.image.replace("w=1000", "w=600"),
-  ];
+  const galleryImages =
+    product.gallery && product.gallery.length > 0
+      ? product.gallery
+      : [
+          product.image,
+          product.image.replace("w=1000", "w=900"),
+          product.image.replace("w=1000", "w=800"),
+        ];
 
-  const activeImage = selectedImage || galleryImages[0];
+  const activeImage =
+    selectedImage && galleryImages.includes(selectedImage)
+      ? selectedImage
+      : galleryImages[0];
 
-  const addToCart = () => {
-    setCartMessage(`${quantity} item(s) added to your demo cart.`);
+  const handleAddToCart = () => {
+    addToStoreCart(
+      {
+        id: numericId,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        oldPrice: product.oldPrice,
+        image: product.image,
+      },
+      quantity
+    );
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 2400);
   };
 
   const relatedProducts = products
     .filter(
       (item) =>
-        item.id !== product.id && item.category === product.category
+        item.id !== product.id &&
+        (item.collection === product.collection ||
+          item.category === product.category)
     )
-    .slice(0, 3);
+    .slice(0, 4);
 
   return (
     <>
       <Header />
 
-      <main className="bg-white">
-        {/* Breadcrumb */}
-        <div className="mx-auto max-w-7xl px-5 py-5 text-sm text-gray-500 md:px-8">
-          <Link href="/" className="hover:text-[#78D94F]">
-            Home
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/shop" className="hover:text-[#78D94F]">
-            Shop
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-[#17171B]">{product.name}</span>
-        </div>
+      <main
+        className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)] text-[#17171B]`}
+      >
+        {/* ================= DARK HERO BANNER ================= */}
+        <section className="relative overflow-hidden bg-[#17171B] px-4 py-10 sm:px-6 lg:px-10 lg:py-12">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Hero-banners/shop-hero.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-80"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#17171B]/95 via-[#17171B]/75 to-[#17171B]/45" />
+          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
 
-        {/* Product Details */}
-        <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-16 md:grid-cols-2 md:px-8 lg:gap-16">
-          {/* Product Gallery */}
-          <div>
-            <div className="relative overflow-hidden rounded-2xl bg-[#F5F5F5]">
-              <span className="absolute left-5 top-5 z-10 rounded-full bg-[#78D94F] px-4 py-2 text-xs font-bold text-[#17171B]">
-                {product.badge}
-              </span>
+          <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              {/* Breadcrumb */}
+              <nav
+                aria-label="Breadcrumb"
+                className="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gray-400"
+              >
+                <Link
+                  href="/"
+                  className={`text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
+                >
+                  HOME
+                </Link>
+                <span>/</span>
+                <Link
+                  href="/shop"
+                  className={`text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
+                >
+                  SHOP
+                </Link>
+                <span>/</span>
+                <Link
+                  href={`/shop?collection=${encodeURIComponent(product.collection)}`}
+                  className={`text-[#78D94F] no-underline transition hover:underline ${focus}`}
+                >
+                  {product.collection}
+                </Link>
+                <span>/</span>
+                <span className="line-clamp-1 text-white">{product.name}</span>
+              </nav>
 
-              <img
-                src={activeImage}
-                alt={product.name}
-                className="h-[420px] w-full object-cover sm:h-[520px]"
-              />
+              <p className="mb-2.5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-[#78D94F]">
+                <span className="h-0.5 w-8 bg-[#78D94F]" />
+                {product.category}
+              </p>
+
+              <h1
+                className={`${head} max-w-3xl text-2xl font-extrabold uppercase leading-[1.08] tracking-tight text-white sm:text-3xl lg:text-4xl`}
+              >
+                {product.name}
+              </h1>
             </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-4">
-              {galleryImages.map((image, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setSelectedImage(image)}
-                  className={`overflow-hidden rounded-xl border-2 ${
-                    activeImage === image
-                      ? "border-[#78D94F]"
-                      : "border-transparent"
-                  }`}
-                  aria-label={`View product image ${index + 1}`}
-                >
-                  <img
-                    src={image}
-                    alt={`${product.name} view ${index + 1}`}
-                    className="h-28 w-full object-cover"
+            <Link
+              href="/shop"
+              className={`inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-white no-underline backdrop-blur-sm transition hover:border-[#78D94F] hover:bg-[#78D94F] hover:text-[#17171B] md:self-auto ${focus}`}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to Catalog
+            </Link>
+          </div>
+        </section>
+
+        {/* ================= PRODUCT SHOWCASE ================= */}
+        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-10 lg:py-14">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+            {/* Left: Gallery */}
+            <div className="lg:col-span-6">
+              <div className="sticky top-28">
+                <div className="relative aspect-[4/4.6] overflow-hidden rounded-3xl border border-gray-200/80 bg-white shadow-[0_18px_45px_rgba(23,23,27,0.06)]">
+                  {product.badge && (
+                    <span
+                      className={`${head} absolute left-5 top-5 z-10 rounded-full bg-[#78D94F] px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#17171B] shadow-md`}
+                    >
+                      {product.badge}
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => toggleStoreWishlist(numericId)}
+                    aria-label={
+                      isWishlisted ? "Remove from wishlist" : "Add to wishlist"
+                    }
+                    className={`absolute right-5 top-5 z-10 grid h-11 w-11 cursor-pointer place-items-center rounded-full border transition duration-300 ${
+                      isWishlisted
+                        ? "border-[#17171B] bg-[#17171B] text-[#78D94F]"
+                        : "border-gray-200 bg-white/90 text-[#17171B] backdrop-blur-md hover:bg-[#17171B] hover:text-white"
+                    } ${focus}`}
+                  >
+                    <Heart
+                      className="h-5 w-5"
+                      fill={isWishlisted ? "currentColor" : "none"}
+                    />
+                  </button>
+
+                  <LoadingImage
+                    src={activeImage}
+                    alt={product.name}
+                    priority
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                   />
-                </button>
-              ))}
-            </div>
-          </div>
+                </div>
 
-          {/* Product Information */}
-          <div className="flex flex-col">
-            <p className="text-sm font-semibold uppercase tracking-widest text-gray-500">
-              {product.category}
-            </p>
-
-            <h1 className="mt-3 text-3xl font-bold leading-tight text-[#17171B] sm:text-4xl">
-              {product.name}
-            </h1>
-
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <span className="text-yellow-500">★★★★★</span>
-              <span className="text-sm font-semibold text-[#17171B]">
-                {product.rating}/5
-              </span>
-              <span className="text-sm text-gray-500">
-                ({product.reviews} customer reviews)
-              </span>
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <span className="text-3xl font-bold text-[#17171B]">
-                ₹{product.price}
-              </span>
-              <span className="text-lg text-gray-400 line-through">
-                ₹{product.oldPrice}
-              </span>
-              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-700">
-                {discount}% OFF
-              </span>
-            </div>
-
-            <p className="mt-7 leading-7 text-gray-600">
-              {product.description}
-            </p>
-
-            <div className="mt-7 space-y-3 border-y border-gray-200 py-5 text-sm">
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-500">Product SKU</span>
-                <span className="font-semibold text-[#17171B]">
-                  {product.sku}
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-500">Material</span>
-                <span className="font-semibold text-[#17171B]">
-                  {product.material}
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-500">Finish</span>
-                <span className="font-semibold text-[#17171B]">
-                  {product.finish}
-                </span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-gray-500">Availability</span>
-                <span className="font-semibold text-green-600">
-                  {product.availability}
-                </span>
+                {/* Thumbnails */}
+                <div className="mt-4 grid grid-cols-3 gap-3.5">
+                  {galleryImages.map((image, index) => {
+                    const isActive = activeImage === image;
+                    return (
+                      <button
+                        key={`${image}-${index}`}
+                        type="button"
+                        onClick={() => setSelectedImage(image)}
+                        aria-label={`View product image ${index + 1}`}
+                        className={`relative aspect-[4/3] cursor-pointer overflow-hidden rounded-2xl border-2 bg-white transition duration-300 ${
+                          isActive
+                            ? "border-[#78D94F] ring-2 ring-[#78D94F]/30"
+                            : "border-gray-200/80 opacity-75 hover:border-gray-400 hover:opacity-100"
+                        } ${focus}`}
+                      >
+                        <LoadingImage
+                          src={image}
+                          alt={`${product.name} view ${index + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
-            {/* Quantity */}
-            <div className="mt-7">
-              <p className="mb-3 text-sm font-semibold text-[#17171B]">
-                Quantity
-              </p>
+            {/* Right: Product Information Card */}
+            <div className="lg:col-span-6">
+              <div className="rounded-3xl border border-gray-200/80 bg-white p-6 shadow-[0_18px_45px_rgba(23,23,27,0.05)] sm:p-8 lg:p-10">
+                {/* Collection & Category pills */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    href={`/shop?collection=${encodeURIComponent(product.collection)}`}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#17171B] px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#78D94F] no-underline transition hover:bg-[#78D94F] hover:text-[#17171B]"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    {product.collection}
+                  </Link>
+                  <span className="rounded-full bg-[#F7F8F5] px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-600">
+                    {product.category}
+                  </span>
+                </div>
 
-              <div className="flex h-12 w-36 items-center justify-between rounded-full border border-gray-300 px-4">
-                <button
-                  type="button"
-                  onClick={() => setQuantity((current) => Math.max(1, current - 1))}
-                  className="text-xl text-[#17171B] hover:text-[#78D94F]"
-                  aria-label="Decrease quantity"
+                {/* Title */}
+                <h2
+                  className={`${head} mt-4 text-2xl font-extrabold leading-[1.15] tracking-tight text-[#17171B] sm:text-3xl`}
                 >
-                  −
-                </button>
+                  {product.name}
+                </h2>
 
-                <span className="font-semibold text-[#17171B]">
-                  {quantity}
-                </span>
+                {/* Rating & SKU row */}
+                <div className="mt-4 flex flex-wrap items-center gap-3 border-b border-gray-100 pb-5">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
+                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    <span className={valueFont}>{product.rating}/5</span>
+                  </div>
+                  <span className={`${valueFont} text-xs font-medium text-gray-500`}>
+                    ({product.reviews} verified reviews)
+                  </span>
+                  <span className="text-gray-300">•</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    {product.availability}
+                  </span>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setQuantity((current) => current + 1)}
-                  className="text-xl text-[#17171B] hover:text-[#78D94F]"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={addToCart}
-                className="flex-1 rounded-full bg-[#78D94F] px-7 py-4 font-bold text-[#17171B] transition hover:bg-[#65c83d]"
-              >
-                Add to Cart
-              </button>
-
-              <Link
-                href="/cart"
-                className="flex-1 rounded-full border border-[#17171B] px-7 py-4 text-center font-bold text-[#17171B] transition hover:bg-[#17171B] hover:text-white"
-              >
-                Buy Now
-              </Link>
-            </div>
-
-            {cartMessage && (
-              <p
-                role="status"
-                className="mt-4 rounded-lg bg-green-50 p-3 text-sm font-medium text-green-700"
-              >
-                {cartMessage}
-              </p>
-            )}
-
-            <div className="mt-7 grid grid-cols-2 gap-4">
-              <div className="rounded-xl bg-[#F7F7F7] p-4">
-                <p className="font-semibold text-[#17171B]">
-                  Free Delivery
+                {/* Price block */}
+                <div className="mt-6 flex flex-wrap items-baseline gap-3.5">
+                  <span
+                    className={`${valueFont} text-3xl font-extrabold tracking-tight text-[#17171B] sm:text-4xl`}
+                  >
+                    {rupee(product.price)}
+                  </span>
+                  <span
+                    className={`${valueFont} text-lg font-medium text-gray-400 line-through`}
+                  >
+                    {rupee(product.oldPrice)}
+                  </span>
+                  <span
+                    className={`${valueFont} rounded-full bg-[#78D94F]/20 px-3.5 py-1 text-xs font-extrabold uppercase tracking-[0.1em] text-[#17171B]`}
+                  >
+                    Save {discount}%
+                  </span>
+                </div>
+                <p className="mt-1.5 text-xs text-gray-500">
+                  Inclusive of all taxes • Free shipping on orders over ₹999
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  On eligible orders
+
+                {/* Description */}
+                <p className="mt-6 text-sm leading-7 text-gray-600 sm:text-[15px]">
+                  {product.description}
                 </p>
-              </div>
-              <div className="rounded-xl bg-[#F7F7F7] p-4">
-                <p className="font-semibold text-[#17171B]">
-                  Secure Payment
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  Safe checkout experience
-                </p>
+
+                {/* Size selector for Metal Posters */}
+                {isMetalPoster && (
+                  <div className="mt-6">
+                    <div className="mb-2.5 flex items-center justify-between">
+                      <span
+                        className={`${head} text-xs font-extrabold uppercase tracking-[0.14em] text-[#17171B]`}
+                      >
+                        Select Poster Size
+                      </span>
+                      <span className="text-xs font-medium text-gray-500">
+                        Includes magnetic mount kit
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {METAL_SIZES.map((size) => {
+                        const active = selectedSize === size;
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setSelectedSize(size)}
+                            className={`${valueFont} cursor-pointer rounded-xl border px-3 py-2.5 text-xs font-bold transition ${
+                              active
+                                ? "border-[#17171B] bg-[#17171B] text-[#78D94F] shadow-sm"
+                                : "border-gray-200 bg-[#F7F8F5] text-[#17171B] hover:border-[#17171B]"
+                            } ${focus}`}
+                          >
+                            {size}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Specifications table */}
+                <div className="mt-6 rounded-2xl border border-gray-100 bg-[#F7F8F5] p-4 sm:p-5">
+                  <dl className="m-0 space-y-3 text-xs sm:text-sm">
+                    <div className="flex items-center justify-between gap-4">
+                      <dt className="font-medium text-gray-500">Product SKU</dt>
+                      <dd
+                        className={`${valueFont} m-0 font-bold text-[#17171B]`}
+                      >
+                        {product.sku}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4 border-t border-gray-200/70 pt-2.5">
+                      <dt className="font-medium text-gray-500">Material</dt>
+                      <dd className="m-0 text-right font-semibold text-[#17171B]">
+                        {product.material}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4 border-t border-gray-200/70 pt-2.5">
+                      <dt className="font-medium text-gray-500">Finish</dt>
+                      <dd className="m-0 text-right font-semibold text-[#17171B]">
+                        {product.finish}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-4 border-t border-gray-200/70 pt-2.5">
+                      <dt className="font-medium text-gray-500">Dimensions</dt>
+                      <dd
+                        className={`${valueFont} m-0 text-right font-semibold text-[#17171B]`}
+                      >
+                        {isMetalPoster ? selectedSize : product.dimensions}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                {/* Quantity + Actions */}
+                <div className="mt-7 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+                  {/* Quantity stepper */}
+                  <div className="inline-flex h-13 w-36 shrink-0 items-center justify-between rounded-full border border-gray-300 bg-[#F7F8F5] px-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuantity((current) => Math.max(1, current - 1))
+                      }
+                      aria-label="Decrease quantity"
+                      className={`grid h-9 w-9 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-lg font-bold text-[#17171B] transition hover:bg-white ${focus}`}
+                    >
+                      −
+                    </button>
+
+                    <span
+                      className={`${valueFont} text-sm font-extrabold text-[#17171B]`}
+                    >
+                      {quantity}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((current) => current + 1)}
+                      aria-label="Increase quantity"
+                      className={`grid h-9 w-9 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-lg font-bold text-[#17171B] transition hover:bg-white ${focus}`}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Add to Cart */}
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    className={`${head} inline-flex h-13 flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 px-7 text-xs font-extrabold uppercase tracking-[0.16em] transition duration-300 ${
+                      justAdded
+                        ? "bg-[#17171B] text-[#78D94F]"
+                        : "bg-[#78D94F] text-[#17171B] hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white"
+                    } ${focus}`}
+                  >
+                    {justAdded ? (
+                      <>
+                        <Check className="h-4 w-4 stroke-[2.6]" />
+                        Added to Cart
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="h-4 w-4" />
+                        Add to Cart •{" "}
+                        <span className={valueFont}>
+                          {rupee(product.price * quantity)}
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Buy Now & Wishlist secondary actions */}
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href="/cart"
+                    onClick={handleAddToCart}
+                    className={`${head} inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#17171B] bg-transparent px-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#17171B] no-underline transition hover:bg-[#17171B] hover:text-white ${focus}`}
+                  >
+                    Buy It Now
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => toggleStoreWishlist(numericId)}
+                    className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border px-5 text-xs font-bold uppercase tracking-[0.12em] transition ${
+                      isWishlisted
+                        ? "border-[#17171B] bg-[#17171B] text-[#78D94F]"
+                        : "border-gray-200 bg-[#F7F8F5] text-[#17171B] hover:border-[#17171B]"
+                    } ${focus}`}
+                  >
+                    <Heart
+                      className="h-4 w-4"
+                      fill={isWishlisted ? "currentColor" : "none"}
+                    />
+                    {isWishlisted ? "Saved" : "Wishlist"}
+                  </button>
+                </div>
+
+                {/* Live Toast Message */}
+                {justAdded && (
+                  <div
+                    role="status"
+                    className="mt-4 flex items-center justify-between rounded-2xl border border-[#78D94F]/40 bg-[#78D94F]/15 px-4 py-3 text-xs font-semibold text-[#17171B]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-emerald-700" />
+                      <span className={valueFont}>{quantity}</span> item(s) added to your shopping bag.
+                    </span>
+                    <Link
+                      href="/cart"
+                      className="font-extrabold uppercase tracking-[0.12em] text-[#17171B] underline hover:text-emerald-800"
+                    >
+                      View Cart →
+                    </Link>
+                  </div>
+                )}
+
+                {/* Trust Highlights */}
+                <div className="mt-7 grid grid-cols-2 gap-3 border-t border-gray-100 pt-6">
+                  <div className="flex items-start gap-3 rounded-2xl bg-[#F7F8F5] p-3.5">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17171B] text-[#78D94F]">
+                      <Truck className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p
+                        className={`${head} text-xs font-extrabold uppercase tracking-wider text-[#17171B]`}
+                      >
+                        Fast Dispatch
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-gray-500">
+                        Protective armored packaging
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-2xl bg-[#F7F8F5] p-3.5">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17171B] text-[#78D94F]">
+                      <ShieldCheck className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p
+                        className={`${head} text-xs font-extrabold uppercase tracking-wider text-[#17171B]`}
+                      >
+                        Premium Quality
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-gray-500">
+                        Fade-proof archival finish
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-2xl bg-[#F7F8F5] p-3.5">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17171B] text-[#78D94F]">
+                      <RotateCcw className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p
+                        className={`${head} text-xs font-extrabold uppercase tracking-wider text-[#17171B]`}
+                      >
+                        Easy Replacement
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-gray-500">
+                        7-day damage protection
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-2xl bg-[#F7F8F5] p-3.5">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17171B] text-[#78D94F]">
+                      <PackageCheck className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p
+                        className={`${head} text-xs font-extrabold uppercase tracking-wider text-[#17171B]`}
+                      >
+                        Ready to Mount
+                      </p>
+                      <p className="mt-0.5 text-[11px] text-gray-500">
+                        Zero tools or drilling needed
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Product Description */}
-        <section className="border-t border-gray-100 bg-[#F8F8F8]">
-          <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#78D94F]">
-              Product Information
-            </p>
-            <h2 className="mt-3 text-3xl font-bold text-[#17171B]">
-              About This Product
-            </h2>
-            <p className="mt-5 max-w-3xl leading-8 text-gray-600">
-              {product.description} Every Epic Store product is presented
-              with a focus on style, creativity and everyday spaces. Please
-              check the product specifications and final product details
-              before placing your order.
-            </p>
+        {/* ================= CRAFT & QUALITY STORY ================= */}
+        <section className="border-y border-gray-200/80 bg-white">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-10">
+            <div className="md:col-span-2">
+              <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.24em] text-[#78D94F]">
+                <span className="h-0.5 w-8 bg-[#78D94F]" />
+                Craftsmanship & Overview
+              </p>
+              <h2
+                className={`${head} mt-3 text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
+              >
+                Built for Statement <span className="text-[#78D94F]">Spaces.</span>
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-600 sm:text-[15px]">
+                {product.description} Every Epic Store creation is inspected for color accuracy, structural durability, and edge precision before leaving our studio so it arrives ready to transform your wall or desk immediately.
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-[#17171B] p-6 text-white">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#78D94F] text-[#17171B]">
+                  <Layers className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#78D94F]">
+                    Studio Guarantee
+                  </p>
+                  <h3 className={`${head} text-base font-extrabold text-white`}>
+                    What&apos;s in the Box
+                  </h3>
+                </div>
+              </div>
+              <ul className="mt-4 space-y-2.5 pl-0 text-xs text-gray-300">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0 text-[#78D94F]" />
+                  1 × {product.name}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0 text-[#78D94F]" />
+                  Protective foam-lined studio box
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0 text-[#78D94F]" />
+                  Mounting hardware / care guide included
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
-        {/* Related Products */}
+        {/* ================= RELATED PRODUCTS ================= */}
         {relatedProducts.length > 0 && (
-          <section className="mx-auto max-w-7xl px-5 py-16 md:px-8">
-            <div className="mb-9 flex items-end justify-between gap-4">
+          <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-10">
+            <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-[#78D94F]">
+                <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.24em] text-[#78D94F]">
+                  <span className="h-0.5 w-8 bg-[#78D94F]" />
                   You May Also Like
                 </p>
-                <h2 className="mt-2 text-3xl font-bold text-[#17171B]">
-                  Related Products
+                <h2
+                  className={`${head} mt-2.5 text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
+                >
+                  Related <span className="text-[#78D94F]">Creations.</span>
                 </h2>
               </div>
 
               <Link
-                href="/shop"
-                className="text-sm font-semibold text-[#17171B] hover:text-[#65c83d]"
+                href={`/shop?collection=${encodeURIComponent(product.collection)}`}
+                className={`${head} inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#17171B] no-underline transition hover:text-[#78D94F] ${focus}`}
               >
-                View All →
+                Explore {product.collection}
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedProducts.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/products/${item.id}`}
-                  className="group overflow-hidden rounded-2xl border border-gray-100 bg-white transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div className="overflow-hidden bg-gray-100">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <div className="p-5">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                      {item.category}
-                    </p>
-                    <h3 className="mt-2 font-bold text-[#17171B]">
-                      {item.name}
-                    </h3>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="font-bold text-[#17171B]">
-                        ₹{item.price}
-                      </span>
-                      <span className="text-sm text-yellow-500">
-                        ★ {item.rating}
-                      </span>
+            <div className="grid grid-cols-2 gap-3.5 sm:gap-6 lg:grid-cols-4">
+              {relatedProducts.map((item) => {
+                const itemDiscount = Math.round(
+                  ((item.oldPrice - item.price) / item.oldPrice) * 100
+                );
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/products/${item.id}`}
+                    className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white no-underline transition duration-500 hover:-translate-y-1.5 hover:border-[#17171B]/20 hover:shadow-[0_22px_50px_-14px_rgba(23,23,27,0.14)] sm:rounded-3xl"
+                  >
+                    <div className="relative aspect-[4/4.6] overflow-hidden bg-[#ECEEE9]">
+                      {item.badge && (
+                        <span
+                          className={`${head} absolute left-2.5 top-2.5 z-10 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.14em] text-[#17171B] sm:left-4 sm:top-4 sm:px-3.5 sm:text-[10px]`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                      <LoadingImage
+                        src={item.image}
+                        alt={item.name}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
                     </div>
-                  </div>
-                </Link>
-              ))}
+
+                    <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-5">
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="line-clamp-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                            {item.collection}
+                          </span>
+                          <span
+                            className={`${valueFont} inline-flex items-center gap-1 text-[11px] font-bold text-[#17171B]`}
+                          >
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                            {item.rating}
+                          </span>
+                        </div>
+
+                        <h3
+                          className={`${head} mt-1.5 line-clamp-2 text-sm font-extrabold leading-snug text-[#17171B] transition-colors group-hover:text-[#78D94F] sm:text-base`}
+                        >
+                          {item.name}
+                        </h3>
+                      </div>
+
+                      <div className="mt-3 flex items-baseline gap-2 border-t border-gray-100 pt-3">
+                        <span
+                          className={`${valueFont} text-base font-extrabold text-[#17171B] sm:text-lg`}
+                        >
+                          {rupee(item.price)}
+                        </span>
+                        <span
+                          className={`${valueFont} text-xs text-gray-400 line-through`}
+                        >
+                          {rupee(item.oldPrice)}
+                        </span>
+                        <span
+                          className={`${valueFont} ml-auto rounded-full bg-[#78D94F]/20 px-2 py-0.5 text-[10px] font-extrabold text-[#17171B]`}
+                        >
+                          -{itemDiscount}%
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}
@@ -495,7 +1169,7 @@ export default function ProductDetailsPage() {
       fallback={
         <>
           <Header />
-          <main className="min-h-[60vh] bg-white" />
+          <main className="min-h-[60vh] bg-[#F7F8F5]" />
           <Footer />
         </>
       }
