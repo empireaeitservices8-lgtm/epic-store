@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { Inter, Syne } from "next/font/google";
 
 /* Fonts: Syne for headings, Inter for body/UI */
@@ -99,6 +99,14 @@ function Icon({
   );
 }
 
+function PathnameSync({ onChange }: { onChange: (path: string) => void }) {
+  const currentPathname = usePathname();
+  useEffect(() => {
+    onChange(currentPathname);
+  }, [currentPathname, onChange]);
+  return null;
+}
+
 export default function Header({
   cartCount = 0,
   wishlistCount = 0,
@@ -106,7 +114,7 @@ export default function Header({
   cartCount?: number;
   wishlistCount?: number;
 }) {
-  const pathname = usePathname();
+  const [pathname, setPathname] = useState("");
   const router = useRouter();
   const [barOpen, setBarOpen] = useState(true);
   const [msg, setMsg] = useState(0);
@@ -220,6 +228,9 @@ export default function Header({
     <div
       className={`contents font-[family-name:var(--font-inter)] ${syne.variable} ${inter.variable}`}
     >
+      <Suspense fallback={null}>
+        <PathnameSync onChange={setPathname} />
+      </Suspense>
       {/* ============ ANNOUNCEMENT BAR ============ */}
       {barOpen && (
         <div className="relative bg-[#78d94f] text-[#17171b]">
