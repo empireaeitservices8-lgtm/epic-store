@@ -11,7 +11,6 @@ import {
   X,
   Package,
   Filter,
-  ImagePlus,
   Eye,
   ChevronDown,
   CheckCircle2,
@@ -21,6 +20,7 @@ import {
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import LoadingImage from "@/components/LoadingImage";
+import CloudinaryImageUpload from "@/components/admin/CloudinaryImageUpload";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -761,36 +761,13 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="mb-2 block text-sm font-semibold text-[#17171B]">
-                    Product Image URL
-                  </label>
-
-                  <div className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 transition focus-within:border-[#78D94F]">
-                    <ImagePlus size={19} className="shrink-0 text-gray-400" />
-                    <input
-                      value={form.image}
-                      onChange={(e) =>
-                        setForm({ ...form, image: e.target.value })
-                      }
-                      placeholder="Paste an image URL"
-                      className="w-full min-w-0 border-0 bg-transparent text-sm outline-none"
-                    />
-                  </div>
-
-                  <p className="mt-2 text-xs text-gray-400">
-                    Demo version: use a publicly accessible image URL. File
-                    uploads will be implemented later.
-                  </p>
-
-                  {form.image.trim() && (
-                    <div className="mt-3">
-                      <LoadingImage
-                        src={form.image}
-                        alt="Product preview"
-                        wrapperClassName="relative h-24 w-24 overflow-hidden rounded-xl border border-gray-200 bg-gray-100"
-                      />
-                    </div>
-                  )}
+                  <CloudinaryImageUpload
+                    label="Product Image"
+                    value={form.image}
+                    onChange={(url) => setForm({ ...form, image: url })}
+                    folder="epic-store/products"
+                    placeholder="Upload an image or paste a URL"
+                  />
                 </div>
 
                 {formError && (

@@ -73,6 +73,9 @@ export default function CustomPrintsPage() {
   const [dimensions, setDimensions] = useState("");
   const [message, setMessage] = useState("");
   const [fileName, setFileName] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const pageRef = useRef<HTMLElement>(null);
@@ -99,6 +102,33 @@ export default function CustomPrintsPage() {
     style: { transitionDelay: `${delay}ms` },
   });
 
+  const handleFileUpload = async (file: File | undefined) => {
+    if (!file) return;
+    setFileName(file.name);
+    setUploadError("");
+    setUploadingFile(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "epic-store/custom-prints");
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = (await res.json()) as {
+        ok?: boolean;
+        url?: string;
+        error?: string;
+      };
+      if (!res.ok || !data?.ok || !data.url) {
+        setUploadError(data?.error || "Image upload failed.");
+        return;
+      }
+      setFileUrl(data.url);
+    } catch {
+      setUploadError("Unable to upload image right now.");
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSending(true);
@@ -112,7 +142,7 @@ export default function CustomPrintsPage() {
           email,
           printType,
           dimensions,
-          fileName,
+          fileName: fileUrl || fileName,
           message,
         }),
       });
@@ -490,23 +520,35 @@ export default function CustomPrintsPage() {
                           <Upload className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
                         </div>
                         <span className="mt-3 text-sm font-semibold text-[#17171B]">
-                          Click to select an image
+                          {uploadingFile
+                            ? "Uploading to Cloudinary..."
+                            : "Click to select an image"}
                         </span>
                         <span className="mt-1 text-xs text-gray-400">
-                          Image selection demo only
+                          JPG, PNG, WEBP up to 10 MB
                         </span>
                         <input
                           type="file"
                           accept="image/*"
                           className="hidden"
                           onChange={(e) =>
-                            setFileName(e.target.files?.[0]?.name || "")
+                            void handleFileUpload(e.target.files?.[0])
                           }
                         />
                       </label>
+                      {uploadError && (
+                        <p className="mt-2 text-xs font-medium text-red-600">
+                          {uploadError}
+                        </p>
+                      )}
                       {fileName && (
                         <p className="mt-2 break-all text-sm font-medium text-[#17171B]">
                           Selected: {fileName}
+                          {fileUrl && (
+                            <span className="ml-2 text-xs font-bold text-green-700">
+                              ✓ Uploaded
+                            </span>
+                          )}
                         </p>
                       )}
                     </div>

@@ -6,6 +6,7 @@ import { Inter, Syne } from "next/font/google";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import LoadingImage from "@/components/LoadingImage";
+import CloudinaryImageUpload from "@/components/admin/CloudinaryImageUpload";
 import {
   Plus,
   Search,
@@ -623,26 +624,14 @@ export default function AdminCollectionsPage() {
                 />
               </div>
 
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#17171B]">
-                  Collection Image URL
-                </label>
-                <input
-                  value={form.image}
-                  onChange={(e) => setForm({ ...form, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#78D94F]"
-                />
-                {form.image.trim() && (
-                  <div className="mt-3">
-                    <LoadingImage
-                      src={form.image}
-                      alt="Collection preview"
-                      wrapperClassName="relative h-28 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100"
-                    />
-                  </div>
-                )}
-              </div>
+              <CloudinaryImageUpload
+                label="Collection Image"
+                value={form.image}
+                onChange={(url) => setForm({ ...form, image: url })}
+                folder="epic-store/collections"
+                placeholder="Upload an image or paste a URL"
+                previewClassName="relative h-24 w-36 overflow-hidden rounded-xl border border-gray-200 bg-gray-100"
+              />
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
