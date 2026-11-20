@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Inter, Syne } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { clearStoreCart, useStoreCart } from "@/lib/store";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -20,21 +21,20 @@ const inter = Inter({
   display: "swap",
 });
 
-/* TODO: replace with your real cart data */
-const products = [
+const fallbackProducts = [
   {
     id: 1,
-    name: "Astronaut Space Poster",
-    price: 499,
+    name: "Football Stadium Legends Metal Poster (A3)",
+    price: 699,
     quantity: 1,
-    image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=300",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300&q=85",
   },
   {
     id: 2,
-    name: "Abstract Modern Art",
-    price: 599,
+    name: "F1 Circuit Telemetry XXL Desk Pad",
+    price: 899,
     quantity: 1,
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300",
+    image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300&q=85",
   },
 ];
 
@@ -58,28 +58,29 @@ type Field = {
   maxLength?: number;
   required?: boolean;
   half?: boolean;
+  halfMobile?: boolean;
 };
 
 const contactFields: Field[] = [
-  { name: "firstName", label: "First Name", placeholder: "Enter first name", auto: "given-name", required: true, half: true },
-  { name: "lastName", label: "Last Name", placeholder: "Enter last name", auto: "family-name", required: true, half: true },
+  { name: "firstName", label: "First Name", placeholder: "First name", auto: "given-name", required: true, half: true, halfMobile: true },
+  { name: "lastName", label: "Last Name", placeholder: "Last name", auto: "family-name", required: true, half: true, halfMobile: true },
   { name: "email", label: "Email Address", type: "email", placeholder: "example@email.com", auto: "email", required: true, half: true },
-  { name: "phone", label: "Mobile Number", type: "tel", placeholder: "10-digit mobile number", auto: "tel-national", numeric: true, maxLength: 10, required: true, half: true },
+  { name: "phone", label: "Mobile Number", type: "tel", placeholder: "10-digit mobile", auto: "tel-national", numeric: true, maxLength: 10, required: true, half: true },
 ];
 
 const addressFields: Field[] = [
-  { name: "address", label: "House / Building / Street Address", placeholder: "Enter complete address", auto: "street-address", required: true },
+  { name: "address", label: "House / Building / Street", placeholder: "Complete street address", auto: "street-address", required: true },
   { name: "landmark", label: "Landmark", placeholder: "Nearby landmark (optional)" },
-  { name: "city", label: "City", placeholder: "Enter city", auto: "address-level2", required: true, half: true },
+  { name: "city", label: "City", placeholder: "City", auto: "address-level2", required: true, half: true, halfMobile: true },
+  { name: "pincode", label: "PIN Code", placeholder: "6-digit PIN", auto: "postal-code", numeric: true, maxLength: 6, required: true, half: true, halfMobile: true },
   { name: "state", label: "State", type: "select", auto: "address-level1", required: true, half: true },
-  { name: "pincode", label: "PIN Code", placeholder: "6-digit PIN code", auto: "postal-code", numeric: true, maxLength: 6, required: true, half: true },
 ];
 
 const billingFields: Field[] = [
-  { name: "billingAddress", label: "Billing Address", placeholder: "Enter complete billing address", required: true },
-  { name: "billingCity", label: "City", placeholder: "Enter city", required: true, half: true },
+  { name: "billingAddress", label: "Billing Address", placeholder: "Complete billing address", required: true },
+  { name: "billingCity", label: "City", placeholder: "City", required: true, half: true, halfMobile: true },
+  { name: "billingPincode", label: "PIN Code", placeholder: "6-digit PIN", numeric: true, maxLength: 6, required: true, half: true, halfMobile: true },
   { name: "billingState", label: "State", type: "select", required: true, half: true },
-  { name: "billingPincode", label: "PIN Code", placeholder: "6-digit PIN code", numeric: true, maxLength: 6, required: true, half: true },
 ];
 
 const emptyForm: Record<string, string> = {
@@ -90,12 +91,13 @@ const emptyForm: Record<string, string> = {
 
 const steps = ["Cart", "Checkout", "Confirmation"];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${syne.className} font-[family-name:var(--font-syne)]`;
+const valueFont = `${inter.className} font-[family-name:var(--font-inter)] tabular-nums`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 const rupee = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const card =
-  "rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)] md:p-8";
+  "rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] sm:rounded-3xl sm:p-6 md:p-8";
 
 /* Validate one field; returns an error message or "" */
 function validateField(name: string, value: string, billing: boolean): string {
@@ -154,6 +156,8 @@ function Icon({ name, size = 20 }: { name: keyof typeof icons; size?: number }) 
 }
 
 export default function CheckoutPage() {
+  const storeCart = useStoreCart();
+  const products = storeCart.length > 0 ? storeCart : fallbackProducts;
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [sameAsBilling, setSameAsBilling] = useState(true);
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -229,6 +233,7 @@ export default function CheckoutPage() {
       } catch {
         /* Fallback cleanly if offline */
       } finally {
+        clearStoreCart();
         setOrderId(generatedId);
         setPlacing(false);
         setOrderPlaced(true);
@@ -240,16 +245,21 @@ export default function CheckoutPage() {
   /* Render one form field (helper, not a component) */
   const field = (f: Field) => {
     const err = errors[f.name];
-    const base = `w-full rounded-xl border bg-white px-4 py-3.5 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:ring-2 ${
+    const base = `w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:ring-2 sm:px-4 sm:py-3 ${
       err
         ? "border-red-400 focus:border-red-400 focus:ring-red-400/25"
         : "border-gray-200 hover:border-gray-300 focus:border-[#78D94F] focus:ring-[#78D94F]/25"
     }`;
+    const spanCls = f.halfMobile
+      ? "col-span-1"
+      : f.half
+        ? "col-span-2 sm:col-span-1"
+        : "col-span-2";
     return (
-      <div key={f.name} className={f.half ? "" : "sm:col-span-2"}>
+      <div key={f.name} className={spanCls}>
         <label
           htmlFor={f.name}
-          className="mb-2 block text-sm font-semibold text-[#17171B]"
+          className="mb-1.5 block text-xs font-semibold text-[#17171B] sm:text-sm"
         >
           {f.label}
           {f.required && <span className="text-[#78D94F]"> *</span>}
@@ -266,7 +276,7 @@ export default function CheckoutPage() {
               autoComplete={f.auto}
               aria-invalid={Boolean(err)}
               aria-describedby={err ? `${f.name}-err` : undefined}
-              className={`${base} cursor-pointer appearance-none pr-10 ${
+              className={`${base} cursor-pointer appearance-none pr-9 sm:pr-10 ${
                 formData[f.name] ? "" : "text-gray-400"
               }`}
             >
@@ -277,8 +287,8 @@ export default function CheckoutPage() {
                 </option>
               ))}
             </select>
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <Icon name="chevron" size={18} />
+            <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+              <Icon name="chevron" size={16} />
             </span>
           </div>
         ) : (
@@ -299,48 +309,48 @@ export default function CheckoutPage() {
           />
         )}
 
-        <p
-          id={`${f.name}-err`}
-          role={err ? "alert" : undefined}
-          className={`mt-1.5 min-h-4 text-xs text-red-500 transition-opacity duration-300 ${
-            err ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {err}
-        </p>
+        {err && (
+          <p
+            id={`${f.name}-err`}
+            role="alert"
+            className="mt-1 text-[11px] font-medium text-red-500 sm:text-xs"
+          >
+            {err}
+          </p>
+        )}
       </div>
     );
   };
 
   const sectionHead = (step: string, title: string, text: string) => (
-    <div className="mb-7">
-      <p className="m-0 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
-        <span className="h-0.5 w-8 bg-[#78D94F]" />
+    <div className="mb-4 sm:mb-6">
+      <p className="m-0 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.22em] text-green-700 sm:gap-3 sm:text-xs sm:tracking-[0.25em]">
+        <span className="h-0.5 w-6 bg-[#78D94F] sm:w-8" />
         {step}
       </p>
-      <h2 className={`${head} mt-3 text-xl font-extrabold text-[#17171B] sm:text-2xl`}>
+      <h2 className={`${head} mt-1.5 text-lg font-extrabold text-[#17171B] sm:mt-2.5 sm:text-2xl`}>
         {title}
       </h2>
-      <p className="mt-2 text-sm text-gray-500">{text}</p>
+      <p className="mt-1 text-xs text-gray-500 sm:mt-1.5 sm:text-sm">{text}</p>
     </div>
   );
 
   /* Order summary content, used in the sidebar and the mobile accordion */
   const summary = (
     <div>
-      <ul className="m-0 list-none space-y-5 p-0">
+      <ul className="m-0 list-none space-y-3.5 p-0 sm:space-y-4">
         {products.map((p) => (
-          <li key={p.id} className="flex gap-4">
-            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+          <li key={p.id} className="flex items-center gap-3.5">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:h-20 sm:w-20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
-              <span className="absolute -right-0 -top-0 grid h-6 w-6 place-items-center rounded-bl-xl bg-[#17171B] text-xs font-bold text-white">
+              <span className={`${valueFont} absolute -right-0 -top-0 grid h-5 w-5 place-items-center rounded-bl-lg bg-[#17171B] text-[11px] font-bold text-white sm:h-6 sm:w-6 sm:rounded-bl-xl sm:text-xs`}>
                 {p.quantity}
               </span>
             </div>
-            <div className="flex flex-1 flex-col justify-center">
-              <h3 className={`${head} m-0 text-sm font-bold text-[#17171B]`}>{p.name}</h3>
-              <p className="mt-2 text-sm font-bold text-[#17171B]">
+            <div className="flex min-w-0 flex-1 flex-col justify-center">
+              <h3 className={`${head} m-0 line-clamp-2 text-xs font-bold text-[#17171B] sm:text-sm`}>{p.name}</h3>
+              <p className={`${valueFont} mt-1 text-xs font-bold text-[#17171B] sm:mt-1.5 sm:text-sm`}>
                 {rupee(p.price * p.quantity)}
               </p>
             </div>
@@ -348,36 +358,36 @@ export default function CheckoutPage() {
         ))}
       </ul>
 
-      <div className="my-6 border-t border-gray-200" />
+      <div className="my-4 border-t border-gray-200 sm:my-6" />
 
-      <dl className="m-0 space-y-4 text-sm">
+      <dl className="m-0 space-y-2.5 text-xs sm:space-y-3.5 sm:text-sm">
         <div className="flex justify-between">
           <dt className="text-gray-500">Subtotal</dt>
-          <dd className="m-0 font-semibold">{rupee(subtotal)}</dd>
+          <dd className={`${valueFont} m-0 font-semibold`}>{rupee(subtotal)}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-gray-500">Delivery</dt>
-          <dd className="m-0 font-semibold">
+          <dd className={`${valueFont} m-0 font-semibold`}>
             {delivery === 0 ? <span className="text-green-700">FREE</span> : rupee(delivery)}
           </dd>
         </div>
       </dl>
 
-      <div className="my-6 border-t border-dashed border-gray-200" />
+      <div className="my-4 border-t border-dashed border-gray-200 sm:my-6" />
 
       <div className="flex items-center justify-between">
-        <span className="font-bold text-[#17171B]">Total</span>
-        <span className={`${head} text-3xl font-extrabold text-[#17171B]`}>
+        <span className="text-sm font-bold text-[#17171B] sm:text-base">Total</span>
+        <span className={`${valueFont} text-2xl font-extrabold text-[#17171B] sm:text-3xl`}>
           {rupee(total)}
         </span>
       </div>
-      <p className="mt-3 text-xs text-gray-400">
-        Inclusive of applicable charges in this demo calculation.
+      <p className="mt-2 text-[11px] text-gray-400 sm:mt-3 sm:text-xs">
+        Inclusive of all taxes • Free shipping on orders ₹999+
       </p>
     </div>
   );
 
-  const wrapperCls = `${syne.variable} ${inter.variable} font-[family-name:var(--font-inter)]`;
+  const wrapperCls = `${syne.variable} ${inter.variable} ${inter.className} font-[family-name:var(--font-inter)]`;
 
   /* ================= SUCCESS ================= */
   if (orderPlaced) {
@@ -457,9 +467,9 @@ export default function CheckoutPage() {
     <>
       <Header />
 
-      <main className={`${wrapperCls} min-h-screen bg-[#F7F8F5]`}>
+      <main className={`${wrapperCls} min-h-screen bg-[#F7F8F5] pb-24 lg:pb-0`}>
         {/* Heading */}
-        <section className="relative overflow-hidden bg-[#17171B] px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
+        <section className="relative overflow-hidden bg-[#17171B] px-4 py-6 sm:px-6 sm:py-10 lg:px-10 lg:py-12">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/Hero-banners/cart-hero.jpg"
@@ -471,14 +481,14 @@ export default function CheckoutPage() {
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
 
-          <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-4 sm:gap-6 lg:flex-row lg:items-end">
             <div>
-              <p className="mb-3 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-[#78D94F]">
-                <span className="h-0.5 w-10 bg-[#78D94F]" />
+              <p className="mb-1.5 flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#78D94F] sm:mb-2.5 sm:gap-3 sm:text-xs sm:tracking-[0.25em]">
+                <span className="h-0.5 w-7 bg-[#78D94F] sm:w-10" />
                 Almost There
               </p>
               <h1
-                className={`${head} text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl`}
+                className={`${head} text-2xl font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:text-4xl lg:text-5xl`}
               >
                 Check<span className="text-[#78D94F]">out.</span>
               </h1>
@@ -486,16 +496,16 @@ export default function CheckoutPage() {
 
             <ol
               aria-label="Checkout progress"
-              className="m-0 flex list-none items-center gap-3 p-0 text-xs font-bold tracking-[0.14em]"
+              className="m-0 flex list-none items-center gap-2 p-0 text-[10px] font-bold tracking-[0.12em] sm:gap-3 sm:text-xs sm:tracking-[0.14em]"
             >
               {steps.map((s, i) => (
-                <li key={s} className="flex items-center gap-3">
+                <li key={s} className="flex items-center gap-2 sm:gap-3">
                   {i === 0 ? (
                     <Link
                       href="/cart"
-                      className={`flex items-center gap-3 text-gray-300 no-underline transition hover:text-white ${focus}`}
+                      className={`flex items-center gap-2 text-gray-300 no-underline transition hover:text-white sm:gap-3 ${focus}`}
                     >
-                      <span className="grid h-8 w-8 place-items-center rounded-full bg-[#78D94F]/25 text-[#78D94F]">
+                      <span className="grid h-6 w-6 place-items-center rounded-full bg-[#78D94F]/25 text-[#78D94F] sm:h-8 sm:w-8">
                         ✓
                       </span>
                       {s.toUpperCase()}
@@ -503,7 +513,7 @@ export default function CheckoutPage() {
                   ) : (
                     <>
                       <span
-                        className={`${head} grid h-8 w-8 place-items-center rounded-full ${
+                        className={`${valueFont} grid h-6 w-6 place-items-center rounded-full sm:h-8 sm:w-8 ${
                           i === 1
                             ? "bg-[#78D94F] text-[#17171B]"
                             : "border border-white/20 text-gray-400"
@@ -516,31 +526,32 @@ export default function CheckoutPage() {
                       </span>
                     </>
                   )}
-                  {i < steps.length - 1 && <span className="h-px w-5 bg-white/20 sm:w-10" />}
+                  {i < steps.length - 1 && <span className="h-px w-4 bg-white/20 sm:w-10" />}
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-3 lg:px-10 lg:py-14">
+        <section className="mx-auto grid max-w-7xl gap-4 px-3.5 py-5 sm:gap-6 sm:px-6 sm:py-9 lg:grid-cols-3 lg:gap-8 lg:px-10 lg:py-12">
           {/* Mobile order summary accordion */}
           <div className="lg:hidden">
             <button
               type="button"
               onClick={() => setSummaryOpen((o) => !o)}
               aria-expanded={summaryOpen}
-              className={`flex w-full cursor-pointer items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-4 text-left ${focus}`}
+              className={`flex w-full cursor-pointer items-center justify-between rounded-2xl border border-gray-200 bg-white px-4 py-3.5 text-left shadow-sm ${focus}`}
             >
-              <span className="flex items-center gap-3 text-sm font-bold text-[#17171B]">
-                Order summary ({itemCount} {itemCount === 1 ? "item" : "items"})
+              <span className="flex items-center gap-2.5 text-xs font-bold text-[#17171B] sm:text-sm">
+                Order summary (<span className={valueFont}>{itemCount}</span>{" "}
+                {itemCount === 1 ? "item" : "items"})
                 <span
                   className={`transition-transform duration-300 ${summaryOpen ? "rotate-180" : ""}`}
                 >
-                  <Icon name="chevron" size={18} />
+                  <Icon name="chevron" size={16} />
                 </span>
               </span>
-              <span className={`${head} text-lg font-extrabold text-[#17171B]`}>
+              <span className={`${valueFont} text-base font-extrabold text-[#17171B] sm:text-lg`}>
                 {rupee(total)}
               </span>
             </button>
@@ -551,7 +562,7 @@ export default function CheckoutPage() {
               }`}
             >
               <div className="min-h-0 overflow-hidden">
-                <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-5">
+                <div className="mt-2.5 rounded-2xl border border-gray-200 bg-white p-4">
                   {summary}
                 </div>
               </div>
@@ -559,7 +570,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Form */}
-          <div className="space-y-6 lg:col-span-2">
+          <div className="space-y-4 sm:space-y-6 lg:col-span-2">
             {/* Contact */}
             <div
               className={`${card} transition-all duration-700 ${
@@ -567,7 +578,7 @@ export default function CheckoutPage() {
               }`}
             >
               {sectionHead("Step 01", "Contact Information", "Enter your details for order updates.")}
-              <div className="grid gap-x-5 sm:grid-cols-2">{contactFields.map(field)}</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-x-5 sm:gap-y-4">{contactFields.map(field)}</div>
             </div>
 
             {/* Delivery address */}
@@ -578,9 +589,9 @@ export default function CheckoutPage() {
               }`}
             >
               {sectionHead("Step 02", "Delivery Address", "Where should we deliver your order?")}
-              <div className="grid gap-x-5 sm:grid-cols-2">{addressFields.map(field)}</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-x-5 sm:gap-y-4">{addressFields.map(field)}</div>
 
-              <label className="mt-2 flex cursor-pointer items-center gap-3 text-sm text-gray-600">
+              <label className="mt-3.5 flex cursor-pointer items-center gap-2.5 text-xs font-medium text-gray-600 sm:mt-4 sm:gap-3 sm:text-sm">
                 <input
                   type="checkbox"
                   checked={sameAsBilling}
@@ -598,11 +609,11 @@ export default function CheckoutPage() {
               >
                 <div className="min-h-0 overflow-hidden">
                   {!sameAsBilling && (
-                    <div className="mt-6 border-t border-dashed border-gray-200 pt-6">
-                      <h3 className={`${head} mb-5 text-base font-bold text-[#17171B]`}>
+                    <div className="mt-4 border-t border-dashed border-gray-200 pt-4 sm:mt-6 sm:pt-6">
+                      <h3 className={`${head} mb-3.5 text-sm font-bold text-[#17171B] sm:mb-5 sm:text-base`}>
                         Billing Address
                       </h3>
-                      <div className="grid gap-x-5 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-3 sm:gap-x-5 sm:gap-y-4">
                         {billingFields.map(field)}
                       </div>
                     </div>
@@ -620,7 +631,7 @@ export default function CheckoutPage() {
             >
               {sectionHead("Step 03", "Payment Method", "Select your preferred payment method.")}
 
-              <div role="radiogroup" aria-label="Payment method" className="space-y-4">
+              <div role="radiogroup" aria-label="Payment method" className="space-y-3 sm:space-y-4">
                 {[
                   {
                     value: "razorpay",
@@ -634,14 +645,14 @@ export default function CheckoutPage() {
                     icon: "cash" as const,
                     title: "Cash on Delivery",
                     tag: "",
-                    text: "Pay when your order is delivered, if this option is available for your location.",
+                    text: "Pay when your order is delivered, if available for your PIN.",
                   },
                 ].map((o) => {
                   const on = paymentMethod === o.value;
                   return (
                     <label
                       key={o.value}
-                      className={`flex cursor-pointer items-start gap-4 rounded-2xl border p-5 transition duration-300 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#78D94F] ${
+                      className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 transition duration-300 focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[#78D94F] sm:gap-4 sm:rounded-2xl sm:p-5 ${
                         on
                           ? "border-[#78D94F] bg-[#78D94F]/10 shadow-[0_10px_30px_rgba(120,217,79,0.15)]"
                           : "border-gray-200 hover:border-gray-300"
@@ -656,22 +667,22 @@ export default function CheckoutPage() {
                         className="sr-only"
                       />
                       <span
-                        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition duration-300 ${
+                        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition duration-300 sm:h-11 sm:w-11 ${
                           on ? "bg-[#78D94F] text-[#17171B]" : "bg-gray-100 text-gray-500"
                         }`}
                       >
-                        <Icon name={o.icon} />
+                        <Icon name={o.icon} size={18} />
                       </span>
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className={`${head} m-0 font-bold text-[#17171B]`}>{o.title}</h3>
+                          <h3 className={`${head} m-0 text-sm font-bold text-[#17171B] sm:text-base`}>{o.title}</h3>
                           {o.tag && (
-                            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-600">
+                            <span className="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-semibold text-gray-600 sm:px-3 sm:py-1 sm:text-xs">
                               {o.tag}
                             </span>
                           )}
                         </div>
-                        <p className="mt-2 text-sm text-gray-500">{o.text}</p>
+                        <p className="mt-1 text-xs text-gray-500 sm:mt-1.5 sm:text-sm">{o.text}</p>
                       </div>
                       <span
                         aria-hidden="true"
@@ -686,17 +697,17 @@ export default function CheckoutPage() {
                 })}
               </div>
 
-              <div className="mt-5 rounded-xl bg-[#F7F8F5] p-4 text-xs leading-6 text-gray-500">
+              <div className="mt-4 rounded-xl bg-[#F7F8F5] p-3 text-[11px] leading-5 text-gray-500 sm:mt-5 sm:p-4 sm:text-xs sm:leading-6">
                 Demo interface: Razorpay has not been connected yet. No payment
                 will be collected from this page.
               </div>
             </div>
 
             {/* Place order */}
-            <div className="flex flex-col-reverse items-center justify-between gap-4 sm:flex-row">
+            <div className="flex flex-col-reverse items-center justify-between gap-3.5 pt-1 sm:flex-row sm:gap-4">
               <Link
                 href="/cart"
-                className={`group inline-flex items-center gap-2 font-semibold text-gray-500 no-underline transition hover:text-[#17171B] ${focus}`}
+                className={`group inline-flex items-center gap-2 text-sm font-semibold text-gray-500 no-underline transition hover:text-[#17171B] ${focus}`}
               >
                 <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
                 Back to Cart
@@ -706,7 +717,7 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handlePlaceOrder}
                 disabled={placing}
-                className={`group inline-flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border-0 bg-[#78D94F] px-8 py-4 text-sm font-bold tracking-[0.1em] text-[#17171B] shadow-[0_10px_30px_rgba(120,217,79,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white disabled:cursor-wait disabled:opacity-80 disabled:hover:translate-y-0 disabled:hover:bg-[#78D94F] disabled:hover:text-[#17171B] sm:w-auto ${focus}`}
+                className={`${head} group inline-flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border-0 bg-[#78D94F] px-8 py-3.5 text-xs font-extrabold tracking-[0.12em] text-[#17171B] shadow-[0_10px_30px_rgba(120,217,79,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white disabled:cursor-wait disabled:opacity-80 disabled:hover:translate-y-0 disabled:hover:bg-[#78D94F] disabled:hover:text-[#17171B] sm:w-auto sm:py-4 sm:text-sm ${focus}`}
               >
                 {placing ? (
                   <>
@@ -718,7 +729,7 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    PLACE ORDER · {rupee(total)}
+                    PLACE ORDER · <span className={valueFont}>{rupee(total)}</span>
                     <span className="transition-transform duration-300 group-hover:translate-x-1.5">
                       →
                     </span>
@@ -752,6 +763,26 @@ export default function CheckoutPage() {
           </aside>
         </section>
       </main>
+
+      {/* Sticky Mobile Checkout Action Bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-gray-200 bg-white/95 px-4 py-2.5 backdrop-blur-md shadow-[0_-8px_24px_rgba(23,23,27,0.08)] lg:hidden">
+        <div>
+          <p className="text-[11px] font-semibold text-gray-500">
+            Total (<span className={valueFont}>{itemCount}</span> {itemCount === 1 ? "item" : "items"})
+          </p>
+          <p className={`${valueFont} text-lg font-extrabold leading-tight text-[#17171B]`}>
+            {rupee(total)}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={handlePlaceOrder}
+          disabled={placing}
+          className={`${head} inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border-0 bg-[#78D94F] px-6 text-xs font-extrabold uppercase tracking-[0.14em] text-[#17171B] transition disabled:opacity-80 ${focus}`}
+        >
+          {placing ? "Placing..." : "Place Order →"}
+        </button>
+      </div>
 
       <Footer />
     </>
