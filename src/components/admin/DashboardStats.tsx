@@ -42,10 +42,42 @@ const stats = [
   },
 ];
 
-export default function DashboardStats() {
+export type DashboardSummary = {
+  totalRevenue: number;
+  totalOrders: number;
+  totalCustomers: number;
+  totalProducts: number;
+};
+
+export default function DashboardStats({
+  summary,
+}: {
+  summary?: DashboardSummary;
+}) {
+  const dynamicStats = summary
+    ? [
+        {
+          ...stats[0],
+          value: `₹${summary.totalRevenue.toLocaleString("en-IN")}`,
+        },
+        {
+          ...stats[1],
+          value: summary.totalOrders.toLocaleString("en-IN"),
+        },
+        {
+          ...stats[2],
+          value: summary.totalCustomers.toLocaleString("en-IN"),
+        },
+        {
+          ...stats[3],
+          value: summary.totalProducts.toLocaleString("en-IN"),
+        },
+      ]
+    : stats;
+
   return (
     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map((stat) => {
+      {dynamicStats.map((stat) => {
         const Icon = stat.icon;
         const TrendIcon = stat.positive ? TrendingUp : TrendingDown;
 

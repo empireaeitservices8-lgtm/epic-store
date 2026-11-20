@@ -154,6 +154,20 @@ export default function AdminProductsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as { ok?: boolean; products?: Product[] };
+        if (data?.ok && Array.isArray(data.products) && data.products.length > 0) {
+          setProducts(data.products);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!modalOpen && !deleteTarget) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -267,9 +281,19 @@ export default function AdminProductsPage() {
           product.id === editingId ? productData : product
         )
       );
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entity: "product", action: "update", ...productData }),
+      });
       setSuccessMessage("Product updated successfully.");
     } else {
       setProducts((current) => [productData, ...current]);
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entity: "product", action: "create", ...productData }),
+      });
       setSuccessMessage("New product added successfully.");
     }
 
@@ -283,6 +307,11 @@ export default function AdminProductsPage() {
     setProducts((current) =>
       current.filter((product) => product.id !== deleteTarget.id)
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entity: "product", action: "delete", id: deleteTarget.id }),
+    });
     setSuccessMessage(`"${deleteTarget.name}" deleted successfully.`);
     setDeleteTarget(null);
   };

@@ -9,6 +9,9 @@ import {
   Store,
   Truck,
   CreditCard,
+  Bell,
+  Mail,
+  Send,
   Save,
   MapPin,
   CheckCircle2,
@@ -47,6 +50,13 @@ type Settings = {
   onlinePaymentEnabled: boolean;
   razorpayEnabled: boolean;
   maintenanceMode: boolean;
+  notifyNewOrders: boolean;
+  notifyCustomerConfirmation: boolean;
+  notifyCustomEnquiries: boolean;
+  notifyLowStock: boolean;
+  notifyNewReviews: boolean;
+  notifyNewsletterSignups: boolean;
+  lowStockThreshold: string;
 };
 
 const initialSettings: Settings = {
@@ -66,9 +76,16 @@ const initialSettings: Settings = {
   onlinePaymentEnabled: true,
   razorpayEnabled: true,
   maintenanceMode: false,
+  notifyNewOrders: true,
+  notifyCustomerConfirmation: true,
+  notifyCustomEnquiries: true,
+  notifyLowStock: true,
+  notifyNewReviews: true,
+  notifyNewsletterSignups: true,
+  lowStockThreshold: "15",
 };
 
-type Tab = "store" | "shipping" | "payments";
+type Tab = "store" | "shipping" | "payments" | "notifications";
 type Feedback = { type: "success" | "error"; text: string } | null;
 
 const head = "font-[family-name:var(--font-syne)]";
@@ -80,6 +97,43 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState(initialSettings);
   const [activeTab, setActiveTab] = useState<Tab>("store");
   const [feedback, setFeedback] = useState<Feedback>(null);
+  const [testingEmail, setTestingEmail] = useState(false);
+
+  const sendTestAdminAlert = async () => {
+    setTestingEmail(true);
+    setFeedback(null);
+    try {
+      const res = await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "contact",
+          name: "Epic Store Admin Panel",
+          email: settings.storeEmail || "store.epicsports@gmail.com",
+          phone: settings.phone,
+          subject: "Admin Notification Setup Verification",
+          message:
+            "Your Epic Store admin notification system is active and connected to Gmail SMTP (store.epicsports@gmail.com) and TiDB Cloud.",
+        }),
+      });
+      const data = (await res.json()) as { ok?: boolean };
+      if (res.ok && data.ok) {
+        setFeedback({
+          type: "success",
+          text: `Test notification email dispatched to ${settings.storeEmail}!`,
+        });
+      } else {
+        throw new Error("Failed");
+      }
+    } catch {
+      setFeedback({
+        type: "error",
+        text: "Could not send test notification email. Please check your Gmail App Password.",
+      });
+    } finally {
+      setTestingEmail(false);
+    }
+  };
 
   const updateField = <K extends keyof Settings>(
     key: K,
@@ -113,6 +167,7 @@ export default function AdminSettingsPage() {
     { id: "store" as Tab, label: "Store Information", icon: Store },
     { id: "shipping" as Tab, label: "Shipping", icon: Truck },
     { id: "payments" as Tab, label: "Payments", icon: CreditCard },
+    { id: "notifications" as Tab, label: "Notifications", icon: Bell },
   ];
 
   return (
@@ -508,6 +563,141 @@ export default function AdminSettingsPage() {
                     webhook handling must be configured securely in the backend
                     before accepting real payments.
                   </p>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "notifications" && (
+              <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)] sm:p-8">
+                <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#78D94F]/15 text-[#17171B]">
+                      <Bell size={20} />
+                    </div>
+                    <div>
+                      <h2
+                        className={`${head} m-0 text-lg font-extrabold text-[#17171B]`}
+                      >
+                        Admin &amp; Customer Notification Setup
+                      </h2>
+                      <p className="m-0 text-sm text-gray-500">
+                        Configure automatic Gmail alerts and dashboard notifications.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={testingEmail}
+                    onClick={sendTestAdminAlert}
+                    className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#17171B] bg-[#17171B] px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white transition hover:border-[#78D94F] hover:bg-[#78D94F] hover:text-[#17171B] disabled:opacity-60 ${focus}`}
+                  >
+                    <Send size={14} />
+                    {testingEmail ? "Sending Test..." : "Send Test Email Alert"}
+                  </button>
+                </div>
+
+                <div className="mb-6 grid grid-cols-1 gap-5 rounded-2xl bg-[#F7F8F5] p-5 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#17171B]">
+                      Admin Notification Gmail Account
+                    </label>
+                    <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-3">
+                      <Mail size={16} className="shrink-0 text-green-700" />
+                      <input
+                        type="email"
+                        value={settings.storeEmail}
+                        onChange={(e) =>
+                          updateField("storeEmail", e.target.value)
+                        }
+                        className="w-full border-0 bg-transparent text-sm font-semibold text-[#17171B] outline-none"
+                      />
+                    </div>
+                    <p className="m-0 mt-1.5 text-xs text-gray-500">
+                      Connected via Gmail SMTP (smtp.gmail.com:465 TLS).
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-[#17171B]">
+                      Low Stock Alert Threshold (Units)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={settings.lowStockThreshold}
+                      onChange={(e) =>
+                        updateField("lowStockThreshold", e.target.value)
+                      }
+                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 font-[family-name:var(--font-inter)] text-sm font-bold tabular-nums text-[#17171B] outline-none transition focus:border-[#78D94F]"
+                    />
+                    <p className="m-0 mt-1.5 text-xs text-gray-500">
+                      Triggers a warning badge in the admin header bell when stock drops to or below this count.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {[
+                    {
+                      key: "notifyNewOrders" as const,
+                      title: "New Order Admin Alerts",
+                      description:
+                        "Send an instant order notification to store.epicsports@gmail.com and display a badge in the admin top bar whenever an order is placed.",
+                    },
+                    {
+                      key: "notifyCustomerConfirmation" as const,
+                      title: "Automatic Customer Order Confirmation Emails",
+                      description:
+                        "Automatically email the customer an order receipt with their Order ID, itemized breakdown, and delivery address after checkout.",
+                    },
+                    {
+                      key: "notifyCustomEnquiries" as const,
+                      title: "Custom Print & Contact Enquiry Alerts",
+                      description:
+                        "Notify store.epicsports@gmail.com and send an automatic acknowledgement reply to the customer when an enquiry is submitted.",
+                    },
+                    {
+                      key: "notifyLowStock" as const,
+                      title: "Low Stock & Out-of-Stock Inventory Alerts",
+                      description:
+                        "Highlight products in the admin notification bell when inventory reaches zero or falls below the threshold.",
+                    },
+                    {
+                      key: "notifyNewReviews" as const,
+                      title: "Pending Product Review Notifications",
+                      description:
+                        "Alert administrators in the notification dropdown when a customer review is awaiting moderation.",
+                    },
+                    {
+                      key: "notifyNewsletterSignups" as const,
+                      title: "Newsletter Subscriber Notifications",
+                      description:
+                        "Send a welcome email to new newsletter subscribers and notify store.epicsports@gmail.com.",
+                    },
+                  ].map((item) => (
+                    <label
+                      key={item.key}
+                      className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-gray-200 p-4 transition hover:border-[#78D94F] hover:bg-[#F7F8F5]/60"
+                    >
+                      <div>
+                        <p className="m-0 font-bold text-[#17171B]">
+                          {item.title}
+                        </p>
+                        <p className="m-0 mt-1 text-sm text-gray-500">
+                          {item.description}
+                        </p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={settings[item.key]}
+                        onChange={(e) =>
+                          updateField(item.key, e.target.checked)
+                        }
+                        className="h-5 w-5 shrink-0 accent-[#78D94F]"
+                      />
+                    </label>
+                  ))}
                 </div>
               </div>
             )}

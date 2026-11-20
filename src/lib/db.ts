@@ -187,7 +187,6 @@ export async function executeTidbQueries(
     let queryIndex = 0;
     const results: QueryResult[] = [];
 
-    // Per-query resultset state
     let expectedCols = 0;
     let colNames: string[] = [];
     let currentRows: Record<string, string | null>[] = [];
@@ -212,7 +211,6 @@ export async function executeTidbQueries(
 
     const sendNextQuery = () => {
       if (queryIndex >= queries.length) {
-        // Send COM_QUIT (0x01)
         activeStream.write(wrapPacket(Buffer.from([0x01]), 0));
         finish();
         return;
@@ -237,34 +235,31 @@ export async function executeTidbQueries(
           return;
         }
 
-        // Parse MySQL Initial Handshake v10
-        let pos = 1; // skip protocol version (10)
+        let pos = 1;
         while (pos < payload.length && payload[pos] !== 0) pos++;
-        pos++; // skip null terminator of server version
-        pos += 4; // skip connection id
+        pos++;
+        pos += 4;
         const scramble1 = payload.subarray(pos, pos + 8);
         pos += 8;
-        pos += 1; // filler
-        pos += 2; // cap flags lower
-        pos += 1; // charset
-        pos += 2; // status flags
-        pos += 2; // cap flags upper
+        pos += 1;
+        pos += 2;
+        pos += 1;
+        pos += 2;
+        pos += 2;
         const authDataLen = payload[pos];
         pos += 1;
-        pos += 10; // reserved 10 bytes
+        pos += 10;
         const part2Len = Math.max(12, (authDataLen || 21) - 8 - 1);
         const scramble2 = payload.subarray(pos, pos + 12);
         const scramble = Buffer.concat([scramble1, scramble2]);
         pos += part2Len;
 
-        // 1. Send SSLRequest packet before upgrading to TLS
         const sslReq = Buffer.alloc(32);
         sslReq.writeUInt32LE(CAPABILITIES, 0);
         sslReq.writeUInt32LE(0x01000000, 4);
-        sslReq[8] = 45; // utf8mb4_general_ci
+        sslReq[8] = 45;
         rawSocket.write(wrapPacket(sslReq, seqId + 1));
 
-        // 2. Upgrade rawSocket to TLS (required by TiDB Cloud public endpoint)
         rawSocket.removeAllListeners("data");
         const tlsSocket = tls.connect(
           {
@@ -273,11 +268,10 @@ export async function executeTidbQueries(
             minVersion: "TLSv1.2",
           },
           () => {
-            // 3. Send HandshakeResponse41 over TLS
             const fixed = Buffer.alloc(32);
             fixed.writeUInt32LE(CAPABILITIES, 0);
             fixed.writeUInt32LE(0x01000000, 4);
-            fixed[8] = 45; // utf8mb4
+            fixed[8] = 45;
 
             const userBuf = Buffer.from(`${cfg.user}\0`, "utf8");
             const authToken = computeNativePasswordAuth(cfg.password, scramble);
@@ -318,7 +312,6 @@ export async function executeTidbQueries(
           sendNextQuery();
           return;
         }
-        // 0xfe = AuthSwitchRequest from TiDB Serverless Gateway after routing to cluster
         if (payload[0] === 0xfe) {
           let p = 1;
           while (p < payload.length && payload[p] !== 0) p++;
@@ -331,14 +324,11 @@ export async function executeTidbQueries(
           activeStream.write(wrapPacket(switchToken, seqId + 1));
           return;
         }
-        // 0x01 = AuthMoreData (e.g. caching_sha2_password fast-auth success 0x03 or full-auth request 0x04 over TLS)
         if (payload[0] === 0x01) {
           if (payload[1] === 0x03) {
-            // Fast auth succeeded; next packet is OK_Packet (0x00)
             return;
           }
           if (payload[1] === 0x04) {
-            // Perform full authentication over TLS by sending null-terminated password
             activeStream.write(
               wrapPacket(Buffer.from(`${cfg.password}\0`, "utf8"), seqId + 1)
             );
@@ -360,7 +350,6 @@ export async function executeTidbQueries(
             return;
           }
           if (payload[0] === 0x00) {
-            // OK_Packet
             const affected = readLengthEncodedInt(payload, 1);
             const insertId = readLengthEncodedInt(payload, affected.nextOffset);
             results.push({
@@ -372,7 +361,6 @@ export async function executeTidbQueries(
             sendNextQuery();
             return;
           }
-          // ResultSet header: column count
           const colCount = readLengthEncodedInt(payload, 0);
           expectedCols = colCount.value ?? 0;
           readingStage = "cols";
@@ -380,12 +368,10 @@ export async function executeTidbQueries(
         }
 
         if (readingStage === "cols") {
-          // EOF packet (0xfe) after column definitions
           if (payload[0] === 0xfe && payload.length < 9) {
             readingStage = "rows";
             return;
           }
-          // ColumnDefinition41 packet: catalog, schema, table, org_table, name, org_name
           let offset = 0;
           for (let i = 0; i < 4; i++) {
             offset = readLengthEncodedString(payload, offset).nextOffset;
@@ -405,7 +391,6 @@ export async function executeTidbQueries(
             finish(new Error(`TiDB Row Error (${code}): ${msg}`));
             return;
           }
-          // EOF packet (0xfe) or OK packet at end of rows
           if (payload[0] === 0xfe && payload.length < 9) {
             results.push({
               rows: currentRows,
@@ -416,7 +401,6 @@ export async function executeTidbQueries(
             sendNextQuery();
             return;
           }
-          // Text Resultset Row
           let offset = 0;
           const row: Record<string, string | null> = {};
           for (let c = 0; c < expectedCols; c++) {
@@ -452,6 +436,18 @@ export function getSchemaSetupQueries(appDb: string): string[] {
   return [
     `CREATE DATABASE IF NOT EXISTS \`${safeDb}\``,
     `USE \`${safeDb}\``,
+    `CREATE TABLE IF NOT EXISTS products (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(190) NOT NULL,
+      sku VARCHAR(64) NOT NULL UNIQUE,
+      category VARCHAR(120) NOT NULL,
+      price DECIMAL(10,2) NOT NULL DEFAULT 0,
+      stock INT NOT NULL DEFAULT 0,
+      status VARCHAR(40) NOT NULL DEFAULT 'Active',
+      image TEXT NOT NULL,
+      sales INT NOT NULL DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
     `CREATE TABLE IF NOT EXISTS orders (
       id INT AUTO_INCREMENT PRIMARY KEY,
       order_id VARCHAR(64) NOT NULL UNIQUE,
@@ -470,6 +466,62 @@ export function getSchemaSetupQueries(appDb: string): string[] {
       total DECIMAL(10,2) NOT NULL DEFAULT 0,
       status VARCHAR(40) NOT NULL DEFAULT 'Processing',
       items_json TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS customers (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(160) NOT NULL,
+      email VARCHAR(190) NOT NULL UNIQUE,
+      phone VARCHAR(40) NOT NULL,
+      joined VARCHAR(60) NOT NULL,
+      orders_count INT NOT NULL DEFAULT 1,
+      spent DECIMAL(10,2) NOT NULL DEFAULT 0,
+      status VARCHAR(40) NOT NULL DEFAULT 'Active',
+      address TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS categories (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(120) NOT NULL,
+      slug VARCHAR(120) NOT NULL UNIQUE,
+      description TEXT NOT NULL,
+      image TEXT NOT NULL,
+      status VARCHAR(40) NOT NULL DEFAULT 'Active',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS collections (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(160) NOT NULL,
+      slug VARCHAR(160) NOT NULL UNIQUE,
+      description TEXT NOT NULL,
+      image TEXT NOT NULL,
+      status VARCHAR(40) NOT NULL DEFAULT 'Active',
+      featured TINYINT(1) NOT NULL DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS reviews (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      customer VARCHAR(160) NOT NULL,
+      email VARCHAR(190) NOT NULL,
+      product VARCHAR(190) NOT NULL,
+      rating INT NOT NULL DEFAULT 5,
+      title VARCHAR(190) NOT NULL,
+      comment TEXT NOT NULL,
+      review_date VARCHAR(60) NOT NULL,
+      status VARCHAR(40) NOT NULL DEFAULT 'Pending',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS enquiries (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      reference VARCHAR(64) NOT NULL UNIQUE,
+      customer VARCHAR(160) NOT NULL,
+      email VARCHAR(190) NOT NULL,
+      phone VARCHAR(40) NOT NULL,
+      product VARCHAR(190) NOT NULL,
+      quantity INT NOT NULL DEFAULT 1,
+      enquiry_date VARCHAR(60) NOT NULL,
+      message TEXT NOT NULL,
+      status VARCHAR(40) NOT NULL DEFAULT 'New',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS contact_enquiries (
@@ -514,6 +566,260 @@ export async function runInAppDatabase(
   return allResults.slice(prefix.length);
 }
 
+let seedCompleted = false;
+
+export async function ensureSeededDatabase(): Promise<void> {
+  if (seedCompleted) return;
+
+  const counts = await runInAppDatabase([
+    "SELECT COUNT(*) AS c FROM products",
+    "SELECT COUNT(*) AS c FROM orders",
+    "SELECT COUNT(*) AS c FROM customers",
+    "SELECT COUNT(*) AS c FROM categories",
+    "SELECT COUNT(*) AS c FROM collections",
+    "SELECT COUNT(*) AS c FROM reviews",
+    "SELECT COUNT(*) AS c FROM enquiries",
+  ]);
+
+  const seedQueries: string[] = [];
+
+  if (Number(counts[0]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO products (name, sku, category, price, stock, status, image, sales) VALUES
+      ('Astronaut Space Poster', 'EP-POST-001', 'Posters', 499, 45, 'Active', 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=300', 184),
+      ('Abstract Modern Art', 'EP-CAN-002', 'Canvas Prints', 599, 32, 'Active', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300', 156),
+      ('Vintage Aesthetic Poster', 'EP-POST-003', 'Posters', 399, 0, 'Out of Stock', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 132),
+      ('Nature Landscape Print', 'EP-CAN-004', 'Canvas Prints', 549, 18, 'Active', 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=300', 98),
+      ('Minimalist Wall Art', 'EP-MET-005', 'Metal Posters', 699, 12, 'Active', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=300', 76),
+      ('Modern Room Decor', 'EP-TAP-006', 'Tapestries', 799, 0, 'Draft', 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=300', 42)`
+    );
+  }
+
+  if (Number(counts[1]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO orders (order_id, first_name, last_name, email, phone, address, landmark, city, state, pincode, payment_method, subtotal, delivery, total, status, items_json) VALUES
+      ('EP20261119001', 'Alex', 'Johnson', 'alex@example.com', '+91 98765 43210', '123 Marine Drive', 'Near Metro', 'Kochi', 'Kerala', '682001', 'Paid', 1098, 0, 1098, 'Processing', '[{"id":1,"name":"Astronaut Space Poster","price":499,"quantity":1},{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1}]'),
+      ('EP20261118002', 'Priya', 'Sharma', 'priya@example.com', '+91 98765 12345', '45 Indiranagar', '', 'Bengaluru', 'Karnataka', '560038', 'Paid', 599, 0, 599, 'Shipped', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1}]'),
+      ('EP20261117003', 'Rahul', 'Kumar', 'rahul@example.com', '+91 91234 56789', '18 Anna Nagar', '', 'Chennai', 'Tamil Nadu', '600040', 'COD', 1847, 0, 1847, 'Pending', '[{"id":1,"name":"Astronaut Space Poster","price":499,"quantity":1},{"id":4,"name":"Nature Landscape Print","price":549,"quantity":1},{"id":6,"name":"Modern Room Decor","price":799,"quantity":1}]'),
+      ('EP20261116004', 'Sneha', 'Thomas', 'sneha@example.com', '+91 99887 76655', '88 Swaraj Round', '', 'Thrissur', 'Kerala', '680001', 'Paid', 1298, 0, 1298, 'Delivered', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1},{"id":5,"name":"Minimalist Wall Art","price":699,"quantity":1}]'),
+      ('EP20261115005', 'Arjun', 'Das', 'arjun@example.com', '+91 90909 80808', '12 Beach Road', '', 'Kozhikode', 'Kerala', '673001', 'Refunded', 449, 0, 449, 'Cancelled', '[{"id":3,"name":"Vintage Aesthetic Poster","price":399,"quantity":1}]'),
+      ('EP20261114006', 'Meera', 'Nair', 'meera@example.com', '+91 98989 78787', '77 Boat Jetty Road', '', 'Alappuzha', 'Kerala', '688001', 'Paid', 2396, 0, 2396, 'Delivered', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":4}]')`
+    );
+  }
+
+  if (Number(counts[2]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO customers (name, email, phone, joined, orders_count, spent, status, address) VALUES
+      ('Alex Johnson', 'alex@example.com', '+91 98765 43210', '10 Nov 2026', 8, 6490, 'Active', 'Kochi, Kerala, India'),
+      ('Priya Sharma', 'priya@example.com', '+91 98765 12345', '08 Nov 2026', 5, 4299, 'Active', 'Bengaluru, Karnataka, India'),
+      ('Rahul Kumar', 'rahul@example.com', '+91 91234 56789', '05 Nov 2026', 3, 2199, 'Active', 'Chennai, Tamil Nadu, India'),
+      ('Sneha Thomas', 'sneha@example.com', '+91 99887 76655', '01 Nov 2026', 12, 9870, 'Active', 'Thrissur, Kerala, India'),
+      ('Arjun Das', 'arjun@example.com', '+91 90909 80808', '28 Oct 2026', 1, 449, 'Inactive', 'Kozhikode, Kerala, India'),
+      ('Meera Nair', 'meera@example.com', '+91 98989 78787', '22 Oct 2026', 6, 5199, 'Active', 'Alappuzha, Kerala, India')`
+    );
+  }
+
+  if (Number(counts[3]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO categories (name, slug, description, image, status) VALUES
+      ('Posters', 'posters', 'Creative posters for every space.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 'Active'),
+      ('Canvas Prints', 'canvas-prints', 'Premium canvas wall art.', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300', 'Active'),
+      ('Metal Posters', 'metal-posters', 'Modern metal wall posters.', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=300', 'Active'),
+      ('Tapestries', 'tapestries', 'Decorative fabric wall art.', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=300', 'Inactive'),
+      ('Stickers', 'stickers', 'Fun stickers and creative designs.', 'https://images.unsplash.com/photo-1557683316-973673baf926?w=300', 'Active')`
+    );
+  }
+
+  if (Number(counts[4]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO collections (name, slug, description, image, status, featured) VALUES
+      ('Best Sellers', 'best-sellers', 'Our most popular designs.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600', 'Active', 1),
+      ('Modern Wall Art', 'modern-wall-art', 'Contemporary artwork for modern spaces.', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600', 'Active', 1),
+      ('Minimalist Collection', 'minimalist-collection', 'Simple and elegant designs.', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=600', 'Active', 0),
+      ('New Arrivals', 'new-arrivals', 'Recently added products and designs.', 'https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?w=600', 'Inactive', 0)`
+    );
+  }
+
+  if (Number(counts[5]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO reviews (customer, email, product, rating, title, comment, review_date, status) VALUES
+      ('Alex Johnson', 'alex@example.com', 'Astronaut Space Poster', 5, 'Amazing quality!', 'The print quality is excellent and the colors look beautiful. It arrived safely packaged.', '19 Nov 2026', 'Approved'),
+      ('Priya Sharma', 'priya@example.com', 'Abstract Modern Art', 4, 'Very good product', 'The design looks great on my wall. Delivery took a little longer than expected.', '18 Nov 2026', 'Pending'),
+      ('Rahul Kumar', 'rahul@example.com', 'Vintage Aesthetic Poster', 3, 'Good but could improve', 'The design is nice, but I expected slightly thicker paper.', '17 Nov 2026', 'Pending'),
+      ('Sneha Thomas', 'sneha@example.com', 'Nature Landscape Print', 5, 'Beautiful artwork', 'Absolutely loved this print. The colors are vibrant and it looks premium.', '16 Nov 2026', 'Approved'),
+      ('Arjun Das', 'arjun@example.com', 'Minimalist Wall Art', 1, 'Not satisfied', 'The product I received was damaged. I have contacted support regarding this.', '15 Nov 2026', 'Rejected')`
+    );
+  }
+
+  if (Number(counts[6]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO enquiries (reference, customer, email, phone, product, quantity, enquiry_date, message, status) VALUES
+      ('ENQ-2026-001', 'Ananya Menon', 'ananya@example.com', '+91 98765 12345', 'Custom Canvas Print', 3, '19 Nov 2026', 'I would like three canvas prints with my own family photographs. Please share the available sizes and pricing.', 'New'),
+      ('ENQ-2026-002', 'Vishnu Raj', 'vishnu@example.com', '+91 98765 22222', 'Personalized Poster', 5, '18 Nov 2026', 'Need five customized posters for an office event. Please let me know the bulk price.', 'In Progress'),
+      ('ENQ-2026-003', 'Diya Thomas', 'diya@example.com', '+91 98765 33333', 'Custom Wall Art', 2, '17 Nov 2026', 'I have a design file and would like to print it as wall art.', 'Completed'),
+      ('ENQ-2026-004', 'Nikhil Kumar', 'nikhil@example.com', '+91 98765 44444', 'Photo Stickers', 20, '16 Nov 2026', 'Looking for twenty personalized stickers for a birthday event.', 'New'),
+      ('ENQ-2026-005', 'Riya Nair', 'riya@example.com', '+91 98765 55555', 'Custom Canvas Print', 1, '15 Nov 2026', 'Please provide a quotation for a large canvas print.', 'Rejected')`
+    );
+  }
+
+  if (seedQueries.length > 0) {
+    await runInAppDatabase(seedQueries);
+  }
+  seedCompleted = true;
+}
+
+export async function getAdminDataFromDb() {
+  await ensureSeededDatabase();
+
+  const [
+    productsRes,
+    ordersRes,
+    customersRes,
+    categoriesRes,
+    collectionsRes,
+    reviewsRes,
+    enquiriesRes,
+  ] = await runInAppDatabase([
+    "SELECT id, name, sku, category, price, stock, status, image, sales FROM products ORDER BY id DESC",
+    "SELECT id, order_id, first_name, last_name, email, phone, payment_method, total, status, items_json, DATE_FORMAT(created_at, '%d %b %Y') AS formatted_date FROM orders ORDER BY id DESC",
+    "SELECT id, name, email, phone, joined, orders_count, spent, status, address FROM customers ORDER BY id DESC",
+    "SELECT id, name, slug, description, image, status FROM categories ORDER BY id ASC",
+    "SELECT id, name, slug, description, image, status, featured FROM collections ORDER BY id ASC",
+    "SELECT id, customer, email, product, rating, title, comment, review_date, status FROM reviews ORDER BY id DESC",
+    "SELECT id, reference, customer, email, phone, product, quantity, enquiry_date, message, status FROM enquiries ORDER BY id DESC",
+  ]);
+
+  const products = (productsRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    name: r.name ?? "",
+    sku: r.sku ?? "",
+    category: r.category ?? "Posters",
+    price: Number(r.price ?? 0),
+    stock: Number(r.stock ?? 0),
+    status: (r.status ?? "Active") as "Active" | "Draft" | "Out of Stock",
+    image: r.image ?? "",
+    sales: Number(r.sales ?? 0),
+  }));
+
+  const orders = (ordersRes?.rows ?? []).map((r) => {
+    let itemsCount = 1;
+    try {
+      const parsed = JSON.parse(r.items_json ?? "[]");
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        itemsCount = parsed.reduce(
+          (sum: number, item: { quantity?: number }) =>
+            sum + Number(item?.quantity ?? 1),
+          0
+        );
+      }
+    } catch {
+      /* fallback */
+    }
+    const payment =
+      r.payment_method === "cod"
+        ? "COD"
+        : r.payment_method === "razorpay"
+          ? "Paid"
+          : (r.payment_method ?? "Paid");
+
+    return {
+      id: r.order_id ?? "",
+      customer: `${r.first_name ?? ""} ${r.last_name ?? ""}`.trim(),
+      email: r.email ?? "",
+      date: r.formatted_date ?? "20 Nov 2026",
+      items: itemsCount,
+      total: Number(r.total ?? 0),
+      payment,
+      status: (r.status ?? "Processing") as
+        | "Pending"
+        | "Processing"
+        | "Shipped"
+        | "Delivered"
+        | "Cancelled",
+    };
+  });
+
+  const customers = (customersRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    name: r.name ?? "",
+    email: r.email ?? "",
+    phone: r.phone ?? "",
+    joined: r.joined ?? "Nov 2026",
+    orders: Number(r.orders_count ?? 1),
+    spent: Number(r.spent ?? 0),
+    status: (r.status ?? "Active") as "Active" | "Inactive",
+    address: r.address ?? "",
+  }));
+
+  const categories = (categoriesRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    name: r.name ?? "",
+    slug: r.slug ?? "",
+    description: r.description ?? "",
+    image: r.image ?? "",
+    status: (r.status ?? "Active") as "Active" | "Inactive",
+  }));
+
+  const collections = (collectionsRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    name: r.name ?? "",
+    slug: r.slug ?? "",
+    description: r.description ?? "",
+    image: r.image ?? "",
+    status: (r.status ?? "Active") as "Active" | "Inactive",
+    featured: Number(r.featured ?? 0) === 1,
+  }));
+
+  const reviews = (reviewsRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    customer: r.customer ?? "",
+    email: r.email ?? "",
+    product: r.product ?? "",
+    rating: Number(r.rating ?? 5),
+    title: r.title ?? "",
+    comment: r.comment ?? "",
+    date: r.review_date ?? "Nov 2026",
+    status: (r.status ?? "Pending") as "Pending" | "Approved" | "Rejected",
+  }));
+
+  const enquiries = (enquiriesRes?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    reference: r.reference ?? "",
+    customer: r.customer ?? "",
+    email: r.email ?? "",
+    phone: r.phone ?? "",
+    product: r.product ?? "",
+    quantity: Number(r.quantity ?? 1),
+    date: r.enquiry_date ?? "Nov 2026",
+    message: r.message ?? "",
+    status: (r.status ?? "New") as
+      | "New"
+      | "In Progress"
+      | "Completed"
+      | "Rejected",
+  }));
+
+  const totalRevenue = orders
+    .filter((o) => o.status !== "Cancelled")
+    .reduce((sum, o) => sum + o.total, 0);
+
+  return {
+    products,
+    orders,
+    customers,
+    categories,
+    collections,
+    reviews,
+    enquiries,
+    summary: {
+      totalRevenue,
+      totalOrders: orders.length,
+      totalCustomers: customers.length,
+      totalProducts: products.length,
+    },
+  };
+}
+
 export async function saveOrderToDb(order: {
   orderId: string;
   firstName: string;
@@ -531,7 +837,16 @@ export async function saveOrderToDb(order: {
   total: number;
   items: unknown[];
 }): Promise<void> {
-  const sql = `INSERT INTO orders (
+  await ensureSeededDatabase();
+  const fullName = `${order.firstName} ${order.lastName}`.trim();
+  const fullAddress = `${order.city}, ${order.state}, India`;
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const insertOrderSql = `INSERT INTO orders (
     order_id, first_name, last_name, email, phone, address, landmark, city, state, pincode,
     payment_method, subtotal, delivery, total, items_json
   ) VALUES (
@@ -551,7 +866,22 @@ export async function saveOrderToDb(order: {
     ${sqlEscape(order.total)},
     ${sqlEscape(JSON.stringify(order.items))}
   )`;
-  await runInAppDatabase([sql]);
+
+  const upsertCustomerSql = `INSERT INTO customers (name, email, phone, joined, orders_count, spent, status, address)
+  VALUES (
+    ${sqlEscape(fullName)},
+    ${sqlEscape(order.email)},
+    ${sqlEscape(order.phone)},
+    ${sqlEscape(today)},
+    1,
+    ${sqlEscape(order.total)},
+    'Active',
+    ${sqlEscape(fullAddress)}
+  ) ON DUPLICATE KEY UPDATE
+    orders_count = orders_count + 1,
+    spent = spent + ${sqlEscape(order.total)}`;
+
+  await runInAppDatabase([insertOrderSql, upsertCustomerSql]);
 }
 
 export async function saveContactEnquiryToDb(payload: {
@@ -561,14 +891,34 @@ export async function saveContactEnquiryToDb(payload: {
   subject: string;
   message: string;
 }): Promise<void> {
-  const sql = `INSERT INTO contact_enquiries (name, email, phone, subject, message) VALUES (
-    ${sqlEscape(payload.name)},
-    ${sqlEscape(payload.email)},
-    ${sqlEscape(payload.phone ?? "")},
-    ${sqlEscape(payload.subject)},
-    ${sqlEscape(payload.message)}
-  )`;
-  await runInAppDatabase([sql]);
+  await ensureSeededDatabase();
+  const ref = `ENQ-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  await runInAppDatabase([
+    `INSERT INTO contact_enquiries (name, email, phone, subject, message) VALUES (
+      ${sqlEscape(payload.name)},
+      ${sqlEscape(payload.email)},
+      ${sqlEscape(payload.phone ?? "")},
+      ${sqlEscape(payload.subject)},
+      ${sqlEscape(payload.message)}
+    )`,
+    `INSERT IGNORE INTO enquiries (reference, customer, email, phone, product, quantity, enquiry_date, message, status) VALUES (
+      ${sqlEscape(ref)},
+      ${sqlEscape(payload.name)},
+      ${sqlEscape(payload.email)},
+      ${sqlEscape(payload.phone || "Not provided")},
+      ${sqlEscape(payload.subject)},
+      1,
+      ${sqlEscape(today)},
+      ${sqlEscape(payload.message)},
+      'New'
+    )`,
+  ]);
 }
 
 export async function saveCustomPrintToDb(payload: {
@@ -579,19 +929,40 @@ export async function saveCustomPrintToDb(payload: {
   fileName?: string;
   message?: string;
 }): Promise<void> {
-  const sql = `INSERT INTO custom_print_requests (name, email, print_type, dimensions, file_name, message) VALUES (
-    ${sqlEscape(payload.name)},
-    ${sqlEscape(payload.email)},
-    ${sqlEscape(payload.printType)},
-    ${sqlEscape(payload.dimensions ?? "")},
-    ${sqlEscape(payload.fileName ?? "")},
-    ${sqlEscape(payload.message ?? "")}
-  )`;
-  await runInAppDatabase([sql]);
+  await ensureSeededDatabase();
+  const ref = `ENQ-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  await runInAppDatabase([
+    `INSERT INTO custom_print_requests (name, email, print_type, dimensions, file_name, message) VALUES (
+      ${sqlEscape(payload.name)},
+      ${sqlEscape(payload.email)},
+      ${sqlEscape(payload.printType)},
+      ${sqlEscape(payload.dimensions ?? "")},
+      ${sqlEscape(payload.fileName ?? "")},
+      ${sqlEscape(payload.message ?? "")}
+    )`,
+    `INSERT IGNORE INTO enquiries (reference, customer, email, phone, product, quantity, enquiry_date, message, status) VALUES (
+      ${sqlEscape(ref)},
+      ${sqlEscape(payload.name)},
+      ${sqlEscape(payload.email)},
+      'Custom Studio',
+      ${sqlEscape(
+        `${payload.printType}${payload.dimensions ? ` (${payload.dimensions})` : ""}`
+      )},
+      1,
+      ${sqlEscape(today)},
+      ${sqlEscape(payload.message || "Custom print request")},
+      'New'
+    )`,
+  ]);
 }
 
 export async function saveNewsletterSubscriberToDb(email: string): Promise<void> {
   const sql = `INSERT IGNORE INTO newsletter_subscribers (email) VALUES (${sqlEscape(email)})`;
   await runInAppDatabase([sql]);
 }
-

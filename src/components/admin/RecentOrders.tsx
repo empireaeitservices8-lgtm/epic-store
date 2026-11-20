@@ -36,16 +36,32 @@ const orders = [
   },
 ];
 
-export default function RecentOrders({ searchQuery = "" }: { searchQuery?: string }) {
+export type RecentOrderItem = {
+  id: string;
+  customer: string;
+  date: string;
+  amount: number;
+  status: string;
+  statusStyle: string;
+};
+
+export default function RecentOrders({
+  searchQuery = "",
+  items,
+}: {
+  searchQuery?: string;
+  items?: RecentOrderItem[];
+}) {
+  const source = items && items.length > 0 ? items : orders;
   const q = searchQuery.trim().toLowerCase();
   const filtered = q
-    ? orders.filter(
+    ? source.filter(
         (o) =>
           o.id.toLowerCase().includes(q) ||
           o.customer.toLowerCase().includes(q) ||
           o.status.toLowerCase().includes(q)
       )
-    : orders;
+    : source;
 
   return (
     <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.03)]">

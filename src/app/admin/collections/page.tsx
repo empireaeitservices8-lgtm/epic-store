@@ -111,6 +111,27 @@ export default function AdminCollectionsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Collection | null>(null);
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          collections?: Collection[];
+        };
+        if (
+          data?.ok &&
+          Array.isArray(data.collections) &&
+          data.collections.length > 0
+        ) {
+          setCollections(data.collections);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!modalOpen && !deleteTarget) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -188,29 +209,44 @@ export default function AdminCollectionsPage() {
     }
 
     if (editingId !== null) {
+      const updated = {
+        ...form,
+        id: editingId,
+        name: form.name.trim(),
+        slug: form.slug.trim(),
+      };
       setCollections((current) =>
         current.map((collection) =>
-          collection.id === editingId
-            ? {
-                ...collection,
-                ...form,
-                name: form.name.trim(),
-                slug: form.slug.trim(),
-              }
-            : collection
+          collection.id === editingId ? updated : collection
         )
       );
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entity: "collection",
+          action: "update",
+          ...updated,
+        }),
+      });
       setNotice("Collection updated successfully.");
     } else {
-      setCollections((current) => [
-        ...current,
-        {
-          id: Date.now(),
-          ...form,
-          name: form.name.trim(),
-          slug: form.slug.trim(),
-        },
-      ]);
+      const created = {
+        id: Date.now(),
+        ...form,
+        name: form.name.trim(),
+        slug: form.slug.trim(),
+      };
+      setCollections((current) => [...current, created]);
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entity: "collection",
+          action: "create",
+          ...created,
+        }),
+      });
       setNotice("New collection added successfully.");
     }
 
@@ -223,18 +259,39 @@ export default function AdminCollectionsPage() {
     setCollections((current) =>
       current.filter((collection) => collection.id !== deleteTarget.id)
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entity: "collection",
+        action: "delete",
+        id: deleteTarget.id,
+      }),
+    });
     setNotice(`"${deleteTarget.name}" deleted successfully.`);
     setDeleteTarget(null);
   };
 
   const toggleFeatured = (id: number) => {
+    const target = collections.find((c) => c.id === id);
+    const nextFeatured = !target?.featured;
     setCollections((current) =>
       current.map((collection) =>
         collection.id === id
-          ? { ...collection, featured: !collection.featured }
+          ? { ...collection, featured: nextFeatured }
           : collection
       )
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entity: "collection",
+        action: "featured",
+        id,
+        featured: nextFeatured,
+      }),
+    });
   };
 
   return (

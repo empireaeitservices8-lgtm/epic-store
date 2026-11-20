@@ -150,6 +150,27 @@ export default function AdminReviewsPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          reviews?: Review[];
+        };
+        if (
+          data?.ok &&
+          Array.isArray(data.reviews) &&
+          data.reviews.length > 0
+        ) {
+          setReviews(data.reviews);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!selectedReview && !deleteTarget) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -190,6 +211,11 @@ export default function AdminReviewsPage() {
     setSelectedReview((current) =>
       current?.id === id ? { ...current, status } : current
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entity: "review", action: "status", id, status }),
+    });
     setNotice(`Review #${id} marked as ${status}.`);
   };
 
@@ -201,6 +227,15 @@ export default function AdminReviewsPage() {
     setSelectedReview((current) =>
       current?.id === deleteTarget.id ? null : current
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entity: "review",
+        action: "delete",
+        id: deleteTarget.id,
+      }),
+    });
     setNotice(`Review by ${deleteTarget.customer} deleted.`);
     setDeleteTarget(null);
   };

@@ -131,6 +131,27 @@ export default function AdminEnquiriesPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          enquiries?: Enquiry[];
+        };
+        if (
+          data?.ok &&
+          Array.isArray(data.enquiries) &&
+          data.enquiries.length > 0
+        ) {
+          setEnquiries(data.enquiries);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!selectedEnquiry) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedEnquiry(null);
@@ -165,6 +186,11 @@ export default function AdminEnquiriesPage() {
     setSelectedEnquiry((current) =>
       current?.id === id ? { ...current, status } : current
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entity: "enquiry", action: "status", id, status }),
+    });
     const target = enquiries.find((e) => e.id === id);
     if (target) setNotice(`Enquiry ${target.reference} updated to ${status}.`);
   };

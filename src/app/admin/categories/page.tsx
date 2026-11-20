@@ -109,6 +109,27 @@ export default function AdminCategoriesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Category | null>(null);
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          categories?: Category[];
+        };
+        if (
+          data?.ok &&
+          Array.isArray(data.categories) &&
+          data.categories.length > 0
+        ) {
+          setCategories(data.categories);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!modalOpen && !deleteTarget) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -190,19 +211,36 @@ export default function AdminCategoriesPage() {
     }
 
     if (editingId !== null) {
+      const updated = {
+        ...form,
+        id: editingId,
+        name: form.name.trim(),
+        slug: form.slug.trim(),
+      };
       setCategories((current) =>
         current.map((category) =>
-          category.id === editingId
-            ? { ...category, ...form, name: form.name.trim(), slug: form.slug.trim() }
-            : category
+          category.id === editingId ? updated : category
         )
       );
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entity: "category", action: "update", ...updated }),
+      });
       setNotice("Category updated successfully.");
     } else {
-      setCategories((current) => [
-        ...current,
-        { id: Date.now(), ...form, name: form.name.trim(), slug: form.slug.trim() },
-      ]);
+      const created = {
+        id: Date.now(),
+        ...form,
+        name: form.name.trim(),
+        slug: form.slug.trim(),
+      };
+      setCategories((current) => [...current, created]);
+      void fetch("/api/db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entity: "category", action: "create", ...created }),
+      });
       setNotice("New category added successfully.");
     }
 
@@ -215,6 +253,15 @@ export default function AdminCategoriesPage() {
     setCategories((current) =>
       current.filter((category) => category.id !== deleteTarget.id)
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entity: "category",
+        action: "delete",
+        id: deleteTarget.id,
+      }),
+    });
     setNotice(`"${deleteTarget.name}" deleted successfully.`);
     setDeleteTarget(null);
   };

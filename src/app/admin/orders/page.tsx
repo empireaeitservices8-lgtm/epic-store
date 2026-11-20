@@ -132,6 +132,20 @@ export default function AdminOrdersPage() {
   const [statusNotice, setStatusNotice] = useState("");
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as { ok?: boolean; orders?: Order[] };
+        if (data?.ok && Array.isArray(data.orders) && data.orders.length > 0) {
+          setOrders(data.orders);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!selectedOrder) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedOrder(null);
@@ -163,6 +177,11 @@ export default function AdminOrdersPage() {
     setSelectedOrder((current) =>
       current?.id === id ? { ...current, status } : current
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entity: "order", action: "status", id, status }),
+    });
     setStatusNotice(`Order ${id} updated to ${status}.`);
   };
 

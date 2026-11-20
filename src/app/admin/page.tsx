@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Inter, Syne } from "next/font/google";
 import { Calendar, Plus } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
-import DashboardStats from "@/components/admin/DashboardStats";
+import DashboardStats, {
+  type DashboardSummary,
+} from "@/components/admin/DashboardStats";
 import SalesChart from "@/components/admin/SalesChart";
-import RecentOrders from "@/components/admin/RecentOrders";
-import TopProducts from "@/components/admin/TopProducts";
+import RecentOrders, {
+  type RecentOrderItem,
+} from "@/components/admin/RecentOrders";
+import TopProducts, {
+  type TopProductItem,
+} from "@/components/admin/TopProducts";
 
 /* Fonts: Syne for headings, Inter for body/UI */
 const syne = Syne({
@@ -28,6 +34,83 @@ const inter = Inter({
 export default function AdminDashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [summary, setSummary] = useState<DashboardSummary | undefined>(
+    undefined
+  );
+  const [recentOrders, setRecentOrders] = useState<
+    RecentOrderItem[] | undefined
+  >(undefined);
+  const [topProducts, setTopProducts] = useState<TopProductItem[] | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          summary?: DashboardSummary;
+          orders?: Array<{
+            id: string;
+            customer: string;
+            date: string;
+            total: number;
+            status: string;
+          }>;
+          products?: Array<{
+            id: number;
+            name: string;
+            category: string;
+            price: number;
+            sales?: number;
+            image: string;
+          }>;
+        };
+        if (!data?.ok) return;
+        if (data.summary) setSummary(data.summary);
+        if (Array.isArray(data.orders)) {
+          const styleMap: Record<string, string> = {
+            Delivered: "bg-[#78D94F]/20 text-green-800",
+            Processing: "bg-amber-100 text-amber-800",
+            Shipped: "bg-sky-100 text-sky-800",
+            Pending: "bg-gray-100 text-gray-600",
+            Cancelled: "bg-red-50 text-red-600",
+          };
+          setRecentOrders(
+            data.orders.slice(0, 6).map((o) => ({
+              id: o.id,
+              customer: o.customer,
+              date: o.date,
+              amount: o.total,
+              status: o.status,
+              statusStyle: styleMap[o.status] ?? "bg-gray-100 text-gray-600",
+            }))
+          );
+        }
+        if (Array.isArray(data.products)) {
+          setTopProducts(
+            [...data.products]
+              .sort((a, b) => (b.sales ?? 50) - (a.sales ?? 50))
+              .slice(0, 4)
+              .map((p) => {
+                const sold = p.sales && p.sales > 0 ? p.sales : 48;
+                return {
+                  id: p.id,
+                  name: p.name,
+                  category: p.category,
+                  sales: sold,
+                  revenue: sold * p.price,
+                  image: p.image,
+                };
+              })
+          );
+        }
+      } catch {
+        /* fallback to static preview */
+      }
+    })();
+  }, []);
 
   return (
     <div
@@ -76,15 +159,15 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <DashboardStats />
+          <DashboardStats summary={summary} />
 
           <div className="mt-6">
             <SalesChart />
           </div>
 
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-            <RecentOrders searchQuery={searchQuery} />
-            <TopProducts searchQuery={searchQuery} />
+            <RecentOrders searchQuery={searchQuery} items={recentOrders} />
+            <TopProducts searchQuery={searchQuery} items={topProducts} />
           </div>
 
           <div className="mt-8 border-t border-gray-200 pt-5 text-center text-xs text-gray-400">

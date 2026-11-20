@@ -39,15 +39,31 @@ const products = [
   },
 ];
 
-export default function TopProducts({ searchQuery = "" }: { searchQuery?: string }) {
+export type TopProductItem = {
+  id: number;
+  name: string;
+  category: string;
+  sales: number;
+  revenue: number;
+  image: string;
+};
+
+export default function TopProducts({
+  searchQuery = "",
+  items,
+}: {
+  searchQuery?: string;
+  items?: TopProductItem[];
+}) {
+  const source = items && items.length > 0 ? items : products;
   const q = searchQuery.trim().toLowerCase();
   const filtered = q
-    ? products.filter(
+    ? source.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q)
       )
-    : products;
+    : source;
 
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)]">

@@ -127,6 +127,27 @@ export default function AdminCustomersPage() {
   );
 
   useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch("/api/db?view=admin");
+        const data = (await res.json()) as {
+          ok?: boolean;
+          customers?: Customer[];
+        };
+        if (
+          data?.ok &&
+          Array.isArray(data.customers) &&
+          data.customers.length > 0
+        ) {
+          setCustomers(data.customers);
+        }
+      } catch {
+        /* fallback */
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!selectedCustomer) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedCustomer(null);
@@ -152,21 +173,26 @@ export default function AdminCustomersPage() {
   }, [customers, search, statusFilter]);
 
   const toggleStatus = (id: number) => {
+    const target = customers.find((c) => c.id === id);
+    const nextStatus = target?.status === "Active" ? "Inactive" : "Active";
     setCustomers((current) =>
-      current.map((c) =>
-        c.id === id
-          ? { ...c, status: c.status === "Active" ? "Inactive" : "Active" }
-          : c
-      )
+      current.map((c) => (c.id === id ? { ...c, status: nextStatus } : c))
     );
     setSelectedCustomer((current) =>
       current && current.id === id
-        ? {
-            ...current,
-            status: current.status === "Active" ? "Inactive" : "Active",
-          }
+        ? { ...current, status: nextStatus }
         : current
     );
+    void fetch("/api/db", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        entity: "customer",
+        action: "status",
+        id,
+        status: nextStatus,
+      }),
+    });
   };
 
   const totalSpent = customers.reduce((sum, customer) => sum + customer.spent, 0);
