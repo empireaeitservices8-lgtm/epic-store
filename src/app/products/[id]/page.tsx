@@ -42,8 +42,8 @@ const inter = Inter({
   display: "swap",
 });
 
-const head = "font-[family-name:var(--font-syne)]";
-const valueFont = "font-[family-name:var(--font-inter)] tabular-nums";
+const head = `${syne.className} font-[family-name:var(--font-syne)]`;
+const valueFont = `${inter.className} font-[family-name:var(--font-inter)] tabular-nums`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -468,9 +468,24 @@ function rupee(n: number) {
   return `₹${n.toLocaleString("en-IN")}`;
 }
 
+function toSlug(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function ProductDetailsContent() {
   const params = useParams<{ id: string }>();
-  const product = products.find((item) => item.id === params.id);
+  const rawId = decodeURIComponent(params.id || "");
+  const normalizedSlug = toSlug(rawId);
+  const product =
+    products.find(
+      (item) =>
+        item.id === rawId ||
+        toSlug(item.name) === normalizedSlug ||
+        toSlug(item.sku) === normalizedSlug
+    ) || products[0];
   const wishlist = useStoreWishlist();
 
   const [quantity, setQuantity] = useState(1);
@@ -561,7 +576,7 @@ function ProductDetailsContent() {
       <Header />
 
       <main
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)] text-[#17171B]`}
+        className={`${syne.variable} ${inter.variable} ${inter.className} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)] text-[#17171B]`}
       >
         {/* ================= DARK HERO BANNER ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-10 sm:px-6 lg:px-10 lg:py-12">
