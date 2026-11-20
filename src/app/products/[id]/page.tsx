@@ -14,7 +14,6 @@ import {
   RotateCcw,
   ShieldCheck,
   ShoppingBag,
-  Sparkles,
   Star,
   Truck,
 } from "lucide-react";
@@ -720,9 +719,8 @@ function ProductDetailsContent() {
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <Link
                     href={`/shop?collection=${encodeURIComponent(product.collection)}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#17171B] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#78D94F] no-underline transition hover:bg-[#78D94F] hover:text-[#17171B] sm:px-3.5 sm:text-[11px] sm:tracking-[0.14em]"
+                    className="inline-flex items-center rounded-full bg-[#17171B] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#78D94F] no-underline transition hover:bg-[#78D94F] hover:text-[#17171B] sm:px-3.5 sm:text-[11px] sm:tracking-[0.14em]"
                   >
-                    <Sparkles className="h-3 w-3" />
                     {product.collection}
                   </Link>
                   <span className="rounded-full bg-[#F7F8F5] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-gray-600 sm:px-3.5 sm:text-[11px] sm:tracking-[0.14em]">
