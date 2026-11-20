@@ -512,7 +512,9 @@ export default function ShopPage() {
 
                 {/* Product grid */}
                 <div
-                      }`}
+                  className={`grid grid-cols-2 gap-x-3 gap-y-5 transition-opacity duration-200 sm:gap-x-5 sm:gap-y-8 xl:grid-cols-3 ${
+                    fade ? "opacity-40" : "opacity-100"
+                  }`}
                 >
                   {filteredProducts.map((product, i) => {
                     const liked = wishlist.includes(product.id);
@@ -521,135 +523,141 @@ export default function ShopPage() {
                     return (
                       <article
                         key={product.id}
-                        style={{ transitionDelay: ready ? `${Math.min(i, 8) * 60} ms` : "0ms" }}
-                    }`}
+                        style={{ transitionDelay: ready ? `${Math.min(i, 8) * 60}ms` : "0ms" }}
+                        className={`group flex flex-col justify-between rounded-2xl border border-gray-200/80 bg-white p-2 shadow-[0_4px_16px_rgba(0,0,0,0.03)] transition-all duration-700 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none ${
+                          ready ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                        }`}
                       >
-              <div>
-                {/* Image */}
-                <div className="relative overflow-hidden rounded-xl bg-[#F5F5F5] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-shadow duration-300 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] sm:rounded-2xl">
-                  <Link
-                    href={`/products/${product.id}`}
-                    aria-label={product.name}
-                    className={`block ${focus}`}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      loading="lazy"
-                      className="aspect-square w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105 sm:aspect-[4/5]"
-                    />
-                  </Link>
+                        <div>
+                          {/* Image */}
+                          <div className="relative overflow-hidden rounded-xl bg-[#F5F5F5] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-shadow duration-300 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] sm:rounded-2xl">
+                            <Link
+                              href={`/products/${product.id}`}
+                              aria-label={product.name}
+                              className={`block ${focus}`}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                loading="lazy"
+                                className="aspect-square w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105 sm:aspect-[4/5]"
+                              />
+                            </Link>
 
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                      {product.badge && (
-                        <span className="absolute left-2 top-2 rounded-full bg-[#78D94F] px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px]">
-                          {product.badge}
-                        </span>
-                      )}
+                            {product.badge && (
+                              <span className="absolute left-2 top-2 rounded-full bg-[#78D94F] px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px]">
+                                {product.badge}
+                              </span>
+                            )}
 
-                      <span className="absolute bottom-2 left-2 rounded-full bg-[#17171B]/90 px-2 py-0.5 text-[9px] font-bold text-white transition-opacity duration-300 sm:bottom-4 sm:left-4 sm:bg-[#17171B] sm:px-3 sm:py-1.5 sm:text-xs lg:group-hover:opacity-0">
-                        {off}% OFF
-                      </span>
+                            <span className="absolute bottom-2 left-2 rounded-full bg-[#17171B]/90 px-2 py-0.5 text-[9px] font-bold text-white transition-opacity duration-300 sm:bottom-4 sm:left-4 sm:bg-[#17171B] sm:px-3 sm:py-1.5 sm:text-xs lg:group-hover:opacity-0">
+                              {off}% OFF
+                            </span>
 
-                      {/* Wishlist */}
-                      <button
-                        type="button"
-                        onClick={() => toggleWishlist(product.id)}
-                        aria-label={`${liked ? "Remove" : "Add"} ${product.name} ${liked ? "from" : "to"} wishlist`}
-                        aria-pressed={liked}
-                        className={`absolute right-2 top-2 grid h-7 w-7 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 sm:right-4 sm:top-4 sm:h-10 sm:w-10 ${focus} ${liked
-                            ? "bg-[#78D94F] text-[#17171B]"
-                            : "bg-white/95 text-[#17171B]"
-                          }`}
-                      >
-                        <svg
-                          width="15"
-                          height="15"
-                          viewBox="0 0 24 24"
-                          fill={liked ? "currentColor" : "none"}
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          className={`transition-transform duration-300 sm:h-5 sm:w-5 ${liked ? "scale-110" : ""}`}
-                        >
-                          <path d="M12 20.5s-7.5-4.6-9.6-9.4A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.6 4.9c-2.1 4.8-9.6 9.4-9.6 9.4z" />
-                        </svg>
-                      </button>
-
-                          {/* Add to cart: slides up on desktop hover */}
+                            {/* Wishlist */}
                             <button
-                          type="button"
-                          onClick={() => addToCart(product.id)}
-                          className={`absolute inset-x-4 bottom-4 cursor-pointer rounded-full border-0 py-3 text-xs font-bold tracking-[0.14em] shadow-lg transition-all duration-300 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100 ${focus} ${added
-                              ? "bg-[#78D94F] text-[#17171B]"
-                              : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
-                            } max-lg:hidden`}
-                        >
-                      {added ? "ADDED ✓" : "ADD TO CART +"}
-                    </button>
+                              type="button"
+                              onClick={() => toggleWishlist(product.id)}
+                              aria-label={`${liked ? "Remove" : "Add"} ${product.name} ${liked ? "from" : "to"} wishlist`}
+                              aria-pressed={liked}
+                              className={`absolute right-2 top-2 grid h-7 w-7 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 sm:right-4 sm:top-4 sm:h-10 sm:w-10 ${focus} ${
+                                liked
+                                  ? "bg-[#78D94F] text-[#17171B]"
+                                  : "bg-white/95 text-[#17171B]"
+                              }`}
+                            >
+                              <svg
+                                width="15"
+                                height="15"
+                                viewBox="0 0 24 24"
+                                fill={liked ? "currentColor" : "none"}
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                                className={`transition-transform duration-300 sm:h-5 sm:w-5 ${liked ? "scale-110" : ""}`}
+                              >
+                                <path d="M12 20.5s-7.5-4.6-9.6-9.4A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.6 4.9c-2.1 4.8-9.6 9.4-9.6 9.4z" />
+                              </svg>
+                            </button>
+
+                            {/* Add to cart: slides up on desktop hover */}
+                            <button
+                              type="button"
+                              onClick={() => addToCart(product.id)}
+                              className={`absolute inset-x-4 bottom-4 cursor-pointer rounded-full border-0 py-3 text-xs font-bold tracking-[0.14em] shadow-lg transition-all duration-300 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100 ${focus} ${
+                                added
+                                  ? "bg-[#78D94F] text-[#17171B]"
+                                  : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
+                              } max-lg:hidden`}
+                            >
+                              {added ? "ADDED ✓" : "ADD TO CART +"}
+                            </button>
                           </div>
 
-              {/* Details */}
-              <div className="mt-2.5 px-0.5 sm:mt-4 sm:px-0">
-                <p className="m-0 truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 sm:text-[11px] sm:tracking-[0.15em]">
-                  {product.category}
-                </p>
+                          {/* Details */}
+                          <div className="mt-2.5 px-0.5 sm:mt-4 sm:px-0">
+                            <p className="m-0 truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 sm:text-[11px] sm:tracking-[0.15em]">
+                              {product.category}
+                            </p>
 
-                  <Link
-                    href={`/products/${product.id}`}
-                    className={`${head} mt-1 line-clamp-1 block text-xs font-bold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-green-700 sm:mt-1.5 sm:text-base ${focus}`}
-                  >
-                    {product.name}
-                  </Link>
+                            <Link
+                              href={`/products/${product.id}`}
+                              className={`${head} mt-1 line-clamp-1 block text-xs font-bold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-green-700 sm:mt-1.5 sm:text-base ${focus}`}
+                            >
+                              {product.name}
+                            </Link>
 
-                      <div className="mt-1 flex items-center gap-1.5 text-[10px] sm:mt-1.5 sm:gap-2 sm:text-xs">
-                        <span
-                          className="relative inline-block leading-none tracking-tight text-gray-200"
-                          aria-label={`Rated ${product.rating} out of 5`}
-                        >
-                          ★★★★★
-                          <span
-                            className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-yellow-400"
-                            style={{ width: `${(product.rating / 5) * 100}%` }}
-                          >
-                            ★★★★★
-                          </span>
-                        </span>
-                    <span className="text-gray-500">
-                      {product.rating}{" "}
-                      <span className="hidden sm:inline">
-                        ({product.reviews} reviews)
-                      </span>
-                      <span className="sm:hidden">({product.reviews})</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-                  <div className="mt-2 px-0.5 sm:mt-3 sm:px-0">
-                    <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2.5 sm:gap-y-1">
-                      <span className={`${head} text-sm font-extrabold text-[#17171B] sm:text-xl`}>
-                        ₹{product.price}
-                      </span>
-                        <span className="text-[11px] text-gray-400 line-through sm:text-sm">
-                          ₹{product.oldPrice}
-                        </span>
-                          <span className="hidden rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700 sm:inline-block">
-                            Save ₹{product.oldPrice - product.price}
-                          </span>
+                            <div className="mt-1 flex items-center gap-1.5 text-[10px] sm:mt-1.5 sm:gap-2 sm:text-xs">
+                              <span
+                                className="relative inline-block leading-none tracking-tight text-gray-200"
+                                aria-label={`Rated ${product.rating} out of 5`}
+                              >
+                                ★★★★★
+                                <span
+                                  className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-yellow-400"
+                                  style={{ width: `${(product.rating / 5) * 100}%` }}
+                                >
+                                  ★★★★★
+                                </span>
+                              </span>
+                              <span className="text-gray-500">
+                                {product.rating}{" "}
+                                <span className="hidden sm:inline">
+                                  ({product.reviews} reviews)
+                                </span>
+                                <span className="sm:hidden">({product.reviews})</span>
+                              </span>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Mobile add to cart */}
-                        <button
-                          type="button"
-                          onClick={() => addToCart(product.id)}
+                        <div className="mt-2 px-0.5 sm:mt-3 sm:px-0">
+                          <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2.5 sm:gap-y-1">
+                            <span className={`${head} text-sm font-extrabold text-[#17171B] sm:text-xl`}>
+                              ₹{product.price}
+                            </span>
+                            <span className="text-[11px] text-gray-400 line-through sm:text-sm">
+                              ₹{product.oldPrice}
+                            </span>
+                            <span className="hidden rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700 sm:inline-block">
+                              Save ₹{product.oldPrice - product.price}
+                            </span>
+                          </div>
+
+                          {/* Mobile add to cart */}
+                          <button
+                            type="button"
+                            onClick={() => addToCart(product.id)}
+                            className={`mt-2 w-full cursor-pointer rounded-full border-0 py-2 text-[10px] font-bold tracking-[0.1em] transition duration-300 sm:mt-3.5 sm:py-2.5 sm:text-xs sm:tracking-[0.14em] lg:hidden ${focus} ${
+                              added
                                 ? "bg-[#78D94F] text-[#17171B]"
                                 : "bg-[#17171B] text-white"
-                              }`}
+                            }`}
                           >
                             {added ? "ADDED ✓" : "ADD TO CART +"}
                           </button>
