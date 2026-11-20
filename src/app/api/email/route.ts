@@ -10,8 +10,6 @@ import {
   type OrderEmailPayload,
 } from "@/lib/mailer";
 
-export const runtime = "nodejs";
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export async function POST(request: NextRequest) {
