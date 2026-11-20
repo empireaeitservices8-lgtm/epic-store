@@ -24,58 +24,76 @@ const inter = Inter({
 
 const collections = [
   {
-    name: "Minimalist Art",
-    subtitle: "Less clutter. More character.",
+    name: "Football",
+    subtitle: "Iconic stadium moments & legends.",
     description:
-      "Discover clean lines, subtle colors, and elegant artwork for modern spaces.",
+      "Celebrate the beautiful game with metal posters, signed jersey frames, and desk pads featuring football legends and iconic clubs.",
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1000",
-    count: "Explore minimalist designs",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
+    count: "Explore Football Collection",
   },
   {
-    name: "Nature Collection",
-    subtitle: "Bring nature indoors.",
+    name: "Cricket",
+    subtitle: "Championship glory & historic knocks.",
     description:
-      "Explore botanical artwork, landscapes, and nature-inspired designs.",
+      "Tribute prints, framed jersey displays, and collector artwork dedicated to world cricket icons and unforgettable matches.",
     image:
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1000",
-    count: "Explore nature designs",
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1000&q=85",
+    count: "Explore Cricket Collection",
   },
   {
-    name: "Modern Aesthetic",
-    subtitle: "Make your walls stand out.",
+    name: "Movie, Series & Characters (DC, Marvel)",
+    subtitle: "Superheroes, cinema icons & multiverse legends.",
     description:
-      "Bold compositions and contemporary artwork for expressive interiors.",
+      "Action-packed DC, Marvel, and cult cinema artwork printed on vibrant HD metal posters and wide desk pads.",
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1000",
-    count: "Explore modern designs",
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=1000&q=85",
+    count: "Explore DC, Marvel & Cinema",
   },
   {
-    name: "Creative Spaces",
-    subtitle: "Create a space that inspires.",
+    name: "Anime",
+    subtitle: "Legendary arcs & neon shonen battles.",
     description:
-      "Unique artwork and playful designs for workspaces, studios, and rooms.",
+      "High-contrast anime metal posters and desk pads inspired by iconic characters, battles, and anime worlds.",
     image:
-      "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1000",
-    count: "Explore creative designs",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1000&q=85",
+    count: "Explore Anime Collection",
   },
   {
-    name: "Abstract Collection",
-    subtitle: "Art without boundaries.",
+    name: "Cars, Bike & F1",
+    subtitle: "Supercars, superbikes & F1 telemetry.",
     description:
-      "Discover expressive shapes, colors, and abstract compositions.",
+      "High-octane Formula 1 racers, JDM legends, hypercars, and superbikes rendered on metallic wall art and desk pads.",
     image:
-      "https://images.unsplash.com/photo-1549490349-8643362247b5?w=1000",
-    count: "Explore abstract designs",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1000&q=85",
+    count: "Explore Cars, Bike & F1",
   },
   {
-    name: "Vintage Collection",
-    subtitle: "A timeless touch.",
+    name: "Games and Characters",
+    subtitle: "30+ designs from next-gen gaming worlds.",
     description:
-      "Give your interiors a distinctive look with vintage-inspired artwork.",
+      "30+ signature gaming designs spanning open-world epics, esports classics, and legendary game characters.",
     image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=1000",
-    count: "Explore vintage designs",
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&q=85",
+    count: "Explore 30+ Gaming Designs",
+  },
+  {
+    name: "Lady Boss",
+    subtitle: "Fierce ambition, elegance & leadership.",
+    description:
+      "Bold, modern wall art and workspace pieces celebrating women leaders, entrepreneurs, and unstoppable confidence.",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1000&q=85",
+    count: "Explore Lady Boss Collection",
+  },
+  {
+    name: "Gym and Motivation",
+    subtitle: "Discipline, hustle & relentless mindset.",
+    description:
+      "High-impact motivational typography and physique artwork engineered for home gyms, studios, and offices.",
+    image:
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1000&q=85",
+    count: "Explore Gym & Motivation",
   },
 ];
 

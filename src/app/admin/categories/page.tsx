@@ -44,42 +44,29 @@ type Category = {
 const initialCategories: Category[] = [
   {
     id: 1,
-    name: "Posters",
-    slug: "posters",
-    description: "Creative posters for every space.",
+    name: "Metal Posters (A4, A3, A2)",
+    slug: "metal-posters",
+    description:
+      "HD glossy and matte aluminium metal wall posters in A4, A3, and A2 sizes.",
     image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300",
     status: "Active",
   },
   {
     id: 2,
-    name: "Canvas Prints",
-    slug: "canvas-prints",
-    description: "Premium canvas wall art.",
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300",
+    name: "Desk Pad",
+    slug: "desk-pad",
+    description:
+      "Premium XXL anti-fray gaming and workspace micro-weave desk pads.",
+    image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300",
     status: "Active",
   },
   {
     id: 3,
-    name: "Metal Posters",
-    slug: "metal-posters",
-    description: "Modern metal wall posters.",
-    image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=300",
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Tapestries",
-    slug: "tapestries",
-    description: "Decorative fabric wall art.",
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=300",
-    status: "Inactive",
-  },
-  {
-    id: 5,
-    name: "Stickers",
-    slug: "stickers",
-    description: "Fun stickers and creative designs.",
-    image: "https://images.unsplash.com/photo-1557683316-973673baf926?w=300",
+    name: "Signed Jersey Frame",
+    slug: "signed-jersey-frame",
+    description:
+      "Museum-grade shadow-box display frames for autographed sports jerseys.",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300",
     status: "Active",
   },
 ];

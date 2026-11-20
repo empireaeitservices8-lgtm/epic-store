@@ -45,42 +45,90 @@ type Collection = {
 const initialCollections: Collection[] = [
   {
     id: 1,
-    name: "Best Sellers",
-    slug: "best-sellers",
-    description: "Our most popular designs.",
+    name: "Football",
+    slug: "football",
+    description:
+      "Celebrate the beautiful game with metal posters, signed jersey frames, and desk pads featuring football legends.",
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600",
     status: "Active",
     featured: true,
   },
   {
     id: 2,
-    name: "Modern Wall Art",
-    slug: "modern-wall-art",
-    description: "Contemporary artwork for modern spaces.",
+    name: "Cricket",
+    slug: "cricket",
+    description:
+      "Tribute prints, framed jersey displays, and collector artwork dedicated to world cricket icons.",
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600",
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600",
     status: "Active",
     featured: true,
   },
   {
     id: 3,
-    name: "Minimalist Collection",
-    slug: "minimalist-collection",
-    description: "Simple and elegant designs.",
+    name: "Movie, Series & Characters (DC, Marvel)",
+    slug: "movie-series-characters",
+    description:
+      "Action-packed DC, Marvel, and cult cinema artwork printed on vibrant HD metal posters and desk pads.",
     image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=600",
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=600",
+    status: "Active",
+    featured: true,
+  },
+  {
+    id: 4,
+    name: "Anime",
+    slug: "anime",
+    description:
+      "High-contrast anime metal posters and desk pads inspired by iconic characters and worlds.",
+    image:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600",
+    status: "Active",
+    featured: true,
+  },
+  {
+    id: 5,
+    name: "Cars, Bike & F1",
+    slug: "cars-bike-f1",
+    description:
+      "High-octane Formula 1 racers, JDM legends, hypercars, and superbikes rendered on metallic wall art.",
+    image:
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600",
+    status: "Active",
+    featured: true,
+  },
+  {
+    id: 6,
+    name: "Games and Characters",
+    slug: "games-and-characters",
+    description:
+      "30+ signature gaming designs spanning open-world epics, esports classics, and legendary game characters.",
+    image:
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600",
     status: "Active",
     featured: false,
   },
   {
-    id: 4,
-    name: "New Arrivals",
-    slug: "new-arrivals",
-    description: "Recently added products and designs.",
+    id: 7,
+    name: "Lady Boss",
+    slug: "lady-boss",
+    description:
+      "Bold, modern wall art and workspace pieces celebrating women leaders, entrepreneurs, and ambition.",
     image:
-      "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?w=600",
-    status: "Inactive",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600",
+    status: "Active",
+    featured: false,
+  },
+  {
+    id: 8,
+    name: "Gym and Motivation",
+    slug: "gym-and-motivation",
+    description:
+      "High-impact motivational typography and physique artwork engineered for home gyms, studios, and offices.",
+    image:
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600",
+    status: "Active",
     featured: false,
   },
 ];

@@ -24,47 +24,31 @@ const inter = Inter({
 
 const categories = [
   {
-    name: "Posters",
-    description: "Creative designs to make your walls stand out.",
+    name: "Metal Posters (A4, A3, A2)",
+    slug: "metal-posters",
+    description:
+      "HD glossy and matte aluminium metal wall posters available in A4, A3, and A2 sizes with tool-free magnetic wall mounting.",
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900",
-    count: "Explore Posters",
-  },
-  {
-    name: "Canvas Prints",
-    description: "Give your favourite artwork a beautiful canvas finish.",
-    image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900",
-    count: "Explore Canvas Prints",
-  },
-  {
-    name: "Metal Posters",
-    description: "Modern artwork for a bold and distinctive space.",
-    image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=900",
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
     count: "Explore Metal Posters",
   },
   {
-    name: "Tapestries",
-    description: "Add character and creativity to your interiors.",
+    name: "Desk Pad",
+    slug: "desk-pad",
+    description:
+      "Premium XXL anti-fray gaming and workspace desk pads crafted with an ultra-smooth micro-weave surface and non-slip rubber base.",
     image:
-      "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=900",
-    count: "Explore Tapestries",
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=900&q=85",
+    count: "Explore Desk Pads",
   },
   {
-    name: "Stickers",
-    description: "Small details that make your everyday items unique.",
+    name: "Signed Jersey Frame",
+    slug: "signed-jersey-frame",
+    description:
+      "Museum-grade shadow-box display frames engineered to showcase and protect autographed football and cricket jerseys.",
     image:
-      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=900",
-    count: "Explore Stickers",
-  },
-  {
-    name: "Custom Prints",
-    description: "Create personalized artwork using your own ideas.",
-    image:
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=900",
-    count: "Create Custom Prints",
-    custom: true,
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&q=85",
+    count: "Explore Jersey Frames",
   },
 ];
 
@@ -216,11 +200,7 @@ export default function CategoriesPage() {
                   </p>
 
                   <Link
-                    href={
-                      category.custom
-                        ? "/custom-prints"
-                        : `/shop?category=${encodeURIComponent(category.name)}`
-                    }
+                    href={`/shop?category=${category.slug}`}
                     className={`mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#17171B] no-underline transition hover:text-green-700 ${focus}`}
                   >
                     {category.count}

@@ -98,12 +98,12 @@ export default function Newsletter() {
 
   return (
     <section
-      className={`${syne.variable} ${inter.variable} flex min-h-[calc(100svh-4rem)] items-center justify-center bg-[#F7F8F5] px-4 py-6 font-[family-name:var(--font-inter)] sm:px-6 sm:py-8 lg:min-h-[calc(100svh-5rem)] lg:px-10 lg:py-10`}
+      className={`${syne.variable} ${inter.variable} flex items-center justify-center bg-[#F7F8F5] px-4 py-6 font-[family-name:var(--font-inter)] sm:px-6 sm:py-8 lg:px-10 lg:py-10`}
     >
       <div
         ref={cardRef}
         onMouseMove={onMove}
-        className={`relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center overflow-hidden rounded-3xl bg-[#17171B] px-5 py-9 text-center shadow-[0_24px_80px_rgba(0,0,0,0.22)] ring-1 ring-white/10 transition-all duration-700 sm:px-10 sm:py-12 lg:px-14 lg:py-14 ${
+        className={`relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center overflow-hidden rounded-2xl bg-[#17171B] px-5 py-6 text-center shadow-[0_24px_80px_rgba(0,0,0,0.22)] ring-1 ring-white/10 transition-all duration-700 sm:rounded-3xl sm:px-8 sm:py-8 lg:px-12 lg:py-9 ${
           visible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
         }`}
       >
@@ -115,10 +115,10 @@ export default function Newsletter() {
 
         <div className="relative mx-auto w-full max-w-2xl">
           {/* Envelope icon */}
-          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl border border-[#78D94F]/30 bg-[#78D94F]/10 text-[#78D94F] transition-transform duration-500 hover:-rotate-6 hover:scale-110 sm:mb-5 sm:h-14 sm:w-14">
+          <div className="mx-auto mb-2.5 grid h-10 w-10 place-items-center rounded-xl border border-[#78D94F]/30 bg-[#78D94F]/10 text-[#78D94F] transition-transform duration-500 hover:-rotate-6 hover:scale-110 sm:mb-3 sm:h-11 sm:w-11 sm:rounded-2xl">
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -126,37 +126,37 @@ export default function Newsletter() {
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
-              className="sm:h-7 sm:w-7"
+              className="sm:h-5 sm:w-5"
             >
               <rect x="3" y="5" width="18" height="14" rx="2.5" />
               <path d="m4 7 8 6 8-6" />
             </svg>
           </div>
 
-          <span className="inline-flex items-center rounded-full border border-[#78D94F]/40 bg-[#78D94F]/[0.06] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[#78D94F] sm:px-4 sm:py-2 sm:text-xs">
+          <span className="inline-flex items-center rounded-full border border-[#78D94F]/40 bg-[#78D94F]/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#78D94F] sm:px-3.5 sm:py-1.5 sm:text-xs">
             Stay Connected
           </span>
 
           <h2
-            className={`${head} mt-4 text-3xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:mt-5 sm:text-5xl lg:text-6xl`}
+            className={`${head} mt-2.5 text-2xl font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:mt-3 sm:text-4xl lg:text-[44px]`}
           >
             Get the Latest from
             <br />
             <span className="text-[#78D94F]">Epic Store.</span>
           </h2>
 
-          <p className="mx-auto mt-3.5 max-w-lg text-sm leading-relaxed text-gray-400 sm:mt-4 sm:text-base sm:leading-7">
+          <p className="mx-auto mt-2.5 max-w-lg text-xs leading-relaxed text-gray-400 sm:mt-3 sm:text-sm sm:leading-6">
             Be the first to discover new collections, creative designs,
             exclusive offers, and exciting updates delivered straight to your
             inbox.
           </p>
 
           {/* Perks */}
-          <ul className="mt-5 flex flex-wrap justify-center gap-2 sm:gap-2.5">
+          <ul className="mt-3.5 flex flex-wrap justify-center gap-1.5 sm:mt-4 sm:gap-2">
             {perks.map((p) => (
               <li
                 key={p}
-                className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[11px] font-medium text-gray-300 transition duration-300 hover:border-[#78D94F]/60 hover:text-white sm:px-4 sm:py-2 sm:text-xs"
+                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-medium text-gray-300 transition duration-300 hover:border-[#78D94F]/60 hover:text-white sm:px-3.5 sm:py-1.5 sm:text-xs"
               >
                 <span className="text-[#78D94F]">✓</span>
                 {p}
@@ -165,7 +165,7 @@ export default function Newsletter() {
           </ul>
 
           {/* Form + success state share one cell so height never jumps */}
-          <div className="mx-auto mt-6 grid max-w-xl sm:mt-7">
+          <div className="mx-auto mt-4 grid max-w-xl sm:mt-5">
             <form
               onSubmit={handleSubmit}
               noValidate
@@ -174,7 +174,7 @@ export default function Newsletter() {
                 done ? "pointer-events-none -translate-y-3 opacity-0" : "opacity-100"
               }`}
             >
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="flex flex-col gap-2.5 sm:flex-row">
                 <input
                   type="email"
                   value={email}
@@ -188,7 +188,7 @@ export default function Newsletter() {
                   aria-describedby="newsletter-feedback"
                   autoComplete="email"
                   disabled={status === "loading" || done}
-                  className={`min-h-12 flex-1 rounded-full border bg-white px-5 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:ring-2 disabled:opacity-70 sm:min-h-14 sm:px-6 ${
+                  className={`min-h-11 flex-1 rounded-full border bg-white px-5 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:ring-2 disabled:opacity-70 sm:min-h-12 sm:px-6 ${
                     status === "error"
                       ? "border-red-400 focus:border-red-400 focus:ring-red-400/30"
                       : "border-white/10 focus:border-[#78D94F] focus:ring-[#78D94F]/30"
@@ -198,7 +198,7 @@ export default function Newsletter() {
                 <button
                   type="submit"
                   disabled={status === "loading" || done}
-                  className="group inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#78D94F] px-7 text-xs font-bold tracking-[0.1em] text-[#17171B] transition duration-300 hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] sm:min-h-14 sm:px-8 sm:text-sm"
+                  className="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#78D94F] px-6 text-xs font-bold tracking-[0.1em] text-[#17171B] transition duration-300 hover:-translate-y-0.5 hover:bg-white disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] sm:min-h-12 sm:px-7 sm:text-sm"
                 >
                   {status === "loading" ? (
                     <>
@@ -222,7 +222,7 @@ export default function Newsletter() {
               <p
                 id="newsletter-feedback"
                 aria-live="polite"
-                className={`mt-3 min-h-5 text-sm font-medium text-red-400 transition-opacity duration-300 ${
+                className={`mt-1.5 min-h-4 text-xs font-medium text-red-400 transition-opacity duration-300 ${
                   status === "error" ? "opacity-100" : "opacity-0"
                 }`}
               >
@@ -234,20 +234,20 @@ export default function Newsletter() {
               role="status"
               aria-live="polite"
               aria-hidden={!done}
-              className={`col-start-1 row-start-1 flex flex-col items-center justify-center gap-3 transition-all duration-500 ${
+              className={`col-start-1 row-start-1 flex flex-col items-center justify-center gap-2 transition-all duration-500 ${
                 done
                   ? "translate-y-0 opacity-100 delay-200"
                   : "pointer-events-none translate-y-3 opacity-0"
               }`}
             >
               <span
-                className={`grid h-14 w-14 place-items-center rounded-full bg-[#78D94F] text-2xl font-bold text-[#17171B] transition-transform duration-500 ${
+                className={`grid h-11 w-11 place-items-center rounded-full bg-[#78D94F] text-xl font-bold text-[#17171B] transition-transform duration-500 ${
                   done ? "scale-100 delay-300" : "scale-0"
                 }`}
               >
                 ✓
               </span>
-              <p className={`${head} m-0 text-xl font-bold text-white`}>
+              <p className={`${head} m-0 text-lg font-bold text-white`}>
                 Thank you for subscribing to Epic Store!
               </p>
               <button
@@ -260,7 +260,7 @@ export default function Newsletter() {
             </div>
           </div>
 
-          <p className="mt-2 text-[11px] text-gray-500 sm:text-xs">
+          <p className="mt-1 text-[11px] text-gray-500 sm:text-xs">
             By subscribing, you agree to receive updates from Epic Store. You
             can unsubscribe anytime.
           </p>

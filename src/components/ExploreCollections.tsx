@@ -20,24 +20,52 @@ const inter = Inter({
 
 const collections = [
   {
-    name: "Minimalist Art",
-    subtitle: "Simple designs. Bold impact.",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
+    name: "Football",
+    subtitle: "Iconic stadium moments, legends, and matchday art.",
+    image:
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&q=85",
   },
   {
-    name: "Nature Collection",
-    subtitle: "Bring nature into your space.",
-    image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=900&q=85",
+    name: "Cricket",
+    subtitle: "Championship glory, legendary knocks, and stadium roar.",
+    image:
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=900&q=85",
   },
   {
-    name: "Modern Aesthetic",
-    subtitle: "Art that defines your style.",
-    image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=900&q=85",
+    name: "Movie, Series & Characters (DC, Marvel)",
+    subtitle: "Superheroes, cinema icons, and multiverse legends.",
+    image:
+      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=900&q=85",
   },
   {
-    name: "Creative Spaces",
-    subtitle: "Make every wall inspiring.",
-    image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&q=85",
+    name: "Anime",
+    subtitle: "Legendary arcs, shonen battles, and neon anime art.",
+    image:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=900&q=85",
+  },
+  {
+    name: "Cars, Bike & F1",
+    subtitle: "Supercars, motorsport telemetry, and F1 circuits.",
+    image:
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=900&q=85",
+  },
+  {
+    name: "Games and Characters",
+    subtitle: "30+ signature gaming worlds and iconic protagonists.",
+    image:
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&q=85",
+  },
+  {
+    name: "Lady Boss",
+    subtitle: "Fierce ambition, elegance, and empowering statement art.",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&q=85",
+  },
+  {
+    name: "Gym and Motivation",
+    subtitle: "Discipline, hustle, and relentless mindset.",
+    image:
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900&q=85",
   },
 ];
 

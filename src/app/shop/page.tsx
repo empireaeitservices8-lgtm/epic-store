@@ -23,110 +23,106 @@ const inter = Inter({
 const products = [
   {
     id: 1,
-    name: "Astronaut Space Poster",
-    category: "Posters",
-    price: 499,
-    oldPrice: 799,
-    rating: 4.8,
-    reviews: 124,
+    name: "Football Stadium Legends Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    price: 699,
+    oldPrice: 999,
+    rating: 4.9,
+    reviews: 142,
     badge: "BESTSELLER",
-    image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=700&q=85",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=700&q=85",
   },
   {
     id: 2,
-    name: "Abstract Modern Art",
-    category: "Canvas Prints",
-    price: 599,
-    oldPrice: 899,
-    rating: 4.7,
-    reviews: 89,
+    name: "F1 Circuit Telemetry XXL Desk Pad",
+    category: "Desk Pad",
+    price: 899,
+    oldPrice: 1299,
+    rating: 4.8,
+    reviews: 98,
     badge: "NEW",
-    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=700&q=85",
+    image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=700&q=85",
   },
   {
     id: 3,
-    name: "Vintage Aesthetic Poster",
-    category: "Posters",
-    price: 399,
-    oldPrice: 599,
+    name: "Autographed Football Signed Jersey Frame",
+    category: "Signed Jersey Frame",
+    price: 1499,
+    oldPrice: 1999,
     rating: 4.9,
-    reviews: 156,
+    reviews: 164,
     badge: "POPULAR",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=700&q=85",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=85",
   },
   {
     id: 4,
-    name: "Nature Landscape Print",
-    category: "Canvas Prints",
-    price: 549,
-    oldPrice: 799,
+    name: "Marvel & DC Superhero Metal Poster (A2)",
+    category: "Metal Posters (A4, A3, A2)",
+    price: 999,
+    oldPrice: 1399,
     rating: 4.8,
-    reviews: 72,
-    badge: "NEW",
-    image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=700&q=85",
+    reviews: 112,
+    badge: "TRENDING",
+    image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=700&q=85",
   },
   {
     id: 5,
-    name: "Minimalist Wall Art",
-    category: "Metal Posters",
-    price: 699,
-    oldPrice: 999,
-    rating: 4.6,
-    reviews: 64,
-    badge: "",
-    image: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=700&q=85",
+    name: "Anime Shonen Neon Metal Poster (A4)",
+    category: "Metal Posters (A4, A3, A2)",
+    price: 499,
+    oldPrice: 799,
+    rating: 4.9,
+    reviews: 136,
+    badge: "BESTSELLER",
+    image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=700&q=85",
   },
   {
     id: 6,
-    name: "Creative Art Print",
-    category: "Posters",
-    price: 449,
-    oldPrice: 699,
-    rating: 4.9,
+    name: "Pro Gaming & Characters Micro-Weave Desk Pad",
+    category: "Desk Pad",
+    price: 949,
+    oldPrice: 1349,
+    rating: 4.8,
     reviews: 108,
-    badge: "TRENDING",
-    image: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=700&q=85",
+    badge: "NEW",
+    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&q=85",
   },
   {
     id: 7,
-    name: "Modern Room Decor",
-    category: "Tapestries",
-    price: 799,
-    oldPrice: 1199,
-    rating: 4.7,
-    reviews: 52,
-    badge: "",
-    image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=700&q=85",
+    name: "World Cricket Icon Signed Jersey Frame",
+    category: "Signed Jersey Frame",
+    price: 1499,
+    oldPrice: 2199,
+    rating: 4.9,
+    reviews: 84,
+    badge: "POPULAR",
+    image: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=700&q=85",
   },
   {
     id: 8,
-    name: "Colorful Abstract Art",
-    category: "Stickers",
-    price: 299,
-    oldPrice: 499,
+    name: "Gym & Motivation Mindset Metal Poster (A3)",
+    category: "Metal Posters (A4, A3, A2)",
+    price: 649,
+    oldPrice: 949,
     rating: 4.8,
     reviews: 93,
     badge: "SALE",
-    image: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=700&q=85",
+    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=85",
   },
 ];
 
 const categories = [
   "All Products",
-  "Posters",
-  "Canvas Prints",
-  "Metal Posters",
-  "Tapestries",
-  "Stickers",
+  "Metal Posters (A4, A3, A2)",
+  "Desk Pad",
+  "Signed Jersey Frame",
 ];
 
 /* URL slug -> category name (matches the links used on the home page) */
 const slugToCategory: Record<string, string> = {
-  posters: "Posters",
-  "canvas-prints": "Canvas Prints",
-  "metal-posters": "Metal Posters",
-  tapestries: "Tapestries",
-  stickers: "Stickers",
+  "metal-posters": "Metal Posters (A4, A3, A2)",
+  "desk-pad": "Desk Pad",
+  "signed-jersey-frame": "Signed Jersey Frame",
 };
 
 const MIN_PRICE = 300;
@@ -257,17 +253,15 @@ export default function ShopPage() {
                 type="button"
                 onClick={() => setCategory(item)}
                 aria-pressed={on}
-                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2.5 text-left text-sm transition duration-300 ${focus} ${
-                  on
+                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2.5 text-left text-sm transition duration-300 ${focus} ${on
                     ? "bg-[#17171B] font-bold text-white"
                     : "bg-transparent text-gray-600 hover:bg-[#F7F8F5] hover:text-[#17171B]"
-                }`}
+                  }`}
               >
                 <span className="flex items-center gap-2">
                   <span
-                    className={`h-1.5 rounded-full bg-[#78D94F] transition-all duration-300 ${
-                      on ? "w-4" : "w-0"
-                    }`}
+                    className={`h-1.5 rounded-full bg-[#78D94F] transition-all duration-300 ${on ? "w-4" : "w-0"
+                      }`}
                   />
                   {item}
                 </span>
@@ -518,9 +512,7 @@ export default function ShopPage() {
 
                 {/* Product grid */}
                 <div
-                  className={`grid grid-cols-1 gap-x-5 gap-y-9 transition-opacity duration-200 sm:grid-cols-2 xl:grid-cols-3 ${
-                    fade ? "opacity-40" : "opacity-100"
-                  }`}
+                      }`}
                 >
                   {filteredProducts.map((product, i) => {
                     const liked = wishlist.includes(product.id);
@@ -529,133 +521,135 @@ export default function ShopPage() {
                     return (
                       <article
                         key={product.id}
-                        style={{ transitionDelay: ready ? `${Math.min(i, 8) * 60}ms` : "0ms" }}
-                        className={`group transition-all duration-700 ${
-                          ready ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                        }`}
+                        style={{ transitionDelay: ready ? `${Math.min(i, 8) * 60} ms` : "0ms" }}
+                    }`}
                       >
-                        {/* Image */}
-                        <div className="relative overflow-hidden rounded-2xl bg-[#F5F5F5] shadow-[0_6px_20px_rgba(0,0,0,0.05)] transition-shadow duration-300 group-hover:shadow-[0_24px_48px_rgba(0,0,0,0.14)]">
-                          <Link
-                            href={`/products/${product.id}`}
-                            aria-label={product.name}
-                            className={`block ${focus}`}
-                          >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              loading="lazy"
-                              className="aspect-[4/5] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
-                            />
-                          </Link>
+              <div>
+                {/* Image */}
+                <div className="relative overflow-hidden rounded-xl bg-[#F5F5F5] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-shadow duration-300 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] sm:rounded-2xl">
+                  <Link
+                    href={`/products/${product.id}`}
+                    aria-label={product.name}
+                    className={`block ${focus}`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      loading="lazy"
+                      className="aspect-square w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105 sm:aspect-[4/5]"
+                    />
+                  </Link>
 
-                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                          {product.badge && (
-                            <span className="absolute left-4 top-4 rounded-full bg-[#78D94F] px-3 py-1.5 text-[10px] font-extrabold tracking-wider text-[#17171B]">
-                              {product.badge}
-                            </span>
-                          )}
+                      {product.badge && (
+                        <span className="absolute left-2 top-2 rounded-full bg-[#78D94F] px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px]">
+                          {product.badge}
+                        </span>
+                      )}
 
-                          <span className="absolute bottom-4 left-4 rounded-full bg-[#17171B] px-3 py-1.5 text-xs font-bold text-white transition-opacity duration-300 lg:group-hover:opacity-0">
-                            {off}% OFF
-                          </span>
+                      <span className="absolute bottom-2 left-2 rounded-full bg-[#17171B]/90 px-2 py-0.5 text-[9px] font-bold text-white transition-opacity duration-300 sm:bottom-4 sm:left-4 sm:bg-[#17171B] sm:px-3 sm:py-1.5 sm:text-xs lg:group-hover:opacity-0">
+                        {off}% OFF
+                      </span>
 
-                          {/* Wishlist */}
-                          <button
-                            type="button"
-                            onClick={() => toggleWishlist(product.id)}
-                            aria-label={`${liked ? "Remove" : "Add"} ${product.name} ${liked ? "from" : "to"} wishlist`}
-                            aria-pressed={liked}
-                            className={`absolute right-4 top-4 grid h-10 w-10 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 ${focus} ${
-                              liked
-                                ? "bg-[#78D94F] text-[#17171B]"
-                                : "bg-white text-[#17171B]"
-                            }`}
-                          >
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill={liked ? "currentColor" : "none"}
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              aria-hidden="true"
-                              className={`transition-transform duration-300 ${liked ? "scale-110" : ""}`}
-                            >
-                              <path d="M12 20.5s-7.5-4.6-9.6-9.4A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.6 4.9c-2.1 4.8-9.6 9.4-9.6 9.4z" />
-                            </svg>
-                          </button>
+                      {/* Wishlist */}
+                      <button
+                        type="button"
+                        onClick={() => toggleWishlist(product.id)}
+                        aria-label={`${liked ? "Remove" : "Add"} ${product.name} ${liked ? "from" : "to"} wishlist`}
+                        aria-pressed={liked}
+                        className={`absolute right-2 top-2 grid h-7 w-7 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 sm:right-4 sm:top-4 sm:h-10 sm:w-10 ${focus} ${liked
+                            ? "bg-[#78D94F] text-[#17171B]"
+                            : "bg-white/95 text-[#17171B]"
+                          }`}
+                      >
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill={liked ? "currentColor" : "none"}
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          className={`transition-transform duration-300 sm:h-5 sm:w-5 ${liked ? "scale-110" : ""}`}
+                        >
+                          <path d="M12 20.5s-7.5-4.6-9.6-9.4A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.6 4.9c-2.1 4.8-9.6 9.4-9.6 9.4z" />
+                        </svg>
+                      </button>
 
-                          {/* Add to cart: always visible on touch, slides up on desktop hover */}
-                          <button
-                            type="button"
-                            onClick={() => addToCart(product.id)}
-                            className={`absolute inset-x-4 bottom-4 cursor-pointer rounded-full border-0 py-3 text-xs font-bold tracking-[0.14em] shadow-lg transition-all duration-300 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100 ${focus} ${
-                              added
-                                ? "bg-[#78D94F] text-[#17171B]"
-                                : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
+                          {/* Add to cart: slides up on desktop hover */}
+                            <button
+                          type="button"
+                          onClick={() => addToCart(product.id)}
+                          className={`absolute inset-x-4 bottom-4 cursor-pointer rounded-full border-0 py-3 text-xs font-bold tracking-[0.14em] shadow-lg transition-all duration-300 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100 ${focus} ${added
+                              ? "bg-[#78D94F] text-[#17171B]"
+                              : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
                             } max-lg:hidden`}
+                        >
+                      {added ? "ADDED ✓" : "ADD TO CART +"}
+                    </button>
+                          </div>
+
+              {/* Details */}
+              <div className="mt-2.5 px-0.5 sm:mt-4 sm:px-0">
+                <p className="m-0 truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 sm:text-[11px] sm:tracking-[0.15em]">
+                  {product.category}
+                </p>
+
+                  <Link
+                    href={`/products/${product.id}`}
+                    className={`${head} mt-1 line-clamp-1 block text-xs font-bold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-green-700 sm:mt-1.5 sm:text-base ${focus}`}
+                  >
+                    {product.name}
+                  </Link>
+
+                      <div className="mt-1 flex items-center gap-1.5 text-[10px] sm:mt-1.5 sm:gap-2 sm:text-xs">
+                        <span
+                          className="relative inline-block leading-none tracking-tight text-gray-200"
+                          aria-label={`Rated ${product.rating} out of 5`}
+                        >
+                          ★★★★★
+                          <span
+                            className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-yellow-400"
+                            style={{ width: `${(product.rating / 5) * 100}%` }}
                           >
-                            {added ? "ADDED ✓" : "ADD TO CART +"}
-                          </button>
+                            ★★★★★
+                          </span>
+                        </span>
+                    <span className="text-gray-500">
+                      {product.rating}{" "}
+                      <span className="hidden sm:inline">
+                        ({product.reviews} reviews)
+                      </span>
+                      <span className="sm:hidden">({product.reviews})</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+                  <div className="mt-2 px-0.5 sm:mt-3 sm:px-0">
+                    <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2.5 sm:gap-y-1">
+                      <span className={`${head} text-sm font-extrabold text-[#17171B] sm:text-xl`}>
+                        ₹{product.price}
+                      </span>
+                        <span className="text-[11px] text-gray-400 line-through sm:text-sm">
+                          ₹{product.oldPrice}
+                        </span>
+                          <span className="hidden rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700 sm:inline-block">
+                            Save ₹{product.oldPrice - product.price}
+                          </span>
                         </div>
 
-                        {/* Details */}
-                        <div className="mt-5">
-                          <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-400">
-                            {product.category}
-                          </p>
-
-                          <Link
-                            href={`/products/${product.id}`}
-                            className={`${head} mt-2 block text-base font-bold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-green-700 ${focus}`}
-                          >
-                            {product.name}
-                          </Link>
-
-                          <div className="mt-2 flex items-center gap-2 text-xs">
-                            <span
-                              className="relative inline-block leading-none tracking-tight text-gray-200"
-                              aria-label={`Rated ${product.rating} out of 5`}
-                            >
-                              ★★★★★
-                              <span
-                                className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-yellow-400"
-                                style={{ width: `${(product.rating / 5) * 100}%` }}
-                              >
-                                ★★★★★
-                              </span>
-                            </span>
-                            <span className="text-gray-500">
-                              {product.rating} ({product.reviews} reviews)
-                            </span>
-                          </div>
-
-                          <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                            <span className={`${head} text-xl font-extrabold text-[#17171B]`}>
-                              ₹{product.price}
-                            </span>
-                            <span className="text-sm text-gray-400 line-through">
-                              ₹{product.oldPrice}
-                            </span>
-                            <span className="rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700">
-                              Save ₹{product.oldPrice - product.price}
-                            </span>
-                          </div>
-
-                          {/* Mobile add to cart */}
-                          <button
-                            type="button"
-                            onClick={() => addToCart(product.id)}
-                            className={`mt-4 w-full cursor-pointer rounded-full border-0 py-3 text-xs font-bold tracking-[0.14em] transition duration-300 lg:hidden ${focus} ${
-                              added
+                        {/* Mobile add to cart */}
+                        <button
+                          type="button"
+                          onClick={() => addToCart(product.id)}
                                 ? "bg-[#78D94F] text-[#17171B]"
                                 : "bg-[#17171B] text-white"
-                            }`}
+                              }`}
                           >
                             {added ? "ADDED ✓" : "ADD TO CART +"}
                           </button>
@@ -684,23 +678,23 @@ export default function ShopPage() {
                       </svg>
                     </span>
                     <h3 className={`${head} mt-5 text-xl font-bold text-[#17171B]`}>
-                      No products found
-                    </h3>
-                    <p className="mt-2 text-sm text-gray-500">
-                      Try another search or adjust your filters.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={resetAll}
-                      className={`mt-6 cursor-pointer rounded-full border-0 bg-[#78D94F] px-6 py-3 text-xs font-bold tracking-[0.14em] text-[#17171B] transition hover:bg-[#17171B] hover:text-white ${focus}`}
-                    >
-                      CLEAR FILTERS
-                    </button>
-                  </div>
+                        No products found
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Try another search or adjust your filters.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={resetAll}
+                        className={`mt-6 cursor-pointer rounded-full border-0 bg-[#78D94F] px-6 py-3 text-xs font-bold tracking-[0.14em] text-[#17171B] transition hover:bg-[#17171B] hover:text-white ${focus}`}
+                      >
+                        CLEAR FILTERS
+                      </button>
+                    </div>
                 )}
+                  </div>
               </div>
             </div>
-          </div>
         </section>
       </main>
 
@@ -710,17 +704,15 @@ export default function ShopPage() {
       <div
         onClick={() => setFiltersOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-[3px] transition-all duration-300 lg:hidden ${
-          filtersOpen ? "visible opacity-100" : "invisible opacity-0"
-        }`}
+        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-[3px] transition-all duration-300 lg:hidden ${filtersOpen ? "visible opacity-100" : "invisible opacity-0"
+          }`}
       />
       <div
         role="dialog"
         aria-label="Filters"
         aria-modal="true"
-        className={`${syne.variable} ${inter.variable} fixed inset-x-0 bottom-0 z-[70] max-h-[85svh] overflow-y-auto rounded-t-3xl bg-white p-6 font-[family-name:var(--font-inter)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] lg:hidden ${
-          filtersOpen ? "visible translate-y-0" : "invisible translate-y-full"
-        }`}
+        className={`${syne.variable} ${inter.variable} fixed inset-x-0 bottom-0 z-[70] max-h-[85svh] overflow-y-auto rounded-t-3xl bg-white p-6 font-[family-name:var(--font-inter)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] lg:hidden ${filtersOpen ? "visible translate-y-0" : "invisible translate-y-full"
+          }`}
       >
         <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-gray-200" />
         {filterPanel}
@@ -737,11 +729,10 @@ export default function ShopPage() {
       <div
         role="status"
         aria-live="polite"
-        className={`${inter.variable} fixed bottom-5 left-5 z-50 flex items-center gap-4 rounded-2xl bg-[#17171B] px-5 py-4 font-[family-name:var(--font-inter)] text-sm font-semibold text-white shadow-2xl transition-all duration-300 ${
-          cart.length > 0
+        className={`${inter.variable} fixed bottom-5 left-5 z-50 flex items-center gap-4 rounded-2xl bg-[#17171B] px-5 py-4 font-[family-name:var(--font-inter)] text-sm font-semibold text-white shadow-2xl transition-all duration-300 ${cart.length > 0
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0"
-        }`}
+          }`}
       >
         <span className="grid h-8 w-8 place-items-center rounded-full bg-[#78D94F] text-[#17171B]">
           ✓

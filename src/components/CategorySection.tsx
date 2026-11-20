@@ -20,58 +20,31 @@ const inter = Inter({
 
 const categories = [
   {
-    name: "Posters",
-    subtitle: "Art that speaks your style",
+    name: "Metal Posters (A4, A3, A2)",
+    subtitle: "HD glossy & matte aluminium wall posters in A4, A3 & A2",
     image:
-      "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=900&q=85",
-    href: "/shop?category=posters",
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
+    href: "/shop?category=metal-posters",
     number: "01",
     span: "col-span-2 sm:col-span-1",
   },
   {
-    name: "Canvas Prints",
-    subtitle: "Bring your walls to life",
+    name: "Desk Pad",
+    subtitle: "Premium XXL gaming & workspace micro-weave desk mats",
     image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
-    href: "/shop?category=canvas-prints",
+      "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=900&q=85",
+    href: "/shop?category=desk-pad",
     number: "02",
     span: "",
   },
   {
-    name: "Metal Posters",
-    subtitle: "Bold art. Modern finish.",
+    name: "Signed Jersey Frame",
+    subtitle: "Museum-grade shadow-box frames for autographed jerseys",
     image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900&q=85",
-    href: "/shop?category=metal-posters",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&q=85",
+    href: "/shop?category=signed-jersey-frame",
     number: "03",
     span: "",
-  },
-  {
-    name: "Custom Prints",
-    subtitle: "Make it personal",
-    image:
-      "https://images.unsplash.com/photo-1549490349-8643362247b5?w=900&q=85",
-    href: "/custom-prints",
-    number: "04",
-    span: "",
-  },
-  {
-    name: "Tapestries",
-    subtitle: "Give your space a new vibe",
-    image:
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=85",
-    href: "/shop?category=tapestries",
-    number: "05",
-    span: "",
-  },
-  {
-    name: "Stickers",
-    subtitle: "Little details. Big personality.",
-    image:
-      "https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?w=900&q=85",
-    href: "/shop?category=stickers",
-    number: "06",
-    span: "col-span-2 sm:col-span-1",
   },
 ];
 

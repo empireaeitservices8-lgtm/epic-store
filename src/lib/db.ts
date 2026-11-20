@@ -586,24 +586,24 @@ export async function ensureSeededDatabase(): Promise<void> {
   if (Number(counts[0]?.rows?.[0]?.c ?? 0) === 0) {
     seedQueries.push(
       `INSERT IGNORE INTO products (name, sku, category, price, stock, status, image, sales) VALUES
-      ('Astronaut Space Poster', 'EP-POST-001', 'Posters', 499, 45, 'Active', 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=300', 184),
-      ('Abstract Modern Art', 'EP-CAN-002', 'Canvas Prints', 599, 32, 'Active', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300', 156),
-      ('Vintage Aesthetic Poster', 'EP-POST-003', 'Posters', 399, 0, 'Out of Stock', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 132),
-      ('Nature Landscape Print', 'EP-CAN-004', 'Canvas Prints', 549, 18, 'Active', 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=300', 98),
-      ('Minimalist Wall Art', 'EP-MET-005', 'Metal Posters', 699, 12, 'Active', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=300', 76),
-      ('Modern Room Decor', 'EP-TAP-006', 'Tapestries', 799, 0, 'Draft', 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=300', 42)`
+      ('Football Legends Metal Poster (A3)', 'EP-MET-001', 'Metal Posters (A4, A3, A2)', 699, 45, 'Active', 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300', 184),
+      ('F1 Racing Telemetry Desk Pad', 'EP-DSK-002', 'Desk Pad', 899, 32, 'Active', 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300', 156),
+      ('Autographed Football Signed Jersey Frame', 'EP-FRM-003', 'Signed Jersey Frame', 2499, 14, 'Active', 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300', 132),
+      ('Anime Shonen Edition Metal Poster (A2)', 'EP-MET-004', 'Metal Posters (A4, A3, A2)', 999, 22, 'Active', 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300', 98),
+      ('Pro Gaming & Characters XXL Desk Pad', 'EP-DSK-005', 'Desk Pad', 949, 18, 'Active', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300', 76),
+      ('Championship Cricket Signed Jersey Frame', 'EP-FRM-006', 'Signed Jersey Frame', 2799, 8, 'Active', 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=300', 64)`
     );
   }
 
   if (Number(counts[1]?.rows?.[0]?.c ?? 0) === 0) {
     seedQueries.push(
       `INSERT IGNORE INTO orders (order_id, first_name, last_name, email, phone, address, landmark, city, state, pincode, payment_method, subtotal, delivery, total, status, items_json) VALUES
-      ('EP20261119001', 'Alex', 'Johnson', 'alex@example.com', '+91 98765 43210', '123 Marine Drive', 'Near Metro', 'Kochi', 'Kerala', '682001', 'Paid', 1098, 0, 1098, 'Processing', '[{"id":1,"name":"Astronaut Space Poster","price":499,"quantity":1},{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1}]'),
-      ('EP20261118002', 'Priya', 'Sharma', 'priya@example.com', '+91 98765 12345', '45 Indiranagar', '', 'Bengaluru', 'Karnataka', '560038', 'Paid', 599, 0, 599, 'Shipped', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1}]'),
-      ('EP20261117003', 'Rahul', 'Kumar', 'rahul@example.com', '+91 91234 56789', '18 Anna Nagar', '', 'Chennai', 'Tamil Nadu', '600040', 'COD', 1847, 0, 1847, 'Pending', '[{"id":1,"name":"Astronaut Space Poster","price":499,"quantity":1},{"id":4,"name":"Nature Landscape Print","price":549,"quantity":1},{"id":6,"name":"Modern Room Decor","price":799,"quantity":1}]'),
-      ('EP20261116004', 'Sneha', 'Thomas', 'sneha@example.com', '+91 99887 76655', '88 Swaraj Round', '', 'Thrissur', 'Kerala', '680001', 'Paid', 1298, 0, 1298, 'Delivered', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":1},{"id":5,"name":"Minimalist Wall Art","price":699,"quantity":1}]'),
-      ('EP20261115005', 'Arjun', 'Das', 'arjun@example.com', '+91 90909 80808', '12 Beach Road', '', 'Kozhikode', 'Kerala', '673001', 'Refunded', 449, 0, 449, 'Cancelled', '[{"id":3,"name":"Vintage Aesthetic Poster","price":399,"quantity":1}]'),
-      ('EP20261114006', 'Meera', 'Nair', 'meera@example.com', '+91 98989 78787', '77 Boat Jetty Road', '', 'Alappuzha', 'Kerala', '688001', 'Paid', 2396, 0, 2396, 'Delivered', '[{"id":2,"name":"Abstract Modern Art","price":599,"quantity":4}]')`
+      ('EP20261119001', 'Alex', 'Johnson', 'alex@example.com', '+91 98765 43210', '123 Marine Drive', 'Near Metro', 'Kochi', 'Kerala', '682001', 'Paid', 1598, 0, 1598, 'Processing', '[{"id":1,"name":"Football Legends Metal Poster (A3)","price":699,"quantity":1},{"id":2,"name":"F1 Racing Telemetry Desk Pad","price":899,"quantity":1}]'),
+      ('EP20261118002', 'Priya', 'Sharma', 'priya@example.com', '+91 98765 12345', '45 Indiranagar', '', 'Bengaluru', 'Karnataka', '560038', 'Paid', 899, 0, 899, 'Shipped', '[{"id":2,"name":"F1 Racing Telemetry Desk Pad","price":899,"quantity":1}]'),
+      ('EP20261117003', 'Rahul', 'Kumar', 'rahul@example.com', '+91 91234 56789', '18 Anna Nagar', '', 'Chennai', 'Tamil Nadu', '600040', 'COD', 2499, 0, 2499, 'Pending', '[{"id":3,"name":"Autographed Football Signed Jersey Frame","price":2499,"quantity":1}]'),
+      ('EP20261116004', 'Sneha', 'Thomas', 'sneha@example.com', '+91 99887 76655', '88 Swaraj Round', '', 'Thrissur', 'Kerala', '680001', 'Paid', 1948, 0, 1948, 'Delivered', '[{"id":4,"name":"Anime Shonen Edition Metal Poster (A2)","price":999,"quantity":1},{"id":5,"name":"Pro Gaming & Characters XXL Desk Pad","price":949,"quantity":1}]'),
+      ('EP20261115005', 'Arjun', 'Das', 'arjun@example.com', '+91 90909 80808', '12 Beach Road', '', 'Kozhikode', 'Kerala', '673001', 'Refunded', 699, 0, 699, 'Cancelled', '[{"id":1,"name":"Football Legends Metal Poster (A3)","price":699,"quantity":1}]'),
+      ('EP20261114006', 'Meera', 'Nair', 'meera@example.com', '+91 98989 78787', '77 Boat Jetty Road', '', 'Alappuzha', 'Kerala', '688001', 'Paid', 2799, 0, 2799, 'Delivered', '[{"id":6,"name":"Championship Cricket Signed Jersey Frame","price":2799,"quantity":1}]')`
     );
   }
 
@@ -612,9 +612,9 @@ export async function ensureSeededDatabase(): Promise<void> {
       `INSERT IGNORE INTO customers (name, email, phone, joined, orders_count, spent, status, address) VALUES
       ('Alex Johnson', 'alex@example.com', '+91 98765 43210', '10 Nov 2026', 8, 6490, 'Active', 'Kochi, Kerala, India'),
       ('Priya Sharma', 'priya@example.com', '+91 98765 12345', '08 Nov 2026', 5, 4299, 'Active', 'Bengaluru, Karnataka, India'),
-      ('Rahul Kumar', 'rahul@example.com', '+91 91234 56789', '05 Nov 2026', 3, 2199, 'Active', 'Chennai, Tamil Nadu, India'),
+      ('Rahul Kumar', 'rahul@example.com', '+91 91234 56789', '05 Nov 2026', 3, 2499, 'Active', 'Chennai, Tamil Nadu, India'),
       ('Sneha Thomas', 'sneha@example.com', '+91 99887 76655', '01 Nov 2026', 12, 9870, 'Active', 'Thrissur, Kerala, India'),
-      ('Arjun Das', 'arjun@example.com', '+91 90909 80808', '28 Oct 2026', 1, 449, 'Inactive', 'Kozhikode, Kerala, India'),
+      ('Arjun Das', 'arjun@example.com', '+91 90909 80808', '28 Oct 2026', 1, 699, 'Inactive', 'Kozhikode, Kerala, India'),
       ('Meera Nair', 'meera@example.com', '+91 98989 78787', '22 Oct 2026', 6, 5199, 'Active', 'Alappuzha, Kerala, India')`
     );
   }
@@ -622,21 +622,23 @@ export async function ensureSeededDatabase(): Promise<void> {
   if (Number(counts[3]?.rows?.[0]?.c ?? 0) === 0) {
     seedQueries.push(
       `INSERT IGNORE INTO categories (name, slug, description, image, status) VALUES
-      ('Posters', 'posters', 'Creative posters for every space.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 'Active'),
-      ('Canvas Prints', 'canvas-prints', 'Premium canvas wall art.', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300', 'Active'),
-      ('Metal Posters', 'metal-posters', 'Modern metal wall posters.', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=300', 'Active'),
-      ('Tapestries', 'tapestries', 'Decorative fabric wall art.', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=300', 'Inactive'),
-      ('Stickers', 'stickers', 'Fun stickers and creative designs.', 'https://images.unsplash.com/photo-1557683316-973673baf926?w=300', 'Active')`
+      ('Metal Posters (A4, A3, A2)', 'metal-posters', 'HD glossy and matte aluminium metal wall posters in A4, A3, and A2 sizes.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 'Active'),
+      ('Desk Pad', 'desk-pad', 'Premium XXL anti-fray gaming and workspace micro-weave desk pads.', 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300', 'Active'),
+      ('Signed Jersey Frame', 'signed-jersey-frame', 'Museum-grade shadow-box display frames for autographed sports jerseys.', 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300', 'Active')`
     );
   }
 
   if (Number(counts[4]?.rows?.[0]?.c ?? 0) === 0) {
     seedQueries.push(
       `INSERT IGNORE INTO collections (name, slug, description, image, status, featured) VALUES
-      ('Best Sellers', 'best-sellers', 'Our most popular designs.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600', 'Active', 1),
-      ('Modern Wall Art', 'modern-wall-art', 'Contemporary artwork for modern spaces.', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600', 'Active', 1),
-      ('Minimalist Collection', 'minimalist-collection', 'Simple and elegant designs.', 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=600', 'Active', 0),
-      ('New Arrivals', 'new-arrivals', 'Recently added products and designs.', 'https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?w=600', 'Inactive', 0)`
+      ('Football', 'football', 'Celebrate the beautiful game with metal posters, signed jersey frames, and desk pads featuring football legends.', 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600', 'Active', 1),
+      ('Cricket', 'cricket', 'Tribute prints, framed jersey displays, and collector artwork dedicated to world cricket icons.', 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600', 'Active', 1),
+      ('Movie, Series & Characters (DC, Marvel)', 'movie-series-characters', 'Action-packed DC, Marvel, and cult cinema artwork printed on vibrant HD metal posters and desk pads.', 'https://images.unsplash.com/photo-1635805737707-575885ab0820?w=600', 'Active', 1),
+      ('Anime', 'anime', 'High-contrast anime metal posters and desk pads inspired by iconic characters and worlds.', 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600', 'Active', 1),
+      ('Cars, Bike & F1', 'cars-bike-f1', 'High-octane Formula 1 racers, JDM legends, hypercars, and superbikes rendered on metallic wall art.', 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600', 'Active', 1),
+      ('Games and Characters', 'games-and-characters', '30+ signature gaming designs spanning open-world epics, esports classics, and legendary game characters.', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600', 'Active', 0),
+      ('Lady Boss', 'lady-boss', 'Bold, modern wall art and workspace pieces celebrating women leaders, entrepreneurs, and ambition.', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600', 'Active', 0),
+      ('Gym and Motivation', 'gym-and-motivation', 'High-impact motivational typography and physique artwork engineered for home gyms, studios, and offices.', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600', 'Active', 0)`
     );
   }
 

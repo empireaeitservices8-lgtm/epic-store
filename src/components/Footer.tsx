@@ -33,11 +33,11 @@ const columns = [
   {
     title: "Shop Categories",
     links: [
-      { name: "Posters", href: "/shop?category=posters" },
-      { name: "Canvas Prints", href: "/shop?category=canvas-prints" },
-      { name: "Metal Posters", href: "/shop?category=metal-posters" },
-      { name: "Stickers", href: "/shop?category=stickers" },
-      { name: "Tapestries", href: "/shop?category=tapestries" },
+      { name: "Metal Posters (A4, A3, A2)", href: "/shop?category=metal-posters" },
+      { name: "Desk Pad", href: "/shop?category=desk-pad" },
+      { name: "Signed Jersey Frame", href: "/shop?category=signed-jersey-frame" },
+      { name: "Football & Cricket", href: "/collections" },
+      { name: "Anime & Gaming", href: "/collections" },
       { name: "Custom Designs", href: "/custom-prints" },
     ],
   },
