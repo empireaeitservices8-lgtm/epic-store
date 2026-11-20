@@ -43,7 +43,7 @@ export default function AdminProfilePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState({
     name: "Admin User",
-    email: "admin@epicstore.com",
+    email: "store.epicsports@gmail.com",
     phone: "+91 98765 43210",
     role: "Super Administrator",
   });

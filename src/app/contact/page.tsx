@@ -20,8 +20,8 @@ const inter = Inter({
   display: "swap",
 });
 
-/* Replace these placeholders with the real business details */
-const EMAIL = "support@epicstore.com";
+/* Official store email and business contact details */
+const EMAIL = "store.epicsports@gmail.com";
 const PHONE_DISPLAY = "+91 98765 43210";
 const PHONE_HREF = "tel:+919876543210";
 const HOURS = "Mon – Sat, 9 AM – 6 PM";
@@ -66,12 +66,14 @@ function validate(name: string, value: string): string {
   return "";
 }
 
-/* TODO: connect to your backend / email service, e.g.
-   await fetch("/api/contact", { method: "POST", body: JSON.stringify(data) });
-   Right now this only simulates a request; nothing is sent. */
 async function sendMessage(data: typeof initialForm) {
-  await new Promise((r) => setTimeout(r, 1000));
-  return { ok: Boolean(data.email) };
+  const res = await fetch("/api/email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "contact", ...data }),
+  });
+  const json = (await res.json()) as { ok?: boolean };
+  return { ok: Boolean(res.ok && json.ok) };
 }
 
 const icons = {

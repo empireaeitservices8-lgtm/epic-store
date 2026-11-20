@@ -23,12 +23,14 @@ const perks = ["New collections", "Exclusive offers", "Creative updates"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const head = "font-[family-name:var(--font-syne)]";
 
-/* TODO: replace with your real signup call, e.g.
-   await fetch("/api/newsletter", { method: "POST", body: JSON.stringify({ email }) });
-   Right now it only simulates a request; no email is stored. */
 async function subscribe(email: string) {
-  await new Promise((r) => setTimeout(r, 900));
-  return { ok: Boolean(email) };
+  const res = await fetch("/api/email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: "newsletter", email }),
+  });
+  const json = (await res.json()) as { ok?: boolean };
+  return { ok: Boolean(res.ok && json.ok) };
 }
 
 export default function Newsletter() {

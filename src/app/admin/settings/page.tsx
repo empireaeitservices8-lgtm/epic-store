@@ -51,7 +51,7 @@ type Settings = {
 
 const initialSettings: Settings = {
   storeName: "Epic Store",
-  storeEmail: "support@epicstore.com",
+  storeEmail: "store.epicsports@gmail.com",
   phone: "+91 98765 43210",
   website: "https://epicstore.com",
   address: "Enter your business address",

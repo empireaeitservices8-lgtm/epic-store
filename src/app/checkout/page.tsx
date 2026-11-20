@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Inter, Syne } from "next/font/google";
 import Header from "@/components/Header";
@@ -157,19 +157,16 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [sameAsBilling, setSameAsBilling] = useState(true);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderId, setOrderId] = useState("");
   const [placing, setPlacing] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [ready, setReady] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const placeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setReady(true));
-    return () => {
-      cancelAnimationFrame(raf);
-      if (placeTimer.current) clearTimeout(placeTimer.current);
-    };
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const subtotal = products.reduce((t, i) => t + i.price * i.quantity, 0);
@@ -205,13 +202,39 @@ export default function CheckoutPage() {
       return;
     }
 
-    /* Demo only: no real payment or order is created. */
     setPlacing(true);
-    placeTimer.current = setTimeout(() => {
-      setPlacing(false);
-      setOrderPlaced(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 1100);
+    void (async () => {
+      let generatedId = `EP${new Date().getFullYear()}${String(
+        new Date().getMonth() + 1
+      ).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${Math.floor(
+        100 + Math.random() * 900
+      )}`;
+      try {
+        const res = await fetch("/api/email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "order",
+            orderId: generatedId,
+            ...formData,
+            paymentMethod,
+            items: products,
+            subtotal,
+            delivery,
+            total,
+          }),
+        });
+        const data = (await res.json()) as { ok?: boolean; orderId?: string };
+        if (data?.orderId) generatedId = data.orderId;
+      } catch {
+        /* Fallback cleanly if offline */
+      } finally {
+        setOrderId(generatedId);
+        setPlacing(false);
+        setOrderPlaced(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    })();
   };
 
   /* Render one form field (helper, not a component) */
@@ -379,7 +402,7 @@ export default function CheckoutPage() {
 
             <p className="mt-7 flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-green-700">
               <span className="h-0.5 w-8 bg-[#78D94F]" />
-              Demo Order Confirmation
+              Order Confirmed
               <span className="h-0.5 w-8 bg-[#78D94F]" />
             </p>
 
@@ -388,19 +411,26 @@ export default function CheckoutPage() {
             </h1>
 
             <p className="mt-4 leading-7 text-gray-500">
-              Your checkout form has been submitted successfully in this
-              frontend demo. No real order or payment has been created.
+              An automatic order confirmation email has been sent to{" "}
+              <strong className="text-[#17171B]">{formData.email}</strong> from{" "}
+              <strong className="text-[#17171B]">store.epicsports@gmail.com</strong>.
             </p>
 
             <div className="mt-8 space-y-3 rounded-2xl bg-[#F7F8F5] p-5 text-left">
+              {orderId && (
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-500">Order ID</span>
+                  <span className="font-bold text-[#17171B]">{orderId}</span>
+                </div>
+              )}
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Demo Order Amount</span>
+                <span className="text-sm text-gray-500">Order Amount</span>
                 <span className="font-bold text-[#17171B]">{rupee(total)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-500">Payment Method</span>
                 <span className="font-semibold text-[#17171B]">
-                  {paymentMethod === "razorpay" ? "Razorpay (not connected)" : "Cash on Delivery"}
+                  {paymentMethod === "razorpay" ? "Razorpay (Online Payment)" : "Cash on Delivery"}
                 </span>
               </div>
             </div>

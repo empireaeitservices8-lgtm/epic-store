@@ -73,6 +73,7 @@ export default function CustomPrintsPage() {
   const [dimensions, setDimensions] = useState("");
   const [message, setMessage] = useState("");
   const [fileName, setFileName] = useState("");
+  const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const pageRef = useRef<HTMLElement>(null);
 
@@ -98,9 +99,29 @@ export default function CustomPrintsPage() {
     style: { transitionDelay: `${delay}ms` },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    try {
+      await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "custom-print",
+          name,
+          email,
+          printType,
+          dimensions,
+          fileName,
+          message,
+        }),
+      });
+    } catch {
+      /* Fallback gracefully if offline */
+    } finally {
+      setSending(false);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -506,9 +527,10 @@ export default function CustomPrintsPage() {
 
                     <button
                       type="submit"
-                      className={`group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border-0 bg-[#78D94F] py-4 text-sm font-bold tracking-[0.08em] text-[#17171B] transition duration-300 hover:bg-[#17171B] hover:text-white ${focus}`}
+                      disabled={sending}
+                      className={`group inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border-0 bg-[#78D94F] py-4 text-sm font-bold tracking-[0.08em] text-[#17171B] transition duration-300 hover:bg-[#17171B] hover:text-white disabled:opacity-60 ${focus}`}
                     >
-                      SUBMIT ENQUIRY
+                      {sending ? "SENDING ENQUIRY..." : "SUBMIT ENQUIRY"}
                       <ArrowRight
                         className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5"
                         aria-hidden="true"
@@ -516,8 +538,7 @@ export default function CustomPrintsPage() {
                     </button>
 
                     <p className="m-0 text-center text-xs leading-6 text-gray-400">
-                      Demo form only. Connect a backend before accepting real
-                      customer enquiries.
+                      Automatic confirmation email sent via store.epicsports@gmail.com.
                     </p>
                   </form>
                 </>

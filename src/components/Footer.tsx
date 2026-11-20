@@ -239,10 +239,10 @@ export default function Footer() {
               Email Support
             </p>
             <a
-              href="mailto:support@epicstore.com"
+              href="mailto:store.epicsports@gmail.com"
               className={`mt-2 inline-block text-sm text-gray-300 no-underline transition hover:text-[#78D94F] ${focus}`}
             >
-              support@epicstore.com
+              store.epicsports@gmail.com
             </a>
           </div>
 
