@@ -1,5 +1,11 @@
 import { NextRequest } from "next/server";
 import {
+  saveContactEnquiryToDb,
+  saveCustomPrintToDb,
+  saveNewsletterSubscriberToDb,
+  saveOrderToDb,
+} from "@/lib/db";
+import {
   buildContactEmails,
   buildCustomerOrderEmail,
   buildCustomPrintEmails,
@@ -51,21 +57,30 @@ export async function POST(request: NextRequest) {
         total: Number(body.total ?? 0),
       };
 
-      // Send both the Order Confirmation email to the customer and the Order Alert to store.epicsports@gmail.com
       const customerMail = buildCustomerOrderEmail(payload);
       const storeMail = buildStoreOrderNotificationEmail(payload);
 
-      const [customerResult, storeResult] = await Promise.all([
+      const [customerResult, storeResult, dbSaved] = await Promise.all([
         sendEmail(customerMail),
         sendEmail(storeMail),
+        saveOrderToDb(payload)
+          .then(() => true)
+          .catch((err) => {
+            console.warn("[Epic Store TiDB Order Save Warning]", err);
+            return false;
+          }),
       ]);
 
       return Response.json({
         ok: true,
         orderId,
+        dbSaved,
         storeEmail: STORE_EMAIL,
         customerEmail: email,
-        mode: customerResult.mode === "smtp" && storeResult.mode === "smtp" ? "smtp" : "preview",
+        mode:
+          customerResult.mode === "smtp" && storeResult.mode === "smtp"
+            ? "smtp"
+            : "preview",
       });
     }
 
@@ -80,21 +95,30 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const { storeMail, customerMail } = buildContactEmails({
+      const contactPayload = {
         name,
         email,
         phone: String(body.phone ?? "").trim(),
         subject: String(body.subject ?? "General Enquiry").trim(),
         message,
-      });
+      };
 
-      const [storeResult] = await Promise.all([
+      const { storeMail, customerMail } = buildContactEmails(contactPayload);
+
+      const [storeResult, , dbSaved] = await Promise.all([
         sendEmail(storeMail),
         sendEmail(customerMail),
+        saveContactEnquiryToDb(contactPayload)
+          .then(() => true)
+          .catch((err) => {
+            console.warn("[Epic Store TiDB Contact Save Warning]", err);
+            return false;
+          }),
       ]);
 
       return Response.json({
         ok: true,
+        dbSaved,
         storeEmail: STORE_EMAIL,
         mode: storeResult.mode,
       });
@@ -110,22 +134,31 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const { storeMail, customerMail } = buildCustomPrintEmails({
+      const customPayload = {
         name,
         email,
         printType: String(body.printType ?? "Personalized Poster").trim(),
         dimensions: String(body.dimensions ?? "").trim(),
         fileName: String(body.fileName ?? "").trim(),
         message: String(body.message ?? "").trim(),
-      });
+      };
 
-      const [storeResult] = await Promise.all([
+      const { storeMail, customerMail } = buildCustomPrintEmails(customPayload);
+
+      const [storeResult, , dbSaved] = await Promise.all([
         sendEmail(storeMail),
         sendEmail(customerMail),
+        saveCustomPrintToDb(customPayload)
+          .then(() => true)
+          .catch((err) => {
+            console.warn("[Epic Store TiDB Custom Print Save Warning]", err);
+            return false;
+          }),
       ]);
 
       return Response.json({
         ok: true,
+        dbSaved,
         storeEmail: STORE_EMAIL,
         mode: storeResult.mode,
       });
@@ -141,13 +174,20 @@ export async function POST(request: NextRequest) {
       }
 
       const { storeMail, customerMail } = buildNewsletterEmails(email);
-      const [customerResult] = await Promise.all([
+      const [customerResult, , dbSaved] = await Promise.all([
         sendEmail(customerMail),
         sendEmail(storeMail),
+        saveNewsletterSubscriberToDb(email)
+          .then(() => true)
+          .catch((err) => {
+            console.warn("[Epic Store TiDB Newsletter Save Warning]", err);
+            return false;
+          }),
       ]);
 
       return Response.json({
         ok: true,
+        dbSaved,
         storeEmail: STORE_EMAIL,
         mode: customerResult.mode,
       });
@@ -171,4 +211,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

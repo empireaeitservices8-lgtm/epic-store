@@ -378,7 +378,7 @@ export default function AdminProductsPage() {
                 </div>
               </div>
               <h2
-                className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B]`}
+                className="m-0 mt-3 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
               >
                 {products.length}
               </h2>
@@ -389,7 +389,7 @@ export default function AdminProductsPage() {
                 Active Products
               </p>
               <h2
-                className={`${head} m-0 mt-4 text-3xl font-extrabold text-green-700`}
+                className="m-0 mt-4 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-green-700"
               >
                 {activeCount}
               </h2>
@@ -400,7 +400,7 @@ export default function AdminProductsPage() {
                 Out of Stock
               </p>
               <h2
-                className={`${head} m-0 mt-4 text-3xl font-extrabold text-red-600`}
+                className="m-0 mt-4 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-red-600"
               >
                 {outOfStockCount}
               </h2>
@@ -521,7 +521,7 @@ export default function AdminProductsPage() {
                       </td>
 
                       <td
-                        className={`${head} px-6 py-4 text-sm font-extrabold text-[#17171B]`}
+                        className="px-6 py-4 font-[family-name:var(--font-inter)] text-sm font-extrabold tabular-nums text-[#17171B]"
                       >
                         ₹{product.price.toLocaleString("en-IN")}
                       </td>

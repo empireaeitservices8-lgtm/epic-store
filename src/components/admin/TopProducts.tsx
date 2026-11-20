@@ -86,7 +86,7 @@ export default function TopProducts({ searchQuery = "" }: { searchQuery?: string
                 </p>
               </div>
 
-              <p className="m-0 shrink-0 font-[family-name:var(--font-syne)] text-sm font-extrabold text-[#17171B]">
+              <p className="m-0 shrink-0 font-[family-name:var(--font-inter)] text-sm font-extrabold tabular-nums text-[#17171B]">
                 ₹{product.revenue.toLocaleString("en-IN")}
               </p>
             </div>

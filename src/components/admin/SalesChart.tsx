@@ -59,7 +59,7 @@ export default function SalesChart() {
           </h2>
           <p className="m-0 mt-1 text-sm text-gray-500">
             Revenue total:{" "}
-            <strong className="text-[#17171B]">
+            <strong className="font-[family-name:var(--font-inter)] tabular-nums text-[#17171B]">
               ₹{periodTotal.toLocaleString("en-IN")}
             </strong>
           </p>

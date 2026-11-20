@@ -254,7 +254,7 @@ export default function AdminOrdersPage() {
                     {label}
                   </p>
                   <p
-                    className={`${head} m-0 mt-2 text-2xl font-extrabold text-[#17171B]`}
+                    className="m-0 mt-2 font-[family-name:var(--font-inter)] text-2xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     {value}
                   </p>
@@ -331,7 +331,7 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="px-6 py-4 text-gray-600">{order.items}</td>
                       <td
-                        className={`${head} whitespace-nowrap px-6 py-4 font-extrabold text-[#17171B]`}
+                        className="whitespace-nowrap px-6 py-4 font-[family-name:var(--font-inter)] font-extrabold tabular-nums text-[#17171B]"
                       >
                         ₹{order.total.toLocaleString("en-IN")}
                       </td>
@@ -440,7 +440,7 @@ export default function AdminOrdersPage() {
                 <div className="rounded-2xl bg-[#F7F8F5] p-3.5">
                   <p className="m-0 text-xs text-gray-400">Total</p>
                   <p
-                    className={`${head} m-0 mt-1 font-extrabold text-[#17171B]`}
+                    className="m-0 mt-1 font-[family-name:var(--font-inter)] font-extrabold tabular-nums text-[#17171B]"
                   >
                     ₹{selectedOrder.total.toLocaleString("en-IN")}
                   </p>

@@ -323,7 +323,7 @@ export default function AdminCollectionsPage() {
               >
                 <p className="m-0 text-sm font-medium text-gray-500">{label}</p>
                 <p
-                  className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B]`}
+                  className="m-0 mt-3 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                 >
                   {value}
                 </p>

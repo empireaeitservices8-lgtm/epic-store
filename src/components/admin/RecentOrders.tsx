@@ -99,7 +99,7 @@ export default function RecentOrders({ searchQuery = "" }: { searchQuery?: strin
                     {order.customer}
                   </td>
                   <td className="px-6 py-4 text-gray-500">{order.date}</td>
-                  <td className="px-6 py-4 font-bold text-[#17171B]">
+                  <td className="px-6 py-4 font-[family-name:var(--font-inter)] font-bold tabular-nums text-[#17171B]">
                     ₹{order.amount.toLocaleString("en-IN")}
                   </td>
                   <td className="px-6 py-4">

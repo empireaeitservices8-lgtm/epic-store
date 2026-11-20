@@ -261,7 +261,7 @@ export default function AdminEnquiriesPage() {
                     {label}
                   </p>
                   <p
-                    className={`${head} m-0 mt-2 text-2xl font-extrabold text-[#17171B]`}
+                    className="m-0 mt-2 font-[family-name:var(--font-inter)] text-2xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     {value}
                   </p>
@@ -457,7 +457,7 @@ export default function AdminEnquiriesPage() {
                 <div>
                   <p className="m-0 text-xs text-gray-400">Quantity</p>
                   <p
-                    className={`${head} m-0 mt-1 text-lg font-extrabold text-[#17171B]`}
+                    className="m-0 mt-1 font-[family-name:var(--font-inter)] text-lg font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     {selectedEnquiry.quantity}
                   </p>

@@ -239,7 +239,7 @@ export default function AdminCustomersPage() {
                     {label}
                   </p>
                   <p
-                    className={`${head} m-0 mt-2 text-2xl font-extrabold text-[#17171B]`}
+                    className="m-0 mt-2 font-[family-name:var(--font-inter)] text-2xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     {value}
                   </p>
@@ -328,7 +328,7 @@ export default function AdminCustomersPage() {
                         {customer.orders}
                       </td>
                       <td
-                        className={`${head} whitespace-nowrap px-6 py-4 font-extrabold text-[#17171B]`}
+                        className="whitespace-nowrap px-6 py-4 font-[family-name:var(--font-inter)] font-extrabold tabular-nums text-[#17171B]"
                       >
                         ₹{customer.spent.toLocaleString("en-IN")}
                       </td>
@@ -471,7 +471,7 @@ export default function AdminCustomersPage() {
                 <div className="rounded-2xl bg-[#F7F8F5] p-4">
                   <p className="m-0 text-xs text-gray-500">Total Orders</p>
                   <p
-                    className={`${head} m-0 mt-1 text-xl font-extrabold text-[#17171B]`}
+                    className="m-0 mt-1 font-[family-name:var(--font-inter)] text-xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     {selectedCustomer.orders}
                   </p>
@@ -479,7 +479,7 @@ export default function AdminCustomersPage() {
                 <div className="rounded-2xl bg-[#F7F8F5] p-4">
                   <p className="m-0 text-xs text-gray-500">Total Spent</p>
                   <p
-                    className={`${head} m-0 mt-1 text-xl font-extrabold text-[#17171B]`}
+                    className="m-0 mt-1 font-[family-name:var(--font-inter)] text-xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
                   >
                     ₹{selectedCustomer.spent.toLocaleString("en-IN")}
                   </p>

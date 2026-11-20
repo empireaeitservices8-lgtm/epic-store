@@ -75,7 +75,7 @@ export default function DashboardStats() {
               {stat.title}
             </p>
 
-            <h3 className="m-0 mt-1 font-[family-name:var(--font-syne)] text-2xl font-extrabold text-[#17171B] sm:text-3xl">
+            <h3 className="m-0 mt-1 font-[family-name:var(--font-inter)] text-2xl font-extrabold tabular-nums tracking-tight text-[#17171B] sm:text-3xl">
               {stat.value}
             </h3>
 
