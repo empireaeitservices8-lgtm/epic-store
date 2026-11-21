@@ -1,44 +1,5 @@
 import LoadingImage from "@/components/LoadingImage";
 
-const products = [
-  {
-    id: 1,
-    name: "Astronaut Space Poster",
-    category: "Posters",
-    sales: 184,
-    revenue: 91716,
-    image:
-      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=150",
-  },
-  {
-    id: 2,
-    name: "Abstract Modern Art",
-    category: "Canvas Prints",
-    sales: 156,
-    revenue: 93444,
-    image:
-      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=150",
-  },
-  {
-    id: 3,
-    name: "Vintage Aesthetic Poster",
-    category: "Posters",
-    sales: 132,
-    revenue: 52668,
-    image:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=150",
-  },
-  {
-    id: 4,
-    name: "Nature Landscape Print",
-    category: "Canvas Prints",
-    sales: 98,
-    revenue: 53802,
-    image:
-      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=150",
-  },
-];
-
 export type TopProductItem = {
   id: number;
   name: string;
@@ -55,14 +16,15 @@ export default function TopProducts({
   searchQuery?: string;
   items?: TopProductItem[];
 }) {
-  const source = items && items.length > 0 ? items : products;
+  const isLoading = items === undefined;
+  const source = items ?? [];
   const q = searchQuery.trim().toLowerCase();
   const filtered = q
     ? source.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q)
-      )
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+    )
     : source;
 
   return (
@@ -72,12 +34,28 @@ export default function TopProducts({
           Top Selling Products
         </h2>
         <p className="m-0 mt-1 text-sm text-gray-500">
-          Best performing products
+          Live revenue &amp; units from database orders
         </p>
       </div>
 
       <div className="space-y-4">
-        {filtered.length > 0 ? (
+          {
+            isLoading?(
+              Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex animate-pulse items-center gap-3 rounded-2xl p-2"
+                >
+                  <span className="h-7 w-7 shrink-0 rounded-full bg-gray-200" />
+                  <div className="h-12 w-12 shrink-0 rounded-xl bg-gray-200" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3.5 w-2/3 rounded bg-gray-200" />
+                    <div className="h-3 w-1/2 rounded bg-gray-100" />
+                  </div>
+                  <div className="h-4 w-16 rounded bg-gray-200" />
+                </div>
+              ))
+        ) : filtered.length > 0 ? (
           filtered.map((product, index) => (
             <div
               key={product.id}
@@ -109,7 +87,9 @@ export default function TopProducts({
           ))
         ) : (
           <p className="py-6 text-center text-sm text-gray-400">
-            No products match &ldquo;{searchQuery}&rdquo;.
+            {searchQuery.trim()
+              ? `No products match "${searchQuery}".`
+              : "No completed product sales recorded yet."}
           </p>
         )}
       </div>

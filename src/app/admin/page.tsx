@@ -66,6 +66,7 @@ export default function AdminDashboardPage() {
             sales?: number;
             image: string;
           }>;
+          topProducts?: TopProductItem[];
         };
         if (!data?.ok) return;
         if (data.summary) setSummary(data.summary);
@@ -88,28 +89,13 @@ export default function AdminDashboardPage() {
             }))
           );
         }
-        if (Array.isArray(data.products)) {
-          setTopProducts(
-            [...data.products]
-              .sort((a, b) => (b.sales ?? 50) - (a.sales ?? 50))
-              .slice(0, 4)
-              .map((p) => {
-                const sold = p.sales && p.sales > 0 ? p.sales : 48;
-                return {
-                  id: p.id,
-                  name: p.name,
-                  category: p.category,
-                  sales: sold,
-                  revenue: sold * p.price,
-                  image: p.image,
-                };
-              })
-          );
+          if (Array.isArray(data.topProducts)) {
+            setTopProducts(data.topProducts);
+          }
+        } catch {
+          /* fallback to static preview */
         }
-      } catch {
-        /* fallback to static preview */
-      }
-    })();
+      })();
   }, []);
 
   return (

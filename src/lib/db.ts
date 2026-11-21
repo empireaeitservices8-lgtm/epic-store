@@ -810,6 +810,60 @@ export async function getAdminDataFromDb() {
     .filter((o) => o.status !== "Cancelled")
     .reduce((sum, o) => sum + o.total, 0);
 
+  // Aggregate real top-selling products from non-cancelled orders in TiDB Cloud
+  const productById = new Map(products.map((p) => [p.id, p]));
+  const productByName = new Map(
+    products.map((p) => [p.name.trim().toLowerCase(), p])
+  );
+  const realSalesMap = new Map<
+    string,
+    { id: number; name: string; category: string; sales: number; revenue: number; image: string }
+  >();
+
+  for (const r of ordersRes?.rows ?? []) {
+    if ((r.status ?? "") === "Cancelled") continue;
+    try {
+      const parsed = JSON.parse(r.items_json ?? "[]") as Array<{
+        id?: number;
+        name?: string;
+        price?: number;
+        quantity?: number;
+      }>;
+      if (!Array.isArray(parsed)) continue;
+      for (const item of parsed) {
+        const qty = Math.max(1, Number(item?.quantity ?? 1));
+        const matched =
+          (item?.id ? productById.get(Number(item.id)) : undefined) ??
+          (item?.name
+            ? productByName.get(String(item.name).trim().toLowerCase())
+            : undefined);
+        const unitPrice = Number(item?.price ?? matched?.price ?? 0);
+        const name = matched?.name || String(item?.name || "Product").trim();
+        const key = matched ? `id-${matched.id}` : `name-${name.toLowerCase()}`;
+        const existing = realSalesMap.get(key);
+        if (existing) {
+          existing.sales += qty;
+          existing.revenue += unitPrice * qty;
+        } else {
+          realSalesMap.set(key, {
+            id: matched?.id ?? realSalesMap.size + 1000,
+            name,
+            category: matched?.category ?? "Epic Store",
+            sales: qty,
+            revenue: unitPrice * qty,
+            image: matched?.image ?? "/products/signed-jersey-frame.jpg",
+          });
+        }
+      }
+    } catch {
+      /* ignore malformed items_json */
+    }
+  }
+
+  const topProducts = Array.from(realSalesMap.values())
+    .sort((a, b) => b.revenue - a.revenue || b.sales - a.sales)
+    .slice(0, 5);
+
   return {
     products,
     orders,
@@ -818,6 +872,7 @@ export async function getAdminDataFromDb() {
     collections,
     reviews,
     enquiries,
+    topProducts,
     summary: {
       totalRevenue,
       totalOrders: orders.length,
