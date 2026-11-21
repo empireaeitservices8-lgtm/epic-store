@@ -61,8 +61,7 @@ const products = [
     rating: 4.9,
     reviews: 164,
     discount: "25% OFF",
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=85",
+    image: "/products/signed-jersey-frame.jpg",
     badge: "POPULAR",
   },
   {

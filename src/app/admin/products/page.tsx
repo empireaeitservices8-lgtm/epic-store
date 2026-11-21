@@ -80,8 +80,7 @@ const initialProducts: Product[] = [
     price: 2499,
     stock: 14,
     status: "Active",
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300",
+    image: "/products/signed-jersey-frame.jpg",
   },
   {
     id: 4,

@@ -67,8 +67,7 @@ const initialProducts: WishlistProduct[] = [
     category: "Signed Jersey Frame",
     price: 1499,
     oldPrice: 1999,
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=700&q=85",
+    image: "/products/signed-jersey-frame.jpg",
     rating: 4.9,
   },
   {

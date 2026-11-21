@@ -80,7 +80,7 @@ const products: ProductItem[] = [
       "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
     gallery: [
       "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+      "/products/signed-jersey-frame.jpg",
       "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1000&q=85",
     ],
     description:
@@ -126,10 +126,9 @@ const products: ProductItem[] = [
     oldPrice: 1999,
     rating: 4.9,
     reviews: 164,
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+    image: "/products/signed-jersey-frame.jpg",
     gallery: [
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+      "/products/signed-jersey-frame.jpg",
       "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1000&q=85",
       "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1000&q=85",
     ],
@@ -231,7 +230,7 @@ const products: ProductItem[] = [
     gallery: [
       "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1000&q=85",
       "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1000&q=85",
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&q=85",
+      "/products/signed-jersey-frame.jpg",
     ],
     description:
       "A centerpiece collector display for true cricket fans. Features a tribute signed championship jersey mounted inside a deep hardwood frame with archival mat boards and commemorative stats.",

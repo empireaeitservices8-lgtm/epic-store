@@ -1,4 +1,4 @@
-`"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -66,7 +66,7 @@ const initialCategories: Category[] = [
     slug: "signed-jersey-frame",
     description:
       "Museum-grade shadow-box display frames for autographed sports jerseys.",
-    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300",
+    image: "/products/signed-jersey-frame.jpg",
     status: "Active",
   },
 ];
@@ -255,7 +255,7 @@ export default function AdminCategoriesPage() {
 
   return (
     <div
-      className={`${ syne.variable } ${ inter.variable } min - h - screen bg - [#F7F8F5] font - [family - name:var(--font - inter)]`}
+      className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
     >
       <AdminSidebar
         mobileOpen={mobileMenuOpen}
@@ -283,7 +283,7 @@ export default function AdminCategoriesPage() {
                 <span className="text-green-700">Categories</span>
               </div>
               <h1
-                className={`${ head } m - 0 mt - 2 text - 2xl font - extrabold uppercase tracking - tight text - [#17171B] sm: text - 3xl`}
+                className={`${head} m-0 mt-2 text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
               >
                 Categories
               </h1>
@@ -294,7 +294,7 @@ export default function AdminCategoriesPage() {
             <button
               type="button"
               onClick={openAddModal}
-              className={`inline - flex cursor - pointer items - center justify - center gap - 2 rounded - full border - 0 bg - [#17171B] px - 6 py - 3.5 text - xs font - bold uppercase tracking - [0.1em] text - white transition hover: bg - [#78D94F] hover: text - [#17171B] ${ focus } `}
+              className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-0 bg-[#17171B] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.1em] text-white transition hover:bg-[#78D94F] hover:text-[#17171B] ${focus}`}
             >
               <Plus size={16} /> Add Category
             </button>
@@ -415,7 +415,7 @@ export default function AdminCategoriesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`rounded - full px - 3.5 py - 1 text - xs font - bold ${
+                          className={`rounded-full px-3.5 py-1 text-xs font-bold ${
   category.status === "Active"
     ? "bg-[#78D94F]/20 text-green-800"
     : "bg-gray-100 text-gray-600"
@@ -429,16 +429,16 @@ export default function AdminCategoriesPage() {
                           <button
                             type="button"
                             onClick={() => openEditModal(category)}
-                            className={`grid h - 9 w - 9 cursor - pointer place - items - center rounded - xl border - 0 bg - transparent text - gray - 400 transition hover: bg - [#78D94F] / 20 hover: text - green - 800 ${ focus } `}
-                            aria-label={`Edit ${ category.name } `}
+                            className={`grid h-9 w-9 cursor-pointer place-items-center rounded-xl border-0 bg-transparent text-gray-400 transition hover:bg-[#78D94F]/20 hover:text-green-800 ${focus}`}
+                            aria-label={`Edit ${category.name}`}
                           >
                             <Pencil size={16} />
                           </button>
                           <button
                             type="button"
                             onClick={() => setDeleteTarget(category)}
-                            className={`grid h - 9 w - 9 cursor - pointer place - items - center rounded - xl border - 0 bg - transparent text - gray - 400 transition hover: bg - red - 50 hover: text - red - 600 ${ focus } `}
-                            aria-label={`Delete ${ category.name } `}
+                            className={`grid h-9 w-9 cursor-pointer place-items-center rounded-xl border-0 bg-transparent text-gray-400 transition hover:bg-red-50 hover:text-red-600 ${focus}`}
+                            aria-label={`Delete ${category.name}`}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -474,7 +474,7 @@ export default function AdminCategoriesPage() {
             <div className="mb-6 flex items-center justify-between">
               <h2
                 id="category-modal-title"
-                className={`${ head } m - 0 text - xl font - extrabold text - [#17171B]`}
+                className={`${head} m-0 text-xl font-extrabold text-[#17171B]`}
               >
                 {editingId ? "Edit Category" : "Add New Category"}
               </h2>
@@ -591,7 +591,7 @@ export default function AdminCategoriesPage() {
             </div>
             <h2
               id="delete-cat-title"
-              className={`${ head } m - 0 mt - 5 text - center text - xl font - extrabold text - [#17171B]`}
+              className={`${head} m-0 mt-5 text-center text-xl font-extrabold text-[#17171B]`}
             >
               Delete Category?
             </h2>

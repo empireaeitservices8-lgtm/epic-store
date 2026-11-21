@@ -40,8 +40,7 @@ const categories = [
   {
     name: "Signed Jersey Frame",
     subtitle: "Museum-grade shadow-box frames for autographed jerseys",
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&q=85",
+    image: "/products/signed-jersey-frame.jpg",
     href: "/shop?category=signed-jersey-frame",
     number: "03",
     span: "",

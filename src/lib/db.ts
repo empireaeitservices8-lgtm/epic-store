@@ -588,7 +588,7 @@ export async function ensureSeededDatabase(): Promise<void> {
       `INSERT IGNORE INTO products (name, sku, category, price, stock, status, image, sales) VALUES
       ('Football Legends Metal Poster (A3)', 'EP-MET-001', 'Metal Posters (A4, A3, A2)', 699, 45, 'Active', 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=300', 184),
       ('F1 Racing Telemetry Desk Pad', 'EP-DSK-002', 'Desk Pad', 899, 32, 'Active', 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300', 156),
-      ('Autographed Football Signed Jersey Frame', 'EP-FRM-003', 'Signed Jersey Frame', 2499, 14, 'Active', 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300', 132),
+      ('Autographed Football Signed Jersey Frame', 'EP-FRM-003', 'Signed Jersey Frame', 2499, 14, 'Active', '/products/signed-jersey-frame.jpg', 132),
       ('Anime Shonen Edition Metal Poster (A2)', 'EP-MET-004', 'Metal Posters (A4, A3, A2)', 999, 22, 'Active', 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300', 98),
       ('Pro Gaming & Characters XXL Desk Pad', 'EP-DSK-005', 'Desk Pad', 949, 18, 'Active', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300', 76),
       ('Championship Cricket Signed Jersey Frame', 'EP-FRM-006', 'Signed Jersey Frame', 2799, 8, 'Active', 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=300', 64)`
@@ -624,9 +624,14 @@ export async function ensureSeededDatabase(): Promise<void> {
       `INSERT IGNORE INTO categories (name, slug, description, image, status) VALUES
       ('Metal Posters (A4, A3, A2)', 'metal-posters', 'HD glossy and matte aluminium metal wall posters in A4, A3, and A2 sizes.', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300', 'Active'),
       ('Desk Pad', 'desk-pad', 'Premium XXL anti-fray gaming and workspace micro-weave desk pads.', 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=300', 'Active'),
-      ('Signed Jersey Frame', 'signed-jersey-frame', 'Museum-grade shadow-box display frames for autographed sports jerseys.', 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=300', 'Active')`
+      ('Signed Jersey Frame', 'signed-jersey-frame', 'Museum-grade shadow-box display frames for autographed sports jerseys.', '/products/signed-jersey-frame.jpg', 'Active')`
     );
   }
+
+  seedQueries.push(
+    `UPDATE products SET image = '/products/signed-jersey-frame.jpg' WHERE image LIKE '%photo-1508098682722-e99c43a406b2%'`,
+    `UPDATE categories SET image = '/products/signed-jersey-frame.jpg' WHERE image LIKE '%photo-1508098682722-e99c43a406b2%'`
+  );
 
   if (Number(counts[4]?.rows?.[0]?.c ?? 0) === 0) {
     seedQueries.push(

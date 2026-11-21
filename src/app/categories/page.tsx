@@ -46,8 +46,7 @@ const categories = [
     slug: "signed-jersey-frame",
     description:
       "Museum-grade shadow-box display frames engineered to showcase and protect autographed football and cricket jerseys.",
-    image:
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&q=85",
+    image: "/products/signed-jersey-frame.jpg",
     count: "Explore Jersey Frames",
   },
 ];

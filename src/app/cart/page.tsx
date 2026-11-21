@@ -128,8 +128,13 @@ export default function CartPage() {
   const [removing, setRemoving] = useState<number | null>(null);
   const [undo, setUndo] = useState<{ item: CartItem; index: number } | null>(null);
   const [ready, setReady] = useState(false);
+  const cartRef = useRef(cartItems);
   const removeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    cartRef.current = cartItems;
+  }, [cartItems]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -149,15 +154,13 @@ export default function CartPage() {
   }, []);
 
   const updateQuantity = (id: number, amount: number) => {
-    setCartItems((items) => {
-      const next = items.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.min(MAX_QTY, Math.max(1, item.quantity + amount)) }
-          : item
-      );
-      setStoreCart(next);
-      return next;
-    });
+    const next = cartItems.map((item) =>
+      item.id === id
+        ? { ...item, quantity: Math.min(MAX_QTY, Math.max(1, item.quantity + amount)) }
+        : item
+    );
+    setCartItems(next);
+    setStoreCart(next);
   };
 
   /* Collapse the row, then remove it and offer Undo */
@@ -165,14 +168,14 @@ export default function CartPage() {
     setRemoving(id);
     if (removeTimer.current) clearTimeout(removeTimer.current);
     removeTimer.current = setTimeout(() => {
-      setCartItems((items) => {
-        const index = items.findIndex((i) => i.id === id);
-        if (index === -1) return items;
-        setUndo({ item: items[index], index });
+      const items = cartRef.current;
+      const index = items.findIndex((i) => i.id === id);
+      if (index !== -1) {
         const next = items.filter((i) => i.id !== id);
+        setUndo({ item: items[index], index });
+        setCartItems(next);
         setStoreCart(next);
-        return next;
-      });
+      }
       setRemoving(null);
       if (undoTimer.current) clearTimeout(undoTimer.current);
       undoTimer.current = setTimeout(() => setUndo(null), 6000);
@@ -181,12 +184,10 @@ export default function CartPage() {
 
   const undoRemove = () => {
     if (!undo) return;
-    setCartItems((items) => {
-      const next = [...items];
-      next.splice(Math.min(undo.index, next.length), 0, undo.item);
-      setStoreCart(next);
-      return next;
-    });
+    const next = [...cartItems];
+    next.splice(Math.min(undo.index, next.length), 0, undo.item);
+    setCartItems(next);
+    setStoreCart(next);
     setUndo(null);
   };
 
