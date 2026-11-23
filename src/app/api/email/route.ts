@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import {
+  generateNextBookingId,
   saveContactEnquiryToDb,
   saveCustomPrintToDb,
   saveNewsletterSubscriberToDb,
@@ -32,12 +33,8 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const now = new Date();
-      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
-        now.getDate()
-      ).padStart(2, "0")}`;
-      const randomPart = String(Math.floor(100 + Math.random() * 900));
-      const orderId = String(body.orderId || `EP${datePart}${randomPart}`);
+      const requestedId = String(body.orderId ?? "").trim();
+      const orderId = requestedId || (await generateNextBookingId());
 
       const payload: OrderEmailPayload = {
         orderId,

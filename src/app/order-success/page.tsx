@@ -81,7 +81,7 @@ const card =
   "rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)] md:p-8";
 
 export default function OrderSuccessPage() {
-  const [orderId, setOrderId] = useState("EP20261117001");
+  const [orderId, setOrderId] = useState("IFE-20261123");
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);

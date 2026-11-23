@@ -187,7 +187,7 @@ export default function TrackOrderPage() {
                       setError("");
                       setSearched(false);
                     }}
-                    placeholder="Example: EP20261117001"
+                    placeholder="Example: IFE-20261123"
                     className="min-w-0 flex-1 border-0 bg-transparent px-3 py-3.5 text-sm outline-none"
                   />
                 </div>

@@ -882,6 +882,24 @@ export async function getAdminDataFromDb() {
   };
 }
 
+export async function generateNextBookingId(): Promise<string> {
+  const now = new Date();
+  const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
+    now.getDate()
+  ).padStart(2, "0")}`;
+  const baseId = `IFE-${datePart}`;
+  try {
+    await ensureSeededDatabase();
+    const [res] = await runInAppDatabase([
+      `SELECT COUNT(*) AS count FROM orders WHERE order_id = ${sqlEscape(baseId)} OR order_id LIKE ${sqlEscape(`${baseId}-%`)}`,
+    ]);
+    const existing = Number(res?.rows?.[0]?.count ?? 0);
+    return existing === 0 ? baseId : `${baseId}-${existing + 1}`;
+  } catch {
+    return baseId;
+  }
+}
+
 export async function saveOrderToDb(order: {
   orderId: string;
   firstName: string;

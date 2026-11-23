@@ -223,11 +223,11 @@ export default function CheckoutPage() {
 
     setPlacing(true);
     void (async () => {
-      let generatedId = `EP${new Date().getFullYear()}${String(
-        new Date().getMonth() + 1
-      ).padStart(2, "0")}${String(new Date().getDate()).padStart(2, "0")}${Math.floor(
-        100 + Math.random() * 900
-      )}`;
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(
+        now.getMonth() + 1
+      ).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      let generatedId = `IFE-${datePart}`;
       try {
         const res = await fetch("/api/email", {
           method: "POST",
@@ -235,7 +235,6 @@ export default function CheckoutPage() {
           body: JSON.stringify({
             type: "order",
             checkoutMode,
-            orderId: generatedId,
             ...formData,
             paymentMethod,
             items: products,
