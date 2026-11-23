@@ -32,6 +32,9 @@ const head = `${syne.className} font-[family-name:var(--font-syne)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
+const autofillFix =
+  "[&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#1E1E24] [&:-webkit-autofill]:[-webkit-text-fill-color:#FFFFFF] [&:-webkit-autofill]:caret-white";
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -49,7 +52,7 @@ export default function AdminLoginPage() {
     setError("");
 
     if (!email.trim() || !password) {
-      setError("Please enter both your admin email and password.");
+      setError("Please enter both your administrator email and password.");
       return;
     }
 
@@ -81,104 +84,66 @@ export default function AdminLoginPage() {
 
   return (
     <main
-      className={`${syne.variable} ${inter.variable} ${inter.className} flex min-h-screen items-center justify-center bg-[#F7F8F5] px-4 py-8 font-[family-name:var(--font-inter)] sm:px-6`}
+      className={`${syne.variable} ${inter.variable} ${inter.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0D0D10] px-4 py-10 font-[family-name:var(--font-inter)] text-white sm:px-6`}
     >
-      <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_24px_70px_rgba(23,23,27,0.08)] md:grid-cols-2">
-        {/* Left Dark Brand Panel */}
-        <div className="relative hidden flex-col justify-between overflow-hidden bg-[#17171B] p-10 text-white md:flex lg:p-12">
-          <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-[#78D94F]/10 blur-3xl" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+      {/* Ambient background effects */}
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#78D94F]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#78D94F]/8 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
 
-          <div className="relative z-10 flex items-center justify-between">
-            <span className={`${head} text-2xl font-extrabold tracking-[0.14em]`}>
-              EPIC<span className="text-[#78D94F]">STORE.</span>
-            </span>
-            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#78D94F]">
-              Admin Portal
-            </span>
-          </div>
-
-          <div className="relative z-10 my-10">
-            <p className="m-0 flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.24em] text-[#78D94F]">
-              <span className="h-0.5 w-7 bg-[#78D94F]" />
-              Control Center
-            </p>
-            <h1
-              className={`${head} mt-3 text-3xl font-extrabold uppercase leading-[1.06] tracking-tight text-white lg:text-4xl`}
-            >
-              Manage Your{" "}
-              <span className="text-[#78D94F]">Storefront.</span>
-            </h1>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-gray-400">
-              Sign in to access live orders, inventory, TiDB Cloud analytics,
-              customer enquiries, and product collections.
-            </p>
-
-            <div className="mt-7 space-y-2.5 text-xs text-gray-300">
-              <div className="flex items-center gap-2.5">
-                <ShieldCheck className="h-4 w-4 shrink-0 text-[#78D94F]" />
-                <span>HTTP-only signed session protection</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <ShieldCheck className="h-4 w-4 shrink-0 text-[#78D94F]" />
-                <span>Real-time TiDB Cloud order &amp; stock sync</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative z-10 border-t border-white/10 pt-5">
-            <Link
-              href="/"
-              className={`inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Live Store
-            </Link>
-          </div>
+      <div className="relative z-10 w-full max-w-[440px]">
+        {/* Top back link */}
+        <div className="mb-5 flex items-center justify-between px-1">
+          <span className={`${head} text-lg font-extrabold tracking-[0.14em] text-white`}>
+            EPIC<span className="text-[#78D94F]">STORE.</span>
+          </span>
+          <Link
+            href="/"
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Live Store
+          </Link>
         </div>
 
-        {/* Right Login Form */}
-        <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
-          <div className="mb-6 flex items-center justify-between md:hidden">
-            <span className={`${head} text-xl font-extrabold tracking-[0.12em] text-[#17171B]`}>
-              EPIC<span className="text-[#78D94F]">STORE.</span>
-            </span>
-            <Link
-              href="/"
-              className="text-xs font-bold text-gray-500 no-underline hover:text-[#17171B]"
+        {/* Main Card */}
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#17171B]/95 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:p-9">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#78D94F]/60 to-transparent" />
+
+          {/* Header */}
+          <div className="text-center">
+            <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-[#78D94F]/35 bg-[#78D94F]/10 text-[#78D94F] shadow-[0_0_28px_rgba(120,217,79,0.18)]">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+
+            <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.26em] text-[#78D94F]">
+              Epic Store Administration
+            </p>
+
+            <h1
+              className={`${head} mt-2.5 text-3xl font-extrabold tracking-tight text-white sm:text-4xl`}
             >
-              ← Storefront
-            </Link>
+              Admin <span className="text-[#78D94F]">Login</span>
+            </h1>
+
+            <p className="mt-2 text-xs text-gray-400 sm:text-sm">
+              Sign in to manage your Epic Store platform.
+            </p>
           </div>
 
-          <p className="m-0 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-green-700">
-            <span className="h-0.5 w-6 bg-[#78D94F]" />
-            Administrator Access
-          </p>
-
-          <h2
-            className={`${head} mt-2.5 text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
-          >
-            Admin Sign In
-          </h2>
-          <p className="mt-1.5 text-sm text-gray-500">
-            Enter your administrator credentials to continue.
-          </p>
-
+          {/* Form */}
           <form onSubmit={handleSubmit} className="mt-7 space-y-5" noValidate>
             <div>
               <label
                 htmlFor="admin-email"
-                className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#17171B]"
+                className="mb-2 block text-xs font-semibold tracking-wide text-gray-300"
               >
-                Admin Email
+                Administrator Email
               </label>
-              <div className="relative">
-                <Mail
-                  size={17}
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
+              <div className="relative flex items-center overflow-hidden rounded-xl border border-white/15 bg-[#1E1E24] transition focus-within:border-[#78D94F] focus-within:ring-2 focus-within:ring-[#78D94F]/20">
+                <span className="grid h-12 w-11 shrink-0 place-items-center text-[#78D94F]">
+                  <Mail size={17} />
+                </span>
                 <input
                   id="admin-email"
                   type="email"
@@ -189,7 +154,7 @@ export default function AdminLoginPage() {
                     if (error) setError("");
                   }}
                   placeholder="admin@epicstore.in"
-                  className={`w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:border-[#78D94F] focus:ring-2 focus:ring-[#78D94F]/25 ${focus}`}
+                  className={`h-12 w-full border-0 bg-transparent pr-4 text-sm text-white outline-none placeholder:text-gray-500 ${autofillFix}`}
                 />
               </div>
             </div>
@@ -197,15 +162,14 @@ export default function AdminLoginPage() {
             <div>
               <label
                 htmlFor="admin-password"
-                className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#17171B]"
+                className="mb-2 block text-xs font-semibold tracking-wide text-gray-300"
               >
                 Password
               </label>
-              <div className="relative">
-                <Lock
-                  size={17}
-                  className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                />
+              <div className="relative flex items-center overflow-hidden rounded-xl border border-white/15 bg-[#1E1E24] transition focus-within:border-[#78D94F] focus-within:ring-2 focus-within:ring-[#78D94F]/20">
+                <span className="grid h-12 w-11 shrink-0 place-items-center text-[#78D94F]">
+                  <Lock size={17} />
+                </span>
                 <input
                   id="admin-password"
                   type={showPassword ? "text" : "password"}
@@ -215,55 +179,64 @@ export default function AdminLoginPage() {
                     setPassword(e.target.value);
                     if (error) setError("");
                   }}
-                  placeholder="Enter admin password"
-                  className={`w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-[#17171B] outline-none transition placeholder:text-gray-400 focus:border-[#78D94F] focus:ring-2 focus:ring-[#78D94F]/25 ${focus}`}
+                  placeholder="Enter administrator password"
+                  className={`h-12 w-full border-0 bg-transparent pr-11 text-sm text-white outline-none placeholder:text-gray-500 ${autofillFix}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-1 text-gray-400 transition hover:text-[#17171B]"
+                  className="absolute right-2 grid h-9 w-9 cursor-pointer place-items-center rounded-lg border-0 bg-transparent text-gray-400 transition hover:text-white"
                 >
                   {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                 </button>
               </div>
             </div>
 
-              <div className="flex items-center text-xs">
-                <label className="flex cursor-pointer items-center gap-2 font-medium text-gray-600">
-                  <input
-                    type="checkbox"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
-                    className="h-4 w-4 cursor-pointer accent-[#78D94F]"
-                  />
-                  Keep me signed in (7 days)
-                </label>
-              </div>
+            <div className="flex items-center justify-between gap-2 text-xs">
+              <label className="flex cursor-pointer items-center gap-2 text-gray-400 transition hover:text-gray-200">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer rounded accent-[#78D94F]"
+                />
+                Keep me signed in (7 days)
+              </label>
+            </div>
 
-              {error && (
-                <p
-                  role="alert"
-                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"
-                >
-                  {error}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`${head} group inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-[#78D94F] px-7 py-3.5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#17171B] shadow-[0_10px_28px_rgba(120,217,79,0.28)] transition hover:bg-[#17171B] hover:text-white disabled:cursor-wait disabled:opacity-75 ${focus}`}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs font-medium text-red-300"
               >
-                {loading ? "Signing In..." : "Sign In to Admin"}
-                {!loading && (
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                )}
-              </button>
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`${head} group inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border-0 bg-[#78D94F] px-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#17171B] shadow-[0_12px_32px_rgba(120,217,79,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#8be365] disabled:cursor-wait disabled:opacity-75 disabled:hover:translate-y-0 ${focus}`}
+            >
+              {loading ? "Signing In..." : "Access Dashboard"}
+              {!loading && (
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              )}
+            </button>
           </form>
+
+          {/* Footer */}
+          <div className="mt-7 border-t border-white/10 pt-5 text-center">
+            <p className="m-0 text-[11px] font-medium text-gray-500">
+              Authorized personnel only.
+            </p>
+            <p className="m-0 mt-1 text-[11px] text-gray-600">
+              Epic Store Administration Portal
+            </p>
+          </div>
         </div>
       </div>
     </main>
   );
 }
-
