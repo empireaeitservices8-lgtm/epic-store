@@ -8,11 +8,12 @@ function getAdminCredentials() {
   return {
     email: (process.env.ADMIN_EMAIL || "admin@epicstore.in").trim().toLowerCase(),
     altEmail: "store.epicsports@gmail.com",
-    password: process.env.ADMIN_PASSWORD || "EpicAdmin@2026",
-    secret:
+    password: (process.env.ADMIN_PASSWORD || "").trim(),
+    secret: (
       process.env.ADMIN_SESSION_SECRET ||
       process.env.GMAIL_APP_PASSWORD ||
-      "epic-store-admin-session-secret-2026",
+      ""
+    ).trim(),
   };
 }
 
@@ -48,6 +49,9 @@ function verifyToken(token: string | undefined, secret: string): string | null {
 
 export async function GET(request: NextRequest) {
   const { secret } = getAdminCredentials();
+  if (!secret) {
+    return NextResponse.json({ authenticated: false }, { status: 401 });
+  }
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const email = verifyToken(token, secret);
 
@@ -76,6 +80,17 @@ export async function POST(request: NextRequest) {
     const email = (body.email || "").trim().toLowerCase();
     const password = body.password || "";
     const creds = getAdminCredentials();
+
+    if (!creds.password || !creds.secret) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "Admin authentication environment variables (ADMIN_PASSWORD, ADMIN_SESSION_SECRET) are not configured.",
+        },
+        { status: 500 }
+      );
+    }
 
     const validEmail = email === creds.email || email === creds.altEmail;
     const validPassword = password === creds.password;
