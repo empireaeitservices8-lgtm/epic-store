@@ -1,19 +1,49 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 
 const COOKIE_NAME = "epic_admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
+function readEnvLocalValue(key: string): string {
+  try {
+    const envPath = path.join(process.cwd(), ".env.local");
+    const raw = fs.readFileSync(envPath, "utf8");
+    const match = raw.match(new RegExp(`^${key}=(.*)$`, "m"));
+    if (!match) return "";
+    return match[1].trim().replace(/^["']|["']$/g, "");
+  } catch {
+    return "";
+  }
+}
+
 function getAdminCredentials() {
+  const email = (
+    process.env.ADMIN_EMAIL ||
+    readEnvLocalValue("ADMIN_EMAIL") ||
+    "admin@epicstore.in"
+  )
+    .trim()
+    .toLowerCase();
+  const password = (
+    process.env.ADMIN_PASSWORD ||
+    readEnvLocalValue("ADMIN_PASSWORD") ||
+    ""
+  ).trim();
+  const secret = (
+    process.env.ADMIN_SESSION_SECRET ||
+    readEnvLocalValue("ADMIN_SESSION_SECRET") ||
+    process.env.GMAIL_APP_PASSWORD ||
+    readEnvLocalValue("GMAIL_APP_PASSWORD") ||
+    ""
+  ).trim();
+
   return {
-    email: (process.env.ADMIN_EMAIL || "admin@epicstore.in").trim().toLowerCase(),
+    email,
     altEmail: "store.epicsports@gmail.com",
-    password: (process.env.ADMIN_PASSWORD || "").trim(),
-    secret: (
-      process.env.ADMIN_SESSION_SECRET ||
-      process.env.GMAIL_APP_PASSWORD ||
-      ""
-    ).trim(),
+    password,
+    secret,
   };
 }
 
