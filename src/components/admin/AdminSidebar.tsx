@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Star,
   Ticket,
+  CalendarDays,
   Settings,
   LogOut,
   Store,
@@ -34,6 +35,7 @@ const menuItems = [
     title: "STORE MANAGEMENT",
     items: [
       { name: "Collections", href: "/admin/collections", icon: Layers },
+      { name: "Home Events", href: "/admin/home-events", icon: CalendarDays },
       { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
       { name: "Reviews", href: "/admin/reviews", icon: Star },
       { name: "Coupons", href: "/admin/coupons", icon: Ticket },

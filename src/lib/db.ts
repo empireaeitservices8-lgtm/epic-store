@@ -550,6 +550,22 @@ export function getSchemaSetupQueries(appDb: string): string[] {
       email VARCHAR(190) NOT NULL UNIQUE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
+    `CREATE TABLE IF NOT EXISTS home_events (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(180) NOT NULL,
+      eyebrow VARCHAR(120) NOT NULL DEFAULT '',
+      headline_line1 VARCHAR(120) NOT NULL DEFAULT '',
+      headline_line2 VARCHAR(120) NOT NULL DEFAULT '',
+      description TEXT,
+      cta_label VARCHAR(80) NOT NULL DEFAULT 'SHOP NOW',
+      cta_href VARCHAR(255) NOT NULL DEFAULT '/shop',
+      badge_text VARCHAR(80) NOT NULL DEFAULT '',
+      banner_image TEXT,
+      ticker_text VARCHAR(255) NOT NULL DEFAULT '',
+      active TINYINT(1) NOT NULL DEFAULT 1,
+      sort_order INT NOT NULL DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
   ];
 }
 
@@ -579,6 +595,7 @@ export async function ensureSeededDatabase(): Promise<void> {
     "SELECT COUNT(*) AS c FROM collections",
     "SELECT COUNT(*) AS c FROM reviews",
     "SELECT COUNT(*) AS c FROM enquiries",
+    "SELECT COUNT(*) AS c FROM home_events",
   ]);
 
   const seedQueries: string[] = [];
@@ -671,10 +688,60 @@ export async function ensureSeededDatabase(): Promise<void> {
     );
   }
 
+  if (Number(counts[7]?.rows?.[0]?.c ?? 0) === 0) {
+    seedQueries.push(
+      `INSERT IGNORE INTO home_events (title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order) VALUES
+      ('Epic Wall Drop 2026', 'DISCOVER YOUR STYLE', 'MAKE YOUR', 'WALLS EPIC.', 'Transform your space with premium metal posters, creative wall art and unique collections. Find something that speaks to you.', 'SHOP NOW', '/shop', 'ART THAT INSPIRES', '/Home-page/hero-slide-1.jpg', 'PREMIUM POSTERS, CREATIVE WALL ART, MINIMAL PRINTS, BOLD TYPOGRAPHY, NEW DROPS, SHIPPING ACROSS INDIA', 1, 1),
+      ('Curated Collections Showcase', 'CURATED COLLECTIONS', 'FRAME YOUR', 'STORY.', 'From bold typography to calm minimal prints, explore collections made to fit the way you live.', 'EXPLORE COLLECTIONS', '/collections', 'MADE TO BE SEEN', '/Home-page/hero-slide-2.jpg', 'CURATED COLLECTIONS, METAL POSTERS, DESK PADS, SIGNED JERSEY FRAMES, FREE PAN-INDIA SHIPPING', 1, 2),
+      ('Matchday & Motorsport Fest', 'LIMITED SEASONAL EVENT', 'MATCHDAY', 'LEGENDS DROP.', 'Celebrate iconic football, cricket, and Formula 1 moments with limited-edition metallic wall art and signed jersey frames.', 'SHOP SPORTS DROP', '/shop?collection=Football', 'EVENT SPECIAL', '/Home-page/hero-slide-3.jpg', 'MATCHDAY DROP, FOOTBALL & CRICKET, F1 TELEMETRY, 3-PIECE BUNDLE SAVINGS, LIMITED EDITION', 0, 3)`
+    );
+  }
+
   if (seedQueries.length > 0) {
     await runInAppDatabase(seedQueries);
   }
   seedCompleted = true;
+}
+
+export type HomeEventRecord = {
+  id: number;
+  title: string;
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  badgeText: string;
+  bannerImage: string;
+  tickerText: string;
+  active: boolean;
+  sortOrder: number;
+};
+
+export async function getHomeEventsFromDb(
+  onlyActive = false
+): Promise<HomeEventRecord[]> {
+  await ensureSeededDatabase();
+  const where = onlyActive ? "WHERE active = 1" : "";
+  const [res] = await runInAppDatabase([
+    `SELECT id, title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order FROM home_events ${where} ORDER BY sort_order ASC, id ASC`,
+  ]);
+  return (res?.rows ?? []).map((r) => ({
+    id: Number(r.id),
+    title: r.title ?? "",
+    eyebrow: r.eyebrow ?? "",
+    headlineLine1: r.headline_line1 ?? "",
+    headlineLine2: r.headline_line2 ?? "",
+    description: r.description ?? "",
+    ctaLabel: r.cta_label ?? "SHOP NOW",
+    ctaHref: r.cta_href ?? "/shop",
+    badgeText: r.badge_text ?? "",
+    bannerImage: r.banner_image ?? "/Home-page/hero-slide-1.jpg",
+    tickerText: r.ticker_text ?? "",
+    active: Number(r.active ?? 0) === 1,
+    sortOrder: Number(r.sort_order ?? 0),
+  }));
 }
 
 export async function getAdminDataFromDb() {

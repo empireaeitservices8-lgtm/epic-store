@@ -92,6 +92,94 @@ export default function CustomPrints() {
       }`,
   });
 
+  const renderStudioControls = (compact = false) => (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+          {compact ? "Size & Finish" : "Live Studio Preview"}
+        </p>
+
+        {/* Finish Toggle */}
+        <div
+          role="radiogroup"
+          aria-label="Choose finish"
+          className="inline-flex rounded-full border border-gray-200 bg-[#F7F8F5] p-0.5"
+        >
+          {finishes.map((f) => (
+            <button
+              key={f}
+              type="button"
+              role="radio"
+              aria-checked={finish === f}
+              onClick={() => setFinish(f)}
+              className={`cursor-pointer rounded-full border-0 px-3 py-1 text-[11px] font-semibold transition ${focus} ${
+                finish === f
+                  ? "bg-[#17171B] text-white"
+                  : "bg-transparent text-gray-500 hover:text-[#17171B]"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-3.5 sm:gap-2.5">
+        {/* Size Pills */}
+        <div
+          role="radiogroup"
+          aria-label="Choose print size"
+          className="flex items-center gap-1.5 sm:gap-2"
+        >
+          {sizes.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              role="radio"
+              aria-checked={size === s.id}
+              onClick={() => setSize(s.id)}
+              className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-semibold tracking-[0.1em] transition duration-300 sm:px-4 sm:py-2 ${focus} ${
+                size === s.id
+                  ? "border-[#17171B] bg-[#17171B] text-white"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        <span className="mx-0.5 hidden h-5 w-px bg-gray-200 sm:block" />
+
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-[#78D94F] bg-[#78D94F]/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#17171B] transition duration-300 hover:bg-[#78D94F] sm:gap-2 sm:px-4 sm:py-2 sm:text-xs ${focus}`}
+        >
+          <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+          {photo ? "Change Photo" : "Preview Photo"}
+        </button>
+
+        {photo && (
+          <button
+            type="button"
+            onClick={() => setPhoto(null)}
+            className={`inline-flex cursor-pointer items-center gap-1 rounded-full border-0 bg-transparent px-2.5 py-1.5 text-xs font-medium text-gray-500 transition hover:text-[#17171B] sm:py-2 ${focus}`}
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            Reset
+          </button>
+        )}
+      </div>
+
+      {!compact && (
+        <p className="mt-3 text-[11px] text-gray-400">
+          Preview only. Your photo stays on your device until you start an order.
+        </p>
+      )}
+    </>
+  );
+
   return (
     <section
       className={`${montserrat.variable} ${inter.variable} overflow-hidden bg-[#F7F8F5] px-4 py-12 font-[family-name:var(--font-inter)] sm:px-8 sm:py-16 lg:px-16 lg:py-20`}
@@ -149,8 +237,13 @@ export default function CustomPrints() {
                 </div>
               </div>
 
-              {/* Bottom Studio Spec Strip */}
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-gray-500">
+              {/* Mobile Inline Studio Controls (kept together with wall preview in viewport) */}
+              <div className="mt-3.5 border-t border-gray-100 pt-3.5 lg:hidden">
+                {renderStudioControls(true)}
+              </div>
+
+              {/* Desktop Bottom Studio Spec Strip */}
+              <div className="mt-4 hidden flex-wrap items-center justify-between gap-2 px-1 text-xs text-gray-500 lg:flex">
                 <span className="font-medium text-[#17171B]">
                   Your Personal Metal Print
                 </span>
@@ -185,98 +278,21 @@ export default function CustomPrints() {
               </p>
             </div>
 
-            {/* Interactive Try-It Card */}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={onFile}
+              className="sr-only"
+              aria-label="Upload a photo to preview"
+            />
+
+            {/* Interactive Try-It Card (Desktop) */}
             <div
               {...reveal(200)}
-              className={`mt-5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_4px_20px_rgba(23,23,27,0.04)] sm:mt-6 sm:rounded-3xl sm:p-5 ${reveal(200).className}`}
+              className={`mt-5 hidden rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_4px_20px_rgba(23,23,27,0.04)] sm:mt-6 sm:rounded-3xl sm:p-5 lg:block ${reveal(200).className}`}
             >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                  Live Studio Preview
-                </p>
-
-                {/* Finish Toggle */}
-                <div
-                  role="radiogroup"
-                  aria-label="Choose finish"
-                  className="inline-flex rounded-full border border-gray-200 bg-[#F7F8F5] p-0.5"
-                >
-                  {finishes.map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      role="radio"
-                      aria-checked={finish === f}
-                      onClick={() => setFinish(f)}
-                      className={`cursor-pointer rounded-full border-0 px-3 py-1 text-[11px] font-semibold transition ${focus} ${finish === f
-                        ? "bg-[#17171B] text-white"
-                        : "bg-transparent text-gray-500 hover:text-[#17171B]"
-                        }`}
-                    >
-                      {f}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-3.5 flex flex-wrap items-center gap-2 sm:gap-2.5">
-                {/* Size Pills */}
-                <div
-                  role="radiogroup"
-                  aria-label="Choose print size"
-                  className="flex items-center gap-1.5 sm:gap-2"
-                >
-                  {sizes.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={size === s.id}
-                      onClick={() => setSize(s.id)}
-                      className={`cursor-pointer rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.1em] transition duration-300 ${focus} ${size === s.id
-                        ? "border-[#17171B] bg-[#17171B] text-white"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
-                        }`}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-
-                <span className="mx-0.5 hidden h-5 w-px bg-gray-200 sm:block" />
-
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={onFile}
-                  className="sr-only"
-                  aria-label="Upload a photo to preview"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-dashed border-[#78D94F] bg-[#78D94F]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-[#17171B] transition duration-300 hover:bg-[#78D94F] ${focus}`}
-                >
-                  <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                  {photo ? "Change Photo" : "Preview Photo"}
-                </button>
-
-                {photo && (
-                  <button
-                    type="button"
-                    onClick={() => setPhoto(null)}
-                    className={`inline-flex cursor-pointer items-center gap-1 rounded-full border-0 bg-transparent px-2.5 py-2 text-xs font-medium text-gray-500 transition hover:text-[#17171B] ${focus}`}
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                    Reset
-                  </button>
-                )}
-              </div>
-
-              <p className="mt-3 text-[11px] text-gray-400">
-                Preview only. Your photo stays on your device until you start an order.
-              </p>
+              {renderStudioControls(false)}
             </div>
 
             {/* Features */}

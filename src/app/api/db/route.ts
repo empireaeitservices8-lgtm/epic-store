@@ -254,6 +254,59 @@ export async function POST(request: NextRequest) {
       return Response.json({ ok: true });
     }
 
+    if (entity === "home_event") {
+      if (action === "create") {
+        const [res] = await runInAppDatabase([
+          `INSERT INTO home_events (title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order) VALUES (
+            ${sqlEscape(body.title ?? "")},
+            ${sqlEscape(body.eyebrow ?? "")},
+            ${sqlEscape(body.headlineLine1 ?? "")},
+            ${sqlEscape(body.headlineLine2 ?? "")},
+            ${sqlEscape(body.description ?? "")},
+            ${sqlEscape(body.ctaLabel ?? "SHOP NOW")},
+            ${sqlEscape(body.ctaHref ?? "/shop")},
+            ${sqlEscape(body.badgeText ?? "")},
+            ${sqlEscape(body.bannerImage ?? "/Home-page/hero-slide-1.jpg")},
+            ${sqlEscape(body.tickerText ?? "")},
+            ${sqlEscape(Boolean(body.active))},
+            ${sqlEscape(Number(body.sortOrder ?? 0))}
+          )`,
+        ]);
+        return Response.json({ ok: true, insertId: res?.insertId ?? 0 });
+      }
+      if (action === "update") {
+        await runInAppDatabase([
+          `UPDATE home_events SET
+            title = ${sqlEscape(body.title ?? "")},
+            eyebrow = ${sqlEscape(body.eyebrow ?? "")},
+            headline_line1 = ${sqlEscape(body.headlineLine1 ?? "")},
+            headline_line2 = ${sqlEscape(body.headlineLine2 ?? "")},
+            description = ${sqlEscape(body.description ?? "")},
+            cta_label = ${sqlEscape(body.ctaLabel ?? "SHOP NOW")},
+            cta_href = ${sqlEscape(body.ctaHref ?? "/shop")},
+            badge_text = ${sqlEscape(body.badgeText ?? "")},
+            banner_image = ${sqlEscape(body.bannerImage ?? "/Home-page/hero-slide-1.jpg")},
+            ticker_text = ${sqlEscape(body.tickerText ?? "")},
+            active = ${sqlEscape(Boolean(body.active))},
+            sort_order = ${sqlEscape(Number(body.sortOrder ?? 0))}
+          WHERE id = ${sqlEscape(Number(body.id))}`,
+        ]);
+        return Response.json({ ok: true });
+      }
+      if (action === "toggle_active") {
+        await runInAppDatabase([
+          `UPDATE home_events SET active = ${sqlEscape(Boolean(body.active))} WHERE id = ${sqlEscape(Number(body.id))}`,
+        ]);
+        return Response.json({ ok: true });
+      }
+      if (action === "delete") {
+        await runInAppDatabase([
+          `DELETE FROM home_events WHERE id = ${sqlEscape(Number(body.id))}`,
+        ]);
+        return Response.json({ ok: true });
+      }
+    }
+
     return Response.json(
       { ok: false, error: "Unsupported database mutation." },
       { status: 400 }

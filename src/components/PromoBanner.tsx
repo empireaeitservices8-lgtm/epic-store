@@ -167,6 +167,70 @@ export default function PromoBanner() {
     timerRef.current = setTimeout(() => setJustAdded(false), 1800);
   };
 
+  const renderPreviewCard = (compact = false) => (
+    <div
+      className={`relative mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm transition-transform duration-300 ease-out sm:rounded-3xl ${
+        compact
+          ? "p-3"
+          : "p-4 [transform:perspective(1000px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] sm:p-6"
+      }`}
+    >
+      {/* Top status bar */}
+      <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2 sm:mb-4">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-300 sm:gap-2 sm:text-[11px] sm:tracking-[0.16em]">
+          <Layers className="h-3.5 w-3.5 text-[#78D94F]" aria-hidden="true" />
+          3-Piece Wall Preview
+        </span>
+
+        <span
+          className={`${valueFont} rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#17171B] sm:px-3 sm:text-[10px]`}
+        >
+          Save {discountPct}% (₹{savings.toLocaleString("en-IN")})
+        </span>
+      </div>
+
+      {/* 3-Piece Triptych Frames */}
+      <div
+        className={`grid grid-cols-3 items-center gap-2 py-1 transition-transform duration-500 sm:gap-4 sm:py-2 ${activeBundle.scaleClass}`}
+      >
+        {trioPreviews.map((item, idx) => (
+          <div
+            key={item.title}
+            className={`group relative overflow-hidden rounded-xl border border-white/15 bg-[#0F0F12] shadow-2xl transition duration-500 hover:-translate-y-1 sm:rounded-2xl ${
+              idx === 1 ? "aspect-[3/4.3]" : "aspect-[3/4]"
+            }`}
+          >
+            <LoadingImage
+              src={item.image}
+              alt={item.title}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+            <span className="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
+              {activeBundle.size}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Summary Strip */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-2.5 text-xs text-gray-300 sm:mt-4 sm:pt-3.5">
+        <span>
+          Bundle Total:{" "}
+          <strong className={`${valueFont} text-sm font-bold text-white`}>
+            ₹{activeBundle.price.toLocaleString("en-IN")}
+          </strong>{" "}
+          <span className={`${valueFont} text-gray-500 line-through`}>
+            ₹{activeBundle.oldPrice.toLocaleString("en-IN")}
+          </span>
+        </span>
+        <span className="text-[11px] font-medium text-[#78D94F]">
+          Includes 3× Magnetic Wall Mounts
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <section
       id="bundle"
@@ -186,36 +250,39 @@ export default function PromoBanner() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,70%)_var(--y,30%),rgba(120,217,79,0.12),transparent_40%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
 
-        <div className="relative grid items-center gap-8 px-5 py-8 sm:gap-10 sm:px-10 sm:py-12 lg:grid-cols-12 lg:px-14 lg:py-14">
+        <div className="relative grid items-center gap-6 px-4 py-7 sm:gap-10 sm:px-10 sm:py-12 lg:grid-cols-12 lg:px-14 lg:py-14">
           {/* Left: Bundle Configurator */}
           <div className="lg:col-span-6">
-            <span className="inline-flex items-center rounded-full border border-[#78D94F]/45 bg-[#78D94F]/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#78D94F]">
+            <span className="inline-flex items-center rounded-full border border-[#78D94F]/45 bg-[#78D94F]/10 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#78D94F] sm:text-[11px]">
               3-Piece Wall Bundle
             </span>
 
             <h2
-              className={`${head} mt-4 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:text-3xl lg:text-4xl`}
+              className={`${head} mt-3.5 text-2xl font-semibold uppercase leading-[1.08] tracking-tight text-white sm:mt-4 sm:text-3xl lg:text-4xl`}
             >
               Build Your <span className="text-[#78D94F]">3-Piece</span>
               <br />
               Metal Poster Set.
             </h2>
 
-            <p className="mt-3 max-w-lg text-sm leading-6 text-gray-300 sm:text-base">
+            <p className="mt-2.5 max-w-lg text-[13px] leading-6 text-gray-300 sm:mt-3 sm:text-base">
               Pick your statement size —{" "}
               <strong className="font-semibold text-white">A3, A2, or A1</strong>{" "}
               — and get three coordinated HD aluminum posters with instant bundle
               savings.
             </p>
 
+            {/* Mobile Inline 3-Piece Wall Preview (visible right above size buttons) */}
+            <div className="mt-4 lg:hidden">{renderPreviewCard(true)}</div>
+
             {/* Size Selector (A3 / A2 / A1) */}
-            <div className="mt-6">
-              <div className="mb-2.5 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+            <div className="mt-5 sm:mt-6">
+              <div className="mb-2.5 flex flex-wrap items-center justify-between gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400 sm:text-[11px]">
                 <span>Select Bundle Size</span>
                 <span className="text-[#78D94F]">{activeBundle.dimensions}</span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {bundleTiers.map((tier) => {
                   const selected = tier.size === selectedSize;
                   return (
@@ -224,7 +291,7 @@ export default function PromoBanner() {
                       type="button"
                       onClick={() => setSelectedSize(tier.size)}
                       aria-pressed={selected}
-                      className={`group relative flex cursor-pointer flex-col items-start rounded-2xl border p-3 text-left transition-all duration-300 sm:p-4 ${focus} ${
+                      className={`group relative flex cursor-pointer flex-col items-start rounded-2xl border p-2.5 text-left transition-all duration-300 sm:p-4 ${focus} ${
                         selected
                           ? "border-[#78D94F] bg-[#78D94F]/15 shadow-[0_0_24px_rgba(120,217,79,0.18)]"
                           : "border-white/10 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]"
@@ -232,23 +299,24 @@ export default function PromoBanner() {
                     >
                       <div className="flex w-full items-center justify-between gap-1">
                         <span
-                          className={`${head} text-lg font-bold sm:text-xl ${
+                          className={`${head} text-base font-bold sm:text-xl ${
                             selected ? "text-[#78D94F]" : "text-white"
                           }`}
                         >
                           {tier.size}
                         </span>
                         {tier.badge && (
-                          <span className="hidden rounded-full bg-[#78D94F] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#17171B] sm:inline-block">
+                          <span className="rounded-full bg-[#78D94F] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wider text-[#17171B] sm:px-2 sm:text-[8px]">
                             {tier.size === "A2" ? "Popular" : "Max"}
                           </span>
                         )}
                       </div>
-                      <span className="mt-1 text-[11px] text-gray-400">
-                        3 × {tier.size} Posters
+                      <span className="mt-1 whitespace-nowrap text-[10px] text-gray-400 sm:text-[11px]">
+                        3 × {tier.size}
+                        <span className="hidden sm:inline"> Posters</span>
                       </span>
                       <span
-                        className={`${valueFont} mt-2 text-sm font-semibold text-white sm:text-base`}
+                        className={`${valueFont} mt-1.5 text-sm font-semibold text-white sm:mt-2 sm:text-base`}
                       >
                         ₹{tier.price.toLocaleString("en-IN")}
                       </span>
@@ -258,8 +326,20 @@ export default function PromoBanner() {
               </div>
             </div>
 
-            {/* Perks */}
-            <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3">
+            {/* Perks: compact pills on mobile, 3-col cards on sm+ */}
+            <div className="mt-4 flex flex-wrap gap-2 sm:hidden">
+              {bundlePerks.map((perk) => (
+                <span
+                  key={perk.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-medium text-gray-200"
+                >
+                  <Check className="h-3 w-3 text-[#78D94F]" aria-hidden="true" />
+                  {perk.label}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-5 hidden grid-cols-3 gap-3 sm:grid">
               {bundlePerks.map((perk) => (
                 <div
                   key={perk.label}
@@ -276,11 +356,11 @@ export default function PromoBanner() {
             </div>
 
             {/* Price + Actions */}
-            <div className="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
+            <div className="mt-5 flex flex-col gap-2.5 sm:mt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               <button
                 type="button"
                 onClick={handleAddBundle}
-                className={`group relative inline-flex cursor-pointer items-center gap-2.5 overflow-hidden rounded-full border-0 px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 sm:px-7 sm:text-sm ${focus} ${
+                className={`group relative inline-flex w-full cursor-pointer items-center justify-center gap-2.5 overflow-hidden rounded-full border-0 px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-sm ${focus} ${
                   justAdded
                     ? "bg-white text-[#17171B]"
                     : "bg-[#78D94F] text-[#17171B] hover:bg-white"
@@ -304,7 +384,7 @@ export default function PromoBanner() {
 
               <Link
                 href="/shop?category=Metal%20Posters"
-                className={`inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-white no-underline transition hover:border-[#78D94F] hover:text-[#78D94F] ${focus}`}
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-white no-underline transition hover:border-[#78D94F] hover:text-[#78D94F] sm:w-auto ${focus}`}
               >
                 Browse Posters
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -312,63 +392,9 @@ export default function PromoBanner() {
             </div>
           </div>
 
-          {/* Right: Interactive 3-Piece Wall Triptych Preview */}
-          <div className="relative lg:col-span-6">
-            <div className="relative mx-auto max-w-xl rounded-3xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm transition-transform duration-300 ease-out [transform:perspective(1000px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] sm:p-6">
-              {/* Top status bar */}
-              <div className="mb-4 flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-300">
-                  <Layers className="h-3.5 w-3.5 text-[#78D94F]" aria-hidden="true" />
-                  3-Piece Wall Preview
-                </span>
-
-                <span
-                  className={`${valueFont} rounded-full bg-[#78D94F] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#17171B]`}
-                >
-                  Save {discountPct}% (₹{savings.toLocaleString("en-IN")})
-                </span>
-              </div>
-
-              {/* 3-Piece Triptych Frames */}
-              <div
-                className={`grid grid-cols-3 items-center gap-2.5 py-2 transition-transform duration-500 sm:gap-4 ${activeBundle.scaleClass}`}
-              >
-                {trioPreviews.map((item, idx) => (
-                  <div
-                    key={item.title}
-                    className={`group relative overflow-hidden rounded-xl border border-white/15 bg-[#0F0F12] shadow-2xl transition duration-500 hover:-translate-y-1 sm:rounded-2xl ${
-                      idx === 1 ? "aspect-[3/4.3]" : "aspect-[3/4]"
-                    }`}
-                  >
-                    <LoadingImage
-                      src={item.image}
-                      alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                    <span className="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
-                      {activeBundle.size}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Bottom Summary Strip */}
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3.5 text-xs text-gray-300">
-                <span>
-                  Bundle Total:{" "}
-                  <strong className={`${valueFont} text-sm font-bold text-white`}>
-                    ₹{activeBundle.price.toLocaleString("en-IN")}
-                  </strong>{" "}
-                  <span className={`${valueFont} text-gray-500 line-through`}>
-                    ₹{activeBundle.oldPrice.toLocaleString("en-IN")}
-                  </span>
-                </span>
-                <span className="text-[11px] font-medium text-[#78D94F]">
-                  Includes 3× Magnetic Wall Mounts
-                </span>
-              </div>
-            </div>
+          {/* Right: Interactive 3-Piece Wall Triptych Preview (Desktop) */}
+          <div className="relative hidden lg:col-span-6 lg:block">
+            {renderPreviewCard(false)}
           </div>
         </div>
       </div>

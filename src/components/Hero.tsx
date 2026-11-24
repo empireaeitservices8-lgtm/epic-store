@@ -21,7 +21,20 @@ const inter = Inter({
 
 const SLIDE_DURATION = 6000;
 
-const slides = [
+type HeroSlide = {
+  eyebrow: string;
+  line1: string;
+  line2: string;
+  description: string;
+  tag: string;
+  image: string;
+  position: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  tickerText?: string;
+};
+
+const defaultSlides: HeroSlide[] = [
   {
     eyebrow: "DISCOVER YOUR STYLE",
     line1: "MAKE YOUR",
@@ -31,6 +44,8 @@ const slides = [
     tag: "ART THAT INSPIRES",
     image: "/Home-page/hero-slide-1.jpg",
     position: "object-center lg:object-right",
+    ctaLabel: "SHOP NOW",
+    ctaHref: "/shop",
   },
   {
     eyebrow: "CURATED COLLECTIONS",
@@ -41,6 +56,8 @@ const slides = [
     tag: "MADE TO BE SEEN",
     image: "/Home-page/hero-slide-2.jpg",
     position: "object-center lg:object-right",
+    ctaLabel: "EXPLORE COLLECTIONS",
+    ctaHref: "/collections",
   },
   {
     eyebrow: "PREMIUM PRINTS",
@@ -51,6 +68,8 @@ const slides = [
     tag: "PRINTED TO LAST",
     image: "/Home-page/hero-slide-3.jpg",
     position: "object-center lg:object-right",
+    ctaLabel: "SHOP NOW",
+    ctaHref: "/shop",
   },
   {
     eyebrow: "FRESH ARRIVALS",
@@ -61,6 +80,8 @@ const slides = [
     tag: "NEW THIS WEEK",
     image: "/Home-page/epic-store-hero-bg.png",
     position: "object-center lg:object-right",
+    ctaLabel: "SHOP NOW",
+    ctaHref: "/shop",
   },
 ];
 
@@ -86,15 +107,65 @@ const reveal =
   "opacity-0 animate-[rise_0.8s_cubic-bezier(0.2,0.7,0.2,1)_forwards] motion-reduce:animate-none motion-reduce:opacity-100";
 
 export default function Hero() {
+  const [slides, setSlides] = useState<HeroSlide[]>(defaultSlides);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const btnRef = useRef<HTMLAnchorElement>(null);
 
+  /* Load active homepage events from admin-managed database */
+  useEffect(() => {
+    let active = true;
+    fetch("/api/home-events", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (
+          !active ||
+          !data?.ok ||
+          !Array.isArray(data.events) ||
+          data.events.length === 0
+        ) {
+          return;
+        }
+        const mapped: HeroSlide[] = data.events.map(
+          (ev: {
+            eyebrow?: string;
+            headlineLine1?: string;
+            headlineLine2?: string;
+            description?: string;
+            badgeText?: string;
+            bannerImage?: string;
+            ctaLabel?: string;
+            ctaHref?: string;
+            tickerText?: string;
+          }) => ({
+            eyebrow: ev.eyebrow || "EPIC STORE EVENT",
+            line1: ev.headlineLine1 || "MAKE YOUR",
+            line2: ev.headlineLine2 || "WALLS EPIC.",
+            description: ev.description || "",
+            tag: ev.badgeText || "FEATURED",
+            image: ev.bannerImage || "/Home-page/hero-slide-1.jpg",
+            position: "object-center lg:object-right",
+            ctaLabel: ev.ctaLabel || "SHOP NOW",
+            ctaHref: ev.ctaHref || "/shop",
+            tickerText: ev.tickerText || "",
+          })
+        );
+        setSlides(mapped);
+        setIndex(0);
+      })
+      .catch(() => {
+        /* fallback to defaultSlides */
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const go = useCallback(
     (dir: 1 | -1) =>
       setIndex((i) => (i + dir + slides.length) % slides.length),
-    []
+    [slides.length]
   );
 
   /* Auto-advance */
@@ -135,7 +206,13 @@ export default function Hero() {
     if (btnRef.current) btnRef.current.style.transform = "";
   };
 
-  const slide = slides[index];
+  const slide = slides[index] ?? slides[0];
+  const activeTicker = slide.tickerText
+    ? slide.tickerText
+        .split(",")
+        .map((item) => item.trim().toUpperCase())
+        .filter(Boolean)
+    : ticker;
 
   return (
     <div
@@ -158,19 +235,20 @@ export default function Hero() {
         style={{ ["--mx" as string]: 0, ["--my" as string]: 0 }}
         className="relative isolate flex min-h-[420px] w-full items-center overflow-hidden bg-[#111114] sm:min-h-[480px] lg:min-h-[540px]"
       >
-        {/* Background images with parallax & 6s crossfade */}
+        {/* Background Slides */}
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 right-0 -z-30 w-full transition-transform duration-300 ease-out will-change-transform [transform:translate3d(calc(var(--mx)*-10px),calc(var(--my)*-8px),0)] lg:w-[62%]"
+          className="absolute inset-0 -z-30 bg-[#111114] transition-transform duration-300 ease-out [transform:translate3d(calc(var(--mx)*-14px),calc(var(--my)*-14px),0)_scale(1.03)]"
         >
           {slides.map((s, i) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              key={s.tag}
+              key={`${s.image}-${i}`}
               src={s.image}
               alt=""
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out lg:object-contain ${s.position} ${i === index ? "opacity-100" : "opacity-0"
-                }`}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out lg:object-contain ${s.position} ${
+                i === index ? "opacity-100" : "opacity-0"
+              }`}
             />
           ))}
         </div>
@@ -220,7 +298,7 @@ export default function Hero() {
             className={`${reveal} flex flex-col items-start gap-4 [animation-delay:340ms] sm:flex-row sm:flex-wrap sm:items-center sm:gap-[30px]`}
           >
             <Link
-              href="/shop"
+              href={slide.ctaHref || "/shop"}
               ref={btnRef}
               onMouseMove={onBtnMove}
               onMouseLeave={onBtnLeave}
@@ -230,7 +308,7 @@ export default function Hero() {
                 aria-hidden="true"
                 className="absolute inset-0 -translate-x-[120%] bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.55)_50%,transparent_70%)] transition-transform duration-700 group-hover:translate-x-[120%]"
               />
-              <span className="relative">SHOP NOW</span>
+              <span className="relative">{slide.ctaLabel || "SHOP NOW"}</span>
               <span className="relative text-[22px] transition-transform duration-300 group-hover:translate-x-1.5">
                 →
               </span>
@@ -255,7 +333,7 @@ export default function Hero() {
         className="group overflow-hidden border-t border-black/10 bg-[#78d94f] text-[#17171b]"
       >
         <div className="flex w-max animate-[marquee_32s_linear_infinite] group-hover:[animation-play-state:paused] motion-reduce:animate-none">
-          {[...ticker, ...ticker, ...ticker, ...ticker].map((t, i) => (
+          {[...activeTicker, ...activeTicker, ...activeTicker, ...activeTicker].map((t, i) => (
             <span
               key={i}
               className={`${head} inline-flex items-center gap-5 whitespace-nowrap py-2.5 pr-5 text-[11px] font-bold tracking-[0.16em] sm:gap-7 sm:py-3.5 sm:pr-7 sm:text-[13px] sm:tracking-[0.2em]`}
