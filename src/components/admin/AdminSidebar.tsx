@@ -80,7 +80,7 @@ export default function AdminSidebar({
         <Link
           href="/admin"
           onClick={onClose}
-          className="font-[family-name:var(--font-syne)] text-2xl font-extrabold tracking-tight text-[#17171B] no-underline"
+          className="font-[family-name:var(--font-inter)] text-2xl font-extrabold tracking-tight text-[#17171B] no-underline"
         >
           EPIC<span className="text-[#78D94F]">STORE.</span>
         </Link>

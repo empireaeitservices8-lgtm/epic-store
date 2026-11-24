@@ -10,14 +10,14 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { useStoreCart, useStoreWishlist } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -47,7 +47,7 @@ const links = [
 const popular = ["Abstract", "Typography", "Minimal", "Nature", "Custom Prints"];
 
 /* Shared Tailwind class strings */
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78d94f]";
 const iconBtn = `group relative grid h-10 w-10 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-white transition-colors duration-300 hover:bg-white/10 hover:text-[#78d94f] sm:h-11 sm:w-11 ${focus}`;
@@ -239,7 +239,7 @@ export default function Header({
 
   return (
     <div
-      className={`contents font-[family-name:var(--font-inter)] ${syne.variable} ${inter.variable}`}
+      className={`contents font-[family-name:var(--font-inter)] ${montserrat.variable} ${inter.variable}`}
     >
       {/* ============ ANNOUNCEMENT BAR ============ */}
       {barOpen && (

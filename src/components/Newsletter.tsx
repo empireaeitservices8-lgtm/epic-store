@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -21,7 +22,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 const perks = ["New collections", "Exclusive offers", "Creative updates"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 
 async function subscribe(email: string) {
   const res = await fetch("/api/email", {
@@ -98,7 +99,7 @@ export default function Newsletter() {
 
   return (
     <section
-      className={`${syne.variable} ${inter.variable} flex items-center justify-center bg-[#F7F8F5] px-4 py-6 font-[family-name:var(--font-inter)] sm:px-6 sm:py-8 lg:px-10 lg:py-10`}
+      className={`${montserrat.variable} ${inter.variable} flex items-center justify-center bg-[#F7F8F5] px-4 py-6 font-[family-name:var(--font-inter)] sm:px-6 sm:py-8 lg:px-10 lg:py-10`}
     >
       <div
         ref={cardRef}
@@ -138,7 +139,7 @@ export default function Newsletter() {
           </span>
 
           <h2
-            className={`${head} mt-2.5 text-2xl font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:mt-3 sm:text-4xl lg:text-[44px]`}
+            className={`${head} mt-2.5 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:mt-3 sm:text-3xl lg:text-4xl`}
           >
             Get the Latest from
             <br />

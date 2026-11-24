@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -33,7 +34,7 @@ const columns = [
   {
     title: "Shop Categories",
     links: [
-      { name: "Metal Posters (A4, A3, A2)", href: "/shop?category=metal-posters" },
+      { name: "Metal Posters", href: "/shop?category=metal-posters" },
       { name: "Desk Pad", href: "/shop?category=desk-pad" },
       { name: "Signed Jersey Frame", href: "/shop?category=signed-jersey-frame" },
       { name: "Football & Cricket", href: "/collections" },
@@ -62,7 +63,7 @@ const socialLinks = [
 
 const payments = ["UPI", "Cards", "Net Banking", "Wallets"];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F]";
 
@@ -113,7 +114,7 @@ export default function Footer() {
 
   return (
     <footer
-      className={`${syne.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] font-[family-name:var(--font-inter)] text-white`}
+      className={`${montserrat.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] font-[family-name:var(--font-inter)] text-white`}
     >
       {/* Top accent line */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-[#78D94F]/60 to-transparent" />

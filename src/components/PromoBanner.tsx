@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
+import { ArrowRight, Check, Layers, ShoppingBag } from "lucide-react";
+import LoadingImage from "@/components/LoadingImage";
+import { addToStoreCart } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -18,17 +22,89 @@ const inter = Inter({
   display: "swap",
 });
 
-const steps = [
-  { n: "01", title: "Upload", text: "Share your photo or idea" },
-  { n: "02", title: "Customise", text: "Pick size and finish" },
-  { n: "03", title: "Receive", text: "Delivered across India" },
+type BundleTier = {
+  id: number;
+  size: "A3" | "A2" | "A1";
+  label: string;
+  dimensions: string;
+  price: number;
+  oldPrice: number;
+  badge?: string;
+  scaleClass: string;
+};
+
+const bundleTiers: BundleTier[] = [
+  {
+    id: 901,
+    size: "A3",
+    label: "A3 Trio",
+    dimensions: "3 × (11.7 × 16.5 in)",
+    price: 1699,
+    oldPrice: 2097,
+    scaleClass: "scale-[0.92]",
+  },
+  {
+    id: 902,
+    size: "A2",
+    label: "A2 Trio",
+    dimensions: "3 × (16.5 × 23.4 in)",
+    price: 2499,
+    oldPrice: 2997,
+    badge: "MOST POPULAR",
+    scaleClass: "scale-100",
+  },
+  {
+    id: 903,
+    size: "A1",
+    label: "A1 Trio",
+    dimensions: "3 × (23.4 × 33.1 in)",
+    price: 3799,
+    oldPrice: 4497,
+    badge: "STUDIO WALL",
+    scaleClass: "scale-[1.04]",
+  },
 ];
 
-const head = "font-[family-name:var(--font-syne)]";
+const trioPreviews = [
+  {
+    title: "Football Legends",
+    image:
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=700&q=85",
+  },
+  {
+    title: "Anime Neon Arc",
+    image:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=700&q=85",
+  },
+  {
+    title: "F1 Telemetry",
+    image:
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&q=85",
+  },
+];
+
+const bundlePerks = [
+  { label: "3× Posters", detail: "Coordinated wall set" },
+  { label: "Magnetic Mounts", detail: "3 kits included" },
+  { label: "Free Delivery", detail: "Pan-India shipping" },
+];
+
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
+const valueFont = `${inter.className} font-[family-name:var(--font-inter)] tabular-nums`;
+const focus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
 export default function PromoBanner() {
+  const [selectedSize, setSelectedSize] = useState<"A3" | "A2" | "A1">("A2");
+  const [justAdded, setJustAdded] = useState(false);
   const [visible, setVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const activeBundle =
+    bundleTiers.find((t) => t.size === selectedSize) ?? bundleTiers[1];
+  const savings = activeBundle.oldPrice - activeBundle.price;
+  const discountPct = Math.round((savings / activeBundle.oldPrice) * 100);
 
   /* Reveal on scroll */
   useEffect(() => {
@@ -47,6 +123,13 @@ export default function PromoBanner() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    []
+  );
+
   /* Cursor spotlight + image parallax (no re-renders) */
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
@@ -56,9 +139,10 @@ export default function PromoBanner() {
     const py = (e.clientY - r.top) / r.height;
     el.style.setProperty("--x", `${px * 100}%`);
     el.style.setProperty("--y", `${py * 100}%`);
-    el.style.setProperty("--rx", `${((0.5 - py) * 6).toFixed(2)}deg`);
-    el.style.setProperty("--ry", `${((px - 0.5) * 8).toFixed(2)}deg`);
+    el.style.setProperty("--rx", `${((0.5 - py) * 5).toFixed(2)}deg`);
+    el.style.setProperty("--ry", `${((px - 0.5) * 6).toFixed(2)}deg`);
   };
+
   const onLeave = () => {
     const el = cardRef.current;
     if (!el) return;
@@ -66,10 +150,27 @@ export default function PromoBanner() {
     el.style.setProperty("--ry", "0deg");
   };
 
+  const handleAddBundle = () => {
+    addToStoreCart(
+      {
+        id: activeBundle.id,
+        name: `3-Piece Metal Poster Bundle (${activeBundle.size})`,
+        category: "Metal Posters",
+        price: activeBundle.price,
+        oldPrice: activeBundle.oldPrice,
+        image: trioPreviews[1].image,
+      },
+      1
+    );
+    setJustAdded(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setJustAdded(false), 1800);
+  };
+
   return (
     <section
-      id="custom"
-      className={`${syne.variable} ${inter.variable} px-4 py-8 font-[family-name:var(--font-inter)] sm:px-6 sm:py-12 lg:px-10 lg:py-14`}
+      id="bundle"
+      className={`${montserrat.variable} ${inter.variable} px-4 py-8 font-[family-name:var(--font-inter)] sm:px-6 sm:py-12 lg:px-10 lg:py-14`}
     >
       <div
         ref={cardRef}
@@ -85,93 +186,188 @@ export default function PromoBanner() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,70%)_var(--y,30%),rgba(120,217,79,0.12),transparent_40%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
 
-        <div className="relative grid items-center gap-6 px-5 py-8 sm:gap-10 sm:px-10 sm:py-12 lg:grid-cols-2 lg:px-14 lg:py-14">
-          {/* Text content */}
-          <div className="max-w-xl">
-            <span className="inline-flex items-center rounded-full border border-[#78D94F]/50 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-[#78D94F] sm:text-xs sm:tracking-[0.2em]">
-              MAKE IT PERSONAL
+        <div className="relative grid items-center gap-8 px-5 py-8 sm:gap-10 sm:px-10 sm:py-12 lg:grid-cols-12 lg:px-14 lg:py-14">
+          {/* Left: Bundle Configurator */}
+          <div className="lg:col-span-6">
+            <span className="inline-flex items-center rounded-full border border-[#78D94F]/45 bg-[#78D94F]/10 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#78D94F]">
+              3-Piece Wall Bundle
             </span>
 
             <h2
-              className={`${head} mt-4 text-3xl font-extrabold uppercase leading-[1.04] tracking-tight text-white sm:mt-5 sm:text-4xl lg:text-5xl`}
+              className={`${head} mt-4 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:text-3xl lg:text-4xl`}
             >
-              Your space.
+              Build Your <span className="text-[#78D94F]">3-Piece</span>
               <br />
-              Your <span className="text-[#78D94F]">story.</span>
+              Metal Poster Set.
             </h2>
 
-            <p className="mt-4 max-w-md text-sm leading-6 text-gray-300 sm:text-base sm:leading-7">
-              Turn your favourite memories, ideas, and creativity into
-              something special with our custom-designed prints.
+            <p className="mt-3 max-w-lg text-sm leading-6 text-gray-300 sm:text-base">
+              Pick your statement size —{" "}
+              <strong className="font-semibold text-white">A3, A2, or A1</strong>{" "}
+              — and get three coordinated HD aluminum posters with instant bundle
+              savings.
             </p>
 
-            {/* Steps */}
-            <ol className="mt-6 grid max-w-md grid-cols-3 gap-2.5 sm:gap-3">
-              {steps.map((s) => (
-                <li
-                  key={s.n}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition duration-300 hover:-translate-y-1 hover:border-[#78D94F]/60 hover:bg-white/[0.06]"
-                >
-                  <span
-                    className={`${head} text-xs font-bold text-[#78D94F]`}
-                  >
-                    {s.n}
-                  </span>
-                  <p className={`${head} mt-2 text-sm font-bold text-white`}>
-                    {s.title}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-4 text-gray-400">
-                    {s.text}
-                  </p>
-                </li>
-              ))}
-            </ol>
+            {/* Size Selector (A3 / A2 / A1) */}
+            <div className="mt-6">
+              <div className="mb-2.5 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-400">
+                <span>Select Bundle Size</span>
+                <span className="text-[#78D94F]">{activeBundle.dimensions}</span>
+              </div>
 
-            <Link
-              href="/custom-prints"
-              className="group relative mt-6 inline-flex items-center gap-3 overflow-hidden rounded-full bg-[#78D94F] px-6 py-3 text-xs font-bold tracking-[0.1em] text-[#17171B] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] sm:mt-7 sm:px-7 sm:py-3.5 sm:text-sm"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 -translate-x-[120%] bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.6)_50%,transparent_70%)] transition-transform duration-700 group-hover:translate-x-[120%]"
-              />
-              <span className="relative">CREATE YOUR OWN</span>
-              <span className="relative text-lg transition-transform duration-300 group-hover:translate-x-1.5">
-                →
-              </span>
-            </Link>
-          </div>
-
-          {/* Image */}
-          <div
-            className="relative mx-auto w-full max-w-lg transition-transform duration-300 ease-out [transform:perspective(1000px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
-          >
-            <div className="absolute inset-4 rounded-3xl bg-[#78D94F]/20 blur-2xl" />
-
-            {/* Decorative frame offset */}
-            <div className="absolute inset-0 translate-x-4 translate-y-4 rounded-2xl border border-[#78D94F]/40" />
-
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1000&q=85"
-              alt="Creative wall art and interior decor"
-              loading="lazy"
-              className="relative h-56 w-full rounded-2xl object-cover shadow-2xl transition-transform duration-700 hover:scale-[1.02] sm:h-72 lg:h-80"
-            />
-
-            <div className="absolute -bottom-4 left-2 rounded-xl bg-white px-4 py-2.5 shadow-xl transition-transform duration-300 hover:-translate-y-1 sm:-bottom-5 sm:-left-8 sm:px-5 sm:py-4">
-              <p className="text-[10px] font-medium tracking-[0.12em] text-gray-500 sm:text-xs">
-                DESIGNED BY YOU
-              </p>
-              <p className={`${head} mt-0.5 text-sm font-extrabold text-[#17171B] sm:mt-1 sm:text-lg`}>
-                Made Personal.
-              </p>
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+                {bundleTiers.map((tier) => {
+                  const selected = tier.size === selectedSize;
+                  return (
+                    <button
+                      key={tier.size}
+                      type="button"
+                      onClick={() => setSelectedSize(tier.size)}
+                      aria-pressed={selected}
+                      className={`group relative flex cursor-pointer flex-col items-start rounded-2xl border p-3 text-left transition-all duration-300 sm:p-4 ${focus} ${
+                        selected
+                          ? "border-[#78D94F] bg-[#78D94F]/15 shadow-[0_0_24px_rgba(120,217,79,0.18)]"
+                          : "border-white/10 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]"
+                      }`}
+                    >
+                      <div className="flex w-full items-center justify-between gap-1">
+                        <span
+                          className={`${head} text-lg font-bold sm:text-xl ${
+                            selected ? "text-[#78D94F]" : "text-white"
+                          }`}
+                        >
+                          {tier.size}
+                        </span>
+                        {tier.badge && (
+                          <span className="hidden rounded-full bg-[#78D94F] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-[#17171B] sm:inline-block">
+                            {tier.size === "A2" ? "Popular" : "Max"}
+                          </span>
+                        )}
+                      </div>
+                      <span className="mt-1 text-[11px] text-gray-400">
+                        3 × {tier.size} Posters
+                      </span>
+                      <span
+                        className={`${valueFont} mt-2 text-sm font-semibold text-white sm:text-base`}
+                      >
+                        ₹{tier.price.toLocaleString("en-IN")}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="absolute -top-3 right-2 grid h-16 w-16 place-items-center rounded-full bg-[#78D94F] text-center text-[9px] font-extrabold leading-tight tracking-wider text-[#17171B] shadow-xl transition-transform duration-500 hover:rotate-12 sm:-right-6 sm:-top-4 sm:h-24 sm:w-24 sm:text-xs">
-              100%
-              <br />
-              CUSTOM
+            {/* Perks */}
+            <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3">
+              {bundlePerks.map((perk) => (
+                <div
+                  key={perk.label}
+                  className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5"
+                >
+                  <p className="text-xs font-semibold text-white">
+                    {perk.label}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-gray-400">
+                    {perk.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Price + Actions */}
+            <div className="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={handleAddBundle}
+                className={`group relative inline-flex cursor-pointer items-center gap-2.5 overflow-hidden rounded-full border-0 px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] shadow-[0_10px_30px_rgba(120,217,79,0.25)] transition duration-300 hover:-translate-y-0.5 sm:px-7 sm:text-sm ${focus} ${
+                  justAdded
+                    ? "bg-white text-[#17171B]"
+                    : "bg-[#78D94F] text-[#17171B] hover:bg-white"
+                }`}
+              >
+                {justAdded ? (
+                  <>
+                    <Check className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
+                    <span>Bundle Added</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                    <span>
+                      Add {activeBundle.size} Bundle • ₹
+                      {activeBundle.price.toLocaleString("en-IN")}
+                    </span>
+                  </>
+                )}
+              </button>
+
+              <Link
+                href="/shop?category=Metal%20Posters"
+                className={`inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-white no-underline transition hover:border-[#78D94F] hover:text-[#78D94F] ${focus}`}
+              >
+                Browse Posters
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right: Interactive 3-Piece Wall Triptych Preview */}
+          <div className="relative lg:col-span-6">
+            <div className="relative mx-auto max-w-xl rounded-3xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm transition-transform duration-300 ease-out [transform:perspective(1000px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] sm:p-6">
+              {/* Top status bar */}
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-300">
+                  <Layers className="h-3.5 w-3.5 text-[#78D94F]" aria-hidden="true" />
+                  3-Piece Wall Preview
+                </span>
+
+                <span
+                  className={`${valueFont} rounded-full bg-[#78D94F] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#17171B]`}
+                >
+                  Save {discountPct}% (₹{savings.toLocaleString("en-IN")})
+                </span>
+              </div>
+
+              {/* 3-Piece Triptych Frames */}
+              <div
+                className={`grid grid-cols-3 items-center gap-2.5 py-2 transition-transform duration-500 sm:gap-4 ${activeBundle.scaleClass}`}
+              >
+                {trioPreviews.map((item, idx) => (
+                  <div
+                    key={item.title}
+                    className={`group relative overflow-hidden rounded-xl border border-white/15 bg-[#0F0F12] shadow-2xl transition duration-500 hover:-translate-y-1 sm:rounded-2xl ${
+                      idx === 1 ? "aspect-[3/4.3]" : "aspect-[3/4]"
+                    }`}
+                  >
+                    <LoadingImage
+                      src={item.image}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+                    <span className="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
+                      {activeBundle.size}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom Summary Strip */}
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3.5 text-xs text-gray-300">
+                <span>
+                  Bundle Total:{" "}
+                  <strong className={`${valueFont} text-sm font-bold text-white`}>
+                    ₹{activeBundle.price.toLocaleString("en-IN")}
+                  </strong>{" "}
+                  <span className={`${valueFont} text-gray-500 line-through`}>
+                    ₹{activeBundle.oldPrice.toLocaleString("en-IN")}
+                  </span>
+                </span>
+                <span className="text-[11px] font-medium text-[#78D94F]">
+                  Includes 3× Magnetic Wall Mounts
+                </span>
+              </div>
             </div>
           </div>
         </div>

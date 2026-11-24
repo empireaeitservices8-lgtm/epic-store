@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { clearStoreCart, useStoreCart } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -91,7 +92,7 @@ const emptyForm: Record<string, string> = {
 
 const steps = ["Cart", "Checkout", "Confirmation"];
 
-const head = `${syne.className} font-[family-name:var(--font-syne)]`;
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const valueFont = `${inter.className} font-[family-name:var(--font-inter)] tabular-nums`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
@@ -441,7 +442,7 @@ export default function CheckoutPage() {
     </div>
   );
 
-  const wrapperCls = `${syne.variable} ${inter.variable} ${inter.className} font-[family-name:var(--font-inter)]`;
+  const wrapperCls = `${montserrat.variable} ${inter.variable} ${inter.className} font-[family-name:var(--font-inter)]`;
 
   /* ================= SUCCESS ================= */
   if (orderPlaced) {

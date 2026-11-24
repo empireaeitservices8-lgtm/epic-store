@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,13 +14,14 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -31,7 +32,7 @@ const inter = Inter({
 type AuthMode = "login" | "register";
 type Feedback = { type: "error" | "success" | "info"; text: string } | null;
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 const revealCls =
@@ -116,13 +117,20 @@ export default function LoginPage() {
     }
   };
 
+  const handleSocialLogin = (provider: "Google" | "Apple") => {
+    setFeedback({
+      type: "info",
+      text: `${provider} sign-in is coming soon. Please use Mobile OTP or Guest Checkout for now.`,
+    });
+  };
+
   return (
     <>
       <Header />
 
       <main
         ref={pageRef}
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-6 lg:py-14`}
+        className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-6 lg:py-14`}
       >
         <div
           data-reveal
@@ -135,23 +143,23 @@ export default function LoginPage() {
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
             <div className="relative z-10">
-              <p className={`${head} m-0 text-2xl font-extrabold tracking-[0.18em]`}>
+              <p className={`${head} m-0 text-xl font-semibold tracking-[0.18em]`}>
                 EPIC<span className="text-[#78D94F]">STORE.</span>
               </p>
             </div>
 
             <div className="relative z-10">
-              <p className="m-0 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] text-[#78D94F]">
+              <p className="m-0 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#78D94F]">
                 <span className="h-0.5 w-8 bg-[#78D94F]" />
                 Welcome to Epic Store
               </p>
               <h1
-                className={`${head} mt-4 max-w-md text-4xl font-extrabold uppercase leading-[1.05] tracking-tight lg:text-5xl`}
+                className={`${head} mt-4 max-w-md text-3xl font-semibold uppercase leading-[1.08] tracking-tight lg:text-4xl`}
               >
                 Make your space feel like{" "}
                 <span className="text-[#78D94F]">you.</span>
               </h1>
-              <p className="mt-5 max-w-sm leading-7 text-gray-400">
+              <p className="mt-4 max-w-sm text-sm leading-6 text-gray-400 sm:text-base sm:leading-7">
                 Discover creative prints, unique designs, and collections
                 selected to bring your walls to life.
               </p>
@@ -221,11 +229,11 @@ export default function LoginPage() {
               </div>
 
               <div className="mt-8">
-                <p className="m-0 text-xs font-bold uppercase tracking-[0.22em] text-green-700">
+                <p className="m-0 text-xs font-semibold uppercase tracking-[0.2em] text-green-700">
                   {mode === "register" ? "New Customer" : "Customer Account"}
                 </p>
                 <h2
-                  className={`${head} m-0 mt-2 text-3xl font-extrabold text-[#17171B]`}
+                  className={`${head} m-0 mt-2 text-2xl font-semibold tracking-tight text-[#17171B] sm:text-3xl`}
                 >
                   {verified
                     ? "You are all set!"
@@ -387,10 +395,62 @@ export default function LoginPage() {
                 </p>
               )}
 
-              <div className="mt-6">
+              {/* Social Login Divider & Buttons */}
+              <div className="mt-6 flex items-center gap-3">
+                <span className="h-px flex-1 bg-gray-200" />
+                <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-gray-400">
+                  Or continue with
+                </span>
+                <span className="h-px flex-1 bg-gray-200" />
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin("Google")}
+                  className={`inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full border border-gray-200 bg-white px-4 py-3 text-xs font-semibold text-[#17171B] transition hover:border-[#17171B] hover:bg-[#F7F8F5] ${focus}`}
+                >
+                  <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      fill="#4285F4"
+                      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"
+                    />
+                  </svg>
+                  <span>Google</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin("Apple")}
+                  className={`inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-full border border-gray-200 bg-white px-4 py-3 text-xs font-semibold text-[#17171B] transition hover:border-[#17171B] hover:bg-[#F7F8F5] ${focus}`}
+                >
+                  <svg
+                    className="h-4 w-4 shrink-0 fill-current"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43Zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45Z" />
+                  </svg>
+                  <span>Apple</span>
+                </button>
+              </div>
+
+              <div className="mt-4">
                 <Link
                   href="/checkout"
-                  className={`flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-[#F7F8F5] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-[#17171B] no-underline transition hover:border-[#17171B] hover:bg-[#17171B] hover:text-white ${focus}`}
+                  className={`flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-[#F7F8F5] px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#17171B] no-underline transition hover:border-[#17171B] hover:bg-[#17171B] hover:text-white ${focus}`}
                 >
                   Continue with Guest Checkout
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { ArrowRight, Check, Heart, Plus, Star } from "lucide-react";
 import LoadingImage from "@/components/LoadingImage";
 import {
@@ -11,13 +11,14 @@ import {
   useStoreWishlist,
 } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -29,7 +30,7 @@ const products = [
   {
     id: 1,
     name: "Football Legends Metal Poster (A3)",
-    category: "METAL POSTERS (A4, A3, A2)",
+    category: "METAL POSTERS",
     price: 699,
     oldPrice: 999,
     rating: 4.9,
@@ -67,7 +68,7 @@ const products = [
   {
     id: 4,
     name: "Anime Shonen Neon Metal Poster (A2)",
-    category: "METAL POSTERS (A4, A3, A2)",
+    category: "METAL POSTERS",
     price: 999,
     oldPrice: 1399,
     rating: 4.9,
@@ -80,7 +81,7 @@ const products = [
 ];
 
 const filters = ["ALL", "NEW", "BESTSELLER", "POPULAR"];
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -133,7 +134,7 @@ export default function ProductSection() {
   return (
     <section
       id="new-arrivals"
-      className={`${syne.variable} ${inter.variable} w-full overflow-hidden bg-[#F7F7F5] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
+      className={`${montserrat.variable} ${inter.variable} w-full overflow-hidden bg-[#F7F7F5] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Heading + Filter Bar */}
@@ -145,7 +146,7 @@ export default function ProductSection() {
             </p>
 
             <h2
-              className={`${head} m-0 text-3xl font-extrabold leading-[1.04] tracking-tight text-[#17171B] sm:text-4xl lg:text-5xl`}
+              className={`${head} m-0 text-2xl font-semibold leading-[1.06] tracking-tight text-[#17171B] sm:text-3xl lg:text-4xl`}
             >
               NEW <span className="text-[#78D94F]">ARRIVALS.</span>
             </h2>
@@ -201,14 +202,14 @@ export default function ProductSection() {
               <article
                 key={p.id}
                 style={{ transitionDelay: visible ? `${i * 80}ms` : "0ms" }}
-                className={`group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-500 hover:-translate-y-1 hover:border-[#78D94F] hover:shadow-[0_18px_36px_rgba(0,0,0,0.08)] sm:rounded-3xl ${
+                className={`group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200/75 bg-white shadow-[0_2px_14px_rgba(23,23,27,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-[#17171B]/20 hover:shadow-[0_18px_40px_-12px_rgba(23,23,27,0.12)] sm:rounded-3xl ${
                   visible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-8 opacity-0"
                 }`}
               >
-                {/* Compact Square Image */}
-                <div className="relative aspect-square overflow-hidden bg-gray-100">
+                {/* Modern Image Frame */}
+                <div className="relative aspect-[4/4.2] overflow-hidden bg-[#F3F4F1]">
                   <Link href={`/products/${p.id}`} className="block h-full w-full">
                     <LoadingImage
                       src={p.image}
@@ -217,11 +218,11 @@ export default function ProductSection() {
                     />
                   </Link>
 
-                  <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-3.5 sm:top-3.5 sm:px-3 sm:text-[10px]">
+                  <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#17171B] shadow-sm sm:left-3.5 sm:top-3.5 sm:px-3 sm:text-[10px]">
                     {p.badge}
                   </span>
 
-                  <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded-full bg-[#17171B]/90 px-2.5 py-1 text-[10px] font-bold text-white sm:bottom-3.5 sm:left-3.5">
+                  <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded-full bg-[#17171B]/80 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white backdrop-blur-sm sm:bottom-3.5 sm:left-3.5">
                     {p.discount}
                   </span>
 
@@ -233,10 +234,10 @@ export default function ProductSection() {
                     } wishlist`}
                     aria-pressed={liked}
                     onClick={() => toggleWish(p.id)}
-                    className={`absolute right-2.5 top-2.5 grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 shadow-md transition duration-300 hover:scale-110 sm:right-3.5 sm:top-3.5 sm:h-9 sm:w-9 ${focus} ${
+                    className={`absolute right-2.5 top-2.5 grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 shadow-sm backdrop-blur-md transition duration-300 hover:scale-110 sm:right-3.5 sm:top-3.5 sm:h-9 sm:w-9 ${focus} ${
                       liked
                         ? "bg-[#78D94F] text-[#17171B]"
-                        : "bg-white text-[#17171B]"
+                        : "bg-white/90 text-[#17171B]"
                     }`}
                   >
                     <Heart
@@ -246,38 +247,38 @@ export default function ProductSection() {
                   </button>
                 </div>
 
-                {/* Compact Details */}
-                <div className="p-3 sm:p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="m-0 truncate text-[9px] font-bold tracking-[0.12em] text-gray-400 sm:text-[10px]">
-                      {p.category}
-                    </p>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-gray-600">
-                      <Star
-                        className="h-3 w-3 fill-amber-400 text-amber-400"
-                        aria-hidden="true"
-                      />
-                      {p.rating}
-                    </span>
+                {/* Modern Card Details */}
+                <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-5">
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="m-0 truncate text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400">
+                        {p.category}
+                      </p>
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-50/80 px-2 py-0.5 text-[11px] font-medium tabular-nums text-amber-700">
+                        <Star
+                          className="h-3 w-3 fill-amber-400 text-amber-400"
+                          aria-hidden="true"
+                        />
+                        {p.rating}
+                      </span>
+                    </div>
+
+                    <Link href={`/products/${p.id}`} className="no-underline">
+                      <h3
+                        className={`${head} m-0 mt-1.5 line-clamp-2 text-[13px] font-semibold leading-snug text-[#17171B] transition-colors duration-300 group-hover:text-emerald-700 sm:text-[15px]`}
+                      >
+                        {p.name}
+                      </h3>
+                    </Link>
                   </div>
 
-                  <Link href={`/products/${p.id}`} className="no-underline">
-                    <h3
-                      className={`${head} m-0 mt-1.5 truncate text-sm font-bold text-[#17171B] transition-colors duration-300 group-hover:text-green-700 sm:text-base`}
-                    >
-                      {p.name}
-                    </h3>
-                  </Link>
-
                   {/* Price + Inline Add Button */}
-                  <div className="mt-3 flex items-center justify-between gap-2">
-                    <div className="flex items-baseline gap-1.5">
-                      <span
-                        className={`${head} text-base font-extrabold text-[#17171B] sm:text-xl`}
-                      >
+                  <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-gray-100 pt-3">
+                    <div className="flex items-baseline gap-1.5 tabular-nums">
+                      <span className="text-sm font-semibold text-[#17171B] sm:text-lg">
                         ₹{p.price}
                       </span>
-                      <span className="text-[11px] text-gray-400 line-through sm:text-xs">
+                      <span className="text-[11px] font-normal text-gray-400 line-through sm:text-xs">
                         ₹{p.oldPrice}
                       </span>
                     </div>
@@ -286,7 +287,7 @@ export default function ProductSection() {
                       type="button"
                       onClick={() => addToCart(p.id)}
                       aria-label={`Add ${p.name} to cart`}
-                      className={`inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border-0 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] transition-all duration-300 sm:px-3.5 sm:py-2 sm:text-[11px] ${focus} ${
+                      className={`inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border-0 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] transition-all duration-300 sm:px-3.5 sm:py-2 sm:text-[11px] ${focus} ${
                         isAdded
                           ? "bg-[#78D94F] text-[#17171B]"
                           : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"

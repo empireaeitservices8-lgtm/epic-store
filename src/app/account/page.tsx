@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   ArrowRight,
   Award,
@@ -15,13 +15,14 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -62,7 +63,7 @@ const stats = [
   { label: "Rewards Points", value: "250", icon: Award, href: "/shop" },
 ];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 const revealCls =
@@ -95,7 +96,7 @@ export default function AccountPage() {
 
       <main
         ref={pageRef}
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-5 py-12 text-white md:py-16">

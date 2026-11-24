@@ -2,17 +2,18 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -156,7 +157,7 @@ const categories = [
 /* Quick searches shown under the search bar */
 const quickSearches = ["Track order", "Payment", "Delivery", "Refund", "Custom"];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -286,7 +287,7 @@ export default function FAQPage() {
       <Header />
 
       <main
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-white font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} min-h-screen bg-white font-[family-name:var(--font-inter)]`}
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-20 text-white sm:px-6 md:py-28">

@@ -2,17 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -46,7 +47,7 @@ const initialForm = {
   message: "",
 };
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 /* Scroll-reveal: an observer sets data-in="1" on [data-reveal] elements */
@@ -279,7 +280,7 @@ export default function ContactPage() {
 
       <main
         ref={pageRef}
-        className={`${syne.variable} ${inter.variable} bg-white font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} bg-white font-[family-name:var(--font-inter)]`}
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-20 sm:px-6 md:py-28 lg:px-10">
@@ -329,7 +330,7 @@ export default function ContactPage() {
             <h1
               data-reveal
               style={delay(160)}
-              className={`${rv} ${head} mt-5 max-w-3xl text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl`}
+              className={`${rv} ${head} mt-5 max-w-3xl text-3xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:text-4xl md:text-5xl`}
             >
               Let&apos;s Start a
               <br />
@@ -427,7 +428,7 @@ export default function ContactPage() {
               </p>
 
               <h2
-                className={`${head} mt-3 text-3xl font-extrabold text-[#17171B] sm:text-4xl`}
+                className={`${head} mt-3 text-2xl font-semibold text-[#17171B] sm:text-3xl`}
               >
                 Get in Touch
               </h2>
@@ -641,7 +642,7 @@ export default function ContactPage() {
                 </p>
 
                 <h2
-                  className={`${head} mt-3 text-3xl font-extrabold text-[#17171B] sm:text-4xl`}
+                  className={`${head} mt-3 text-2xl font-semibold text-[#17171B] sm:text-3xl`}
                 >
                   We&apos;d Love to Hear From You
                 </h2>

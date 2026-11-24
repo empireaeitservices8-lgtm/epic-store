@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   Heart,
   Layers,
   PackageCheck,
+  Plus,
   RotateCcw,
   ShieldCheck,
   ShoppingBag,
@@ -26,11 +27,11 @@ import {
   useStoreWishlist,
 } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI & numeric values */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -41,7 +42,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const head = `${syne.className} font-[family-name:var(--font-syne)]`;
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const valueFont = `${inter.className} font-[family-name:var(--font-inter)] tabular-nums`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
@@ -70,7 +71,7 @@ const products: ProductItem[] = [
   {
     id: "1",
     name: "Football Stadium Legends Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Football",
     price: 699,
     oldPrice: 999,
@@ -144,7 +145,7 @@ const products: ProductItem[] = [
   {
     id: "4",
     name: "Marvel & DC Superhero Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Movie, Series & Characters (DC, Marvel)",
     price: 999,
     oldPrice: 1399,
@@ -169,7 +170,7 @@ const products: ProductItem[] = [
   {
     id: "5",
     name: "Anime Shonen Neon Metal Poster (A4)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Anime",
     price: 499,
     oldPrice: 799,
@@ -244,7 +245,7 @@ const products: ProductItem[] = [
   {
     id: "8",
     name: "Gym & Motivation Mindset Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Gym and Motivation",
     price: 649,
     oldPrice: 949,
@@ -269,7 +270,7 @@ const products: ProductItem[] = [
   {
     id: "9",
     name: "Lady Boss Executive Statement Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Lady Boss",
     price: 699,
     oldPrice: 999,
@@ -293,7 +294,7 @@ const products: ProductItem[] = [
   {
     id: "10",
     name: "Championship Cricket Victory Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Cricket",
     price: 899,
     oldPrice: 1299,
@@ -365,7 +366,7 @@ const products: ProductItem[] = [
   {
     id: "13",
     name: "Supercar GT Carbon Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Cars, Bike & F1",
     price: 949,
     oldPrice: 1349,
@@ -389,7 +390,7 @@ const products: ProductItem[] = [
   {
     id: "14",
     name: "Next-Gen Open World Character Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Games and Characters",
     price: 699,
     oldPrice: 999,
@@ -437,7 +438,7 @@ const products: ProductItem[] = [
   {
     id: "16",
     name: "Relentless Hustle Gym Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Gym and Motivation",
     price: 899,
     oldPrice: 1299,
@@ -490,13 +491,14 @@ function ProductDetailsContent() {
   const [selectedSize, setSelectedSize] = useState(METAL_SIZES[1]);
   const [selectedImage, setSelectedImage] = useState("");
   const [justAdded, setJustAdded] = useState(false);
+  const [relatedAddedId, setRelatedAddedId] = useState<string | null>(null);
 
   if (!product) {
     return (
       <>
         <Header />
         <main
-          className={`${syne.variable} ${inter.variable} flex min-h-[70vh] flex-col items-center justify-center bg-[#F7F8F5] px-5 py-20 text-center font-[family-name:var(--font-inter)]`}
+          className={`${montserrat.variable} ${inter.variable} flex min-h-[70vh] flex-col items-center justify-center bg-[#F7F8F5] px-5 py-20 text-center font-[family-name:var(--font-inter)]`}
         >
           <span className="grid h-16 w-16 place-items-center rounded-2xl bg-[#17171B] text-[#78D94F]">
             <ShoppingBag className="h-7 w-7" />
@@ -574,81 +576,55 @@ function ProductDetailsContent() {
       <Header />
 
       <main
-        className={`${syne.variable} ${inter.variable} ${inter.className} min-h-screen bg-[#F7F8F5] pb-20 font-[family-name:var(--font-inter)] text-[#17171B] sm:pb-0`}
+        className={`${montserrat.variable} ${inter.variable} ${inter.className} min-h-screen bg-[#F7F8F5] pb-20 font-[family-name:var(--font-inter)] text-[#17171B] sm:pb-0`}
       >
-        {/* ================= DARK HERO BANNER ================= */}
-        <section className="relative overflow-hidden bg-[#17171B] px-4 py-5 sm:px-6 sm:py-8 lg:px-10 lg:py-11">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/Hero-banners/shop-hero.jpg"
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-80"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#17171B]/95 via-[#17171B]/75 to-[#17171B]/45" />
-          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#78D94F]/15 blur-3xl" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_left,black,transparent_75%)]" />
-
-          <div className="relative mx-auto flex max-w-7xl flex-col justify-between gap-3 md:flex-row md:items-end md:gap-6">
-            <div>
-              {/* Breadcrumb */}
-              <nav
-                aria-label="Breadcrumb"
-                className="mb-2.5 flex flex-wrap items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400 sm:mb-3.5 sm:gap-2 sm:text-xs sm:tracking-[0.16em]"
+        {/* ================= PRODUCT SHOWCASE ================= */}
+        <section className="mx-auto max-w-7xl px-3.5 pb-6 pt-3 sm:px-6 sm:pb-8 sm:pt-4 lg:px-10 lg:py-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3 sm:mb-4">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-gray-400 sm:gap-2 sm:text-xs"
+            >
+              <Link
+                href="/"
+                className={`text-gray-500 no-underline transition hover:text-[#17171B] ${focus}`}
               >
-                <Link
-                  href="/"
-                  className={`text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
-                >
-                  HOME
-                </Link>
-                <span>/</span>
-                <Link
-                  href="/shop"
-                  className={`text-gray-400 no-underline transition hover:text-[#78D94F] ${focus}`}
-                >
-                  SHOP
-                </Link>
-                <span>/</span>
-                <Link
-                  href={`/shop?collection=${encodeURIComponent(product.collection)}`}
-                  className={`text-[#78D94F] no-underline transition hover:underline ${focus}`}
-                >
-                  {product.collection}
-                </Link>
-                <span className="hidden sm:inline">/</span>
-                <span className="hidden line-clamp-1 text-white sm:inline">{product.name}</span>
-              </nav>
-
-              <p className="mb-1.5 flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#78D94F] sm:mb-2 sm:gap-3 sm:text-xs sm:tracking-[0.24em]">
-                <span className="h-0.5 w-6 bg-[#78D94F] sm:w-8" />
-                {product.category}
-              </p>
-
-              <h1
-                className={`${head} max-w-3xl text-xl font-extrabold uppercase leading-[1.1] tracking-tight text-white sm:text-3xl lg:text-4xl`}
+                Home
+              </Link>
+              <span>/</span>
+              <Link
+                href="/shop"
+                className={`text-gray-500 no-underline transition hover:text-[#17171B] ${focus}`}
               >
+                Shop
+              </Link>
+              <span>/</span>
+              <Link
+                href={`/shop?collection=${encodeURIComponent(product.collection)}`}
+                className={`text-emerald-700 no-underline transition hover:underline ${focus}`}
+              >
+                {product.collection}
+              </Link>
+              <span className="hidden sm:inline">/</span>
+              <span className="hidden line-clamp-1 text-[#17171B] sm:inline">
                 {product.name}
-              </h1>
-            </div>
+              </span>
+            </nav>
 
             <Link
               href="/shop"
-              className={`hidden shrink-0 items-center gap-2 self-start rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-white no-underline backdrop-blur-sm transition hover:border-[#78D94F] hover:bg-[#78D94F] hover:text-[#17171B] sm:inline-flex md:self-auto ${focus}`}
+              className={`hidden items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-[#17171B] no-underline transition hover:border-[#17171B] sm:inline-flex ${focus}`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to Catalog
             </Link>
           </div>
-        </section>
 
-        {/* ================= PRODUCT SHOWCASE ================= */}
-        <section className="mx-auto max-w-7xl px-3.5 py-5 sm:px-6 sm:py-9 lg:px-10 lg:py-12">
-          <div className="grid gap-5 sm:gap-8 lg:grid-cols-12 lg:gap-12">
+          <div className="grid gap-5 sm:gap-6 lg:grid-cols-12 lg:items-start lg:gap-8">
             {/* Left: Gallery */}
-            <div className="lg:col-span-6">
-              <div className="lg:sticky lg:top-28">
-                <div className="relative aspect-[4/3.6] overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_14px_35px_rgba(23,23,27,0.06)] sm:aspect-[4/4.4] sm:rounded-3xl">
+            <div className="lg:col-span-5">
+              <div className="lg:sticky lg:top-24">
+                <div className="relative aspect-[4/3.6] overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_14px_35px_rgba(23,23,27,0.06)] sm:aspect-[4/4] sm:rounded-3xl lg:aspect-auto lg:h-[calc(100svh-255px)] lg:max-h-[440px] lg:min-h-[320px]">
                   {product.badge && (
                     <span
                       className={`${head} absolute left-3.5 top-3.5 z-10 rounded-full bg-[#78D94F] px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#17171B] shadow-md sm:left-5 sm:top-5 sm:px-4 sm:py-1.5 sm:text-[11px]`}
@@ -684,7 +660,7 @@ function ProductDetailsContent() {
                 </div>
 
                 {/* Thumbnails */}
-                <div className="mt-2.5 grid grid-cols-3 gap-2.5 sm:mt-4 sm:gap-3.5">
+                <div className="mt-2.5 grid grid-cols-3 gap-2.5 sm:mt-3 sm:gap-3">
                   {galleryImages.map((image, index) => {
                     const isActive = activeImage === image;
                     return (
@@ -693,7 +669,7 @@ function ProductDetailsContent() {
                         type="button"
                         onClick={() => setSelectedImage(image)}
                         aria-label={`View product image ${index + 1}`}
-                        className={`relative aspect-[4/2.9] cursor-pointer overflow-hidden rounded-xl border-2 bg-white transition duration-300 sm:aspect-[4/3] sm:rounded-2xl ${
+                        className={`relative aspect-[4/2.8] cursor-pointer overflow-hidden rounded-xl border-2 bg-white transition duration-300 sm:rounded-2xl lg:aspect-auto lg:h-[74px] ${
                           isActive
                             ? "border-[#78D94F] ring-2 ring-[#78D94F]/30"
                             : "border-gray-200/80 opacity-75 hover:border-gray-400 hover:opacity-100"
@@ -712,31 +688,31 @@ function ProductDetailsContent() {
             </div>
 
             {/* Right: Product Information Card */}
-            <div className="lg:col-span-6">
-              <div className="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_14px_35px_rgba(23,23,27,0.05)] sm:rounded-3xl sm:p-8 lg:p-10">
+            <div className="lg:col-span-7">
+              <div className="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_14px_35px_rgba(23,23,27,0.05)] sm:rounded-3xl sm:p-6 lg:p-6">
                 {/* Collection & Category pills */}
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <Link
                     href={`/shop?collection=${encodeURIComponent(product.collection)}`}
-                    className="inline-flex items-center rounded-full bg-[#17171B] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#78D94F] no-underline transition hover:bg-[#78D94F] hover:text-[#17171B] sm:px-3.5 sm:text-[11px] sm:tracking-[0.14em]"
+                    className="inline-flex items-center rounded-full bg-[#17171B] px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#78D94F] no-underline transition hover:bg-[#78D94F] hover:text-[#17171B] sm:px-3.5 sm:py-1 sm:text-[11px]"
                   >
                     {product.collection}
                   </Link>
-                  <span className="rounded-full bg-[#F7F8F5] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-gray-600 sm:px-3.5 sm:text-[11px] sm:tracking-[0.14em]">
+                  <span className="rounded-full bg-[#F7F8F5] px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-gray-600 sm:px-3.5 sm:py-1 sm:text-[11px]">
                     {product.category}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h2
-                  className={`${head} mt-3 text-xl font-extrabold leading-[1.15] tracking-tight text-[#17171B] sm:mt-4 sm:text-3xl`}
+                <h1
+                  className={`${head} mt-2.5 text-xl font-semibold leading-[1.18] tracking-tight text-[#17171B] sm:mt-3 sm:text-2xl`}
                 >
                   {product.name}
-                </h2>
+                </h1>
 
                 {/* Rating & SKU row */}
-                <div className="mt-3 flex flex-wrap items-center gap-2.5 border-b border-gray-100 pb-3.5 sm:mt-4 sm:gap-3 sm:pb-5">
-                  <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 sm:gap-1.5 sm:px-3">
+                <div className="mt-2 flex flex-wrap items-center gap-2 border-b border-gray-100 pb-2.5 sm:gap-3">
+                  <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
                     <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                     <span className={valueFont}>{product.rating}/5</span>
                   </div>
@@ -751,46 +727,46 @@ function ProductDetailsContent() {
                 </div>
 
                 {/* Price block */}
-                <div className="mt-4 flex flex-wrap items-baseline gap-2.5 sm:mt-6 sm:gap-3.5">
+                <div className="mt-3 flex flex-wrap items-baseline gap-2.5 sm:gap-3">
                   <span
-                    className={`${valueFont} text-2xl font-extrabold tracking-tight text-[#17171B] sm:text-4xl`}
+                    className={`${valueFont} text-2xl font-bold tracking-tight text-[#17171B] sm:text-3xl`}
                   >
                     {rupee(product.price)}
                   </span>
                   <span
-                    className={`${valueFont} text-base font-medium text-gray-400 line-through sm:text-lg`}
+                    className={`${valueFont} text-sm font-medium text-gray-400 line-through sm:text-base`}
                   >
                     {rupee(product.oldPrice)}
                   </span>
                   <span
-                    className={`${valueFont} rounded-full bg-[#78D94F]/20 px-3 py-0.5 text-[11px] font-extrabold uppercase tracking-[0.08em] text-[#17171B] sm:px-3.5 sm:py-1 sm:text-xs`}
+                    className={`${valueFont} rounded-full bg-[#78D94F]/20 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#17171B]`}
                   >
                     Save {discount}%
                   </span>
+                  <span className="text-[11px] text-gray-500 sm:ml-auto">
+                    Free shipping ₹999+
+                  </span>
                 </div>
-                <p className="mt-1 text-[11px] text-gray-500 sm:mt-1.5 sm:text-xs">
-                  Inclusive of all taxes • Free shipping on orders over ₹999
-                </p>
 
                 {/* Description */}
-                <p className="mt-4 text-[13px] leading-6 text-gray-600 sm:mt-5 sm:text-[15px] sm:leading-7">
+                <p className="mt-2.5 line-clamp-2 text-[13px] leading-relaxed text-gray-600 sm:text-sm">
                   {product.description}
                 </p>
 
                 {/* Size selector for Metal Posters */}
                 {isMetalPoster && (
-                  <div className="mt-4 sm:mt-6">
-                    <div className="mb-2 flex items-center justify-between">
+                  <div className="mt-3.5">
+                    <div className="mb-1.5 flex items-center justify-between">
                       <span
-                        className={`${head} text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#17171B] sm:text-xs`}
+                        className={`${head} text-[11px] font-semibold uppercase tracking-[0.12em] text-[#17171B]`}
                       >
                         Select Poster Size
                       </span>
-                      <span className="text-[11px] font-medium text-gray-500 sm:text-xs">
+                      <span className="text-[11px] font-medium text-gray-500">
                         Magnetic mount included
                       </span>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
+                    <div className="grid grid-cols-3 gap-2">
                       {METAL_SIZES.map((size) => {
                         const active = selectedSize === size;
                         const [shortLabel, dims] = size.split(" (");
@@ -799,17 +775,17 @@ function ProductDetailsContent() {
                             key={size}
                             type="button"
                             onClick={() => setSelectedSize(size)}
-                            className={`${valueFont} flex cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-2 text-center transition sm:px-3 sm:py-2.5 ${
+                            className={`${valueFont} flex cursor-pointer flex-col items-center justify-center rounded-xl border px-2 py-1.5 text-center transition ${
                               active
                                 ? "border-[#17171B] bg-[#17171B] text-[#78D94F] shadow-sm"
                                 : "border-gray-200 bg-[#F7F8F5] text-[#17171B] hover:border-[#17171B]"
                             } ${focus}`}
                           >
-                            <span className="text-xs font-extrabold sm:text-sm">
+                            <span className="text-xs font-semibold sm:text-sm">
                               {shortLabel}
                             </span>
                             <span
-                              className={`mt-0.5 text-[10px] font-medium ${
+                              className={`text-[10px] font-normal ${
                                 active ? "text-gray-300" : "text-gray-500"
                               }`}
                             >
@@ -822,57 +798,53 @@ function ProductDetailsContent() {
                   </div>
                 )}
 
-                {/* Specifications table */}
-                <div className="mt-4 rounded-2xl border border-gray-100 bg-[#F7F8F5] p-3.5 sm:mt-6 sm:p-5">
-                  <dl className="m-0 space-y-2.5 text-xs sm:space-y-3 sm:text-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <dt className="shrink-0 font-medium text-gray-500">Product SKU</dt>
-                      <dd
-                        className={`${valueFont} m-0 font-bold text-[#17171B]`}
-                      >
+                {/* Specifications compact 2x2 grid */}
+                <div className="mt-3.5 rounded-xl border border-gray-100 bg-[#F7F8F5] px-3.5 py-2.5">
+                  <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] sm:text-xs">
+                    <div>
+                      <dt className="font-medium text-gray-400">SKU</dt>
+                      <dd className={`${valueFont} m-0 font-semibold text-[#17171B]`}>
                         {product.sku}
                       </dd>
                     </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-gray-200/70 pt-2">
-                      <dt className="shrink-0 font-medium text-gray-500">Material</dt>
-                      <dd className="m-0 text-right font-semibold text-[#17171B]">
+                    <div>
+                      <dt className="font-medium text-gray-400">Dimensions</dt>
+                      <dd className={`${valueFont} m-0 truncate font-semibold text-[#17171B]`}>
+                        {isMetalPoster ? selectedSize : product.dimensions}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-400">Material</dt>
+                      <dd className="m-0 truncate font-medium text-[#17171B]">
                         {product.material}
                       </dd>
                     </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-gray-200/70 pt-2">
-                      <dt className="shrink-0 font-medium text-gray-500">Finish</dt>
-                      <dd className="m-0 text-right font-semibold text-[#17171B]">
+                    <div>
+                      <dt className="font-medium text-gray-400">Finish</dt>
+                      <dd className="m-0 truncate font-medium text-[#17171B]">
                         {product.finish}
-                      </dd>
-                    </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-gray-200/70 pt-2">
-                      <dt className="shrink-0 font-medium text-gray-500">Dimensions</dt>
-                      <dd
-                        className={`${valueFont} m-0 text-right font-semibold text-[#17171B]`}
-                      >
-                        {isMetalPoster ? selectedSize : product.dimensions}
                       </dd>
                     </div>
                   </dl>
                 </div>
 
                 {/* Quantity + Actions */}
-                <div className="mt-5 flex flex-row items-center gap-2.5 sm:mt-7 sm:gap-3.5">
+                <div className="mt-4 flex flex-row items-center gap-2.5">
                   {/* Quantity stepper */}
-                  <div className="inline-flex h-12 w-28 shrink-0 items-center justify-between rounded-full border border-gray-300 bg-[#F7F8F5] px-1.5 sm:h-13 sm:w-36 sm:px-2">
+                  <div className="inline-flex h-11 w-28 shrink-0 items-center justify-between rounded-full border border-gray-300 bg-[#F7F8F5] px-1.5 sm:w-32">
                     <button
                       type="button"
                       onClick={() =>
                         setQuantity((current) => Math.max(1, current - 1))
                       }
                       aria-label="Decrease quantity"
-                      className={`grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-base font-bold text-[#17171B] transition hover:bg-white sm:h-9 sm:w-9 sm:text-lg ${focus}`}
+                      className={`grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-base font-semibold text-[#17171B] transition hover:bg-white ${focus}`}
                     >
                       −
                     </button>
 
                     <span
-                      className={`${valueFont} text-sm font-extrabold text-[#17171B]`}
+                      className={`${valueFont} text-sm font-semibold text-[#17171B]`}
                     >
                       {quantity}
                     </span>
@@ -881,7 +853,7 @@ function ProductDetailsContent() {
                       type="button"
                       onClick={() => setQuantity((current) => current + 1)}
                       aria-label="Increase quantity"
-                      className={`grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-base font-bold text-[#17171B] transition hover:bg-white sm:h-9 sm:w-9 sm:text-lg ${focus}`}
+                      className={`grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 bg-transparent text-base font-semibold text-[#17171B] transition hover:bg-white ${focus}`}
                     >
                       +
                     </button>
@@ -891,7 +863,7 @@ function ProductDetailsContent() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className={`${head} inline-flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border-0 px-4 text-[11px] font-extrabold uppercase tracking-[0.12em] transition duration-300 sm:h-13 sm:gap-2.5 sm:px-7 sm:text-xs sm:tracking-[0.16em] ${
+                    className={`${head} inline-flex h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border-0 px-5 text-xs font-semibold uppercase tracking-[0.12em] transition duration-300 ${
                       justAdded
                         ? "bg-[#17171B] text-[#78D94F]"
                         : "bg-[#78D94F] text-[#17171B] hover:-translate-y-0.5 hover:bg-[#17171B] hover:text-white"
@@ -915,11 +887,11 @@ function ProductDetailsContent() {
                 </div>
 
                 {/* Buy Now & Wishlist secondary actions */}
-                <div className="mt-2.5 flex flex-row gap-2.5 sm:mt-3 sm:gap-3">
+                <div className="mt-2.5 flex flex-row gap-2.5">
                   <Link
                     href="/cart"
                     onClick={handleAddToCart}
-                    className={`${head} inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#17171B] bg-transparent px-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#17171B] no-underline transition hover:bg-[#17171B] hover:text-white sm:h-12 sm:px-6 sm:text-xs sm:tracking-[0.16em] ${focus}`}
+                    className={`${head} inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#17171B] bg-transparent px-5 text-xs font-semibold uppercase tracking-[0.12em] text-[#17171B] no-underline transition hover:bg-[#17171B] hover:text-white ${focus}`}
                   >
                     Buy It Now
                     <ArrowRight className="h-4 w-4" />
@@ -928,7 +900,7 @@ function ProductDetailsContent() {
                   <button
                     type="button"
                     onClick={() => toggleStoreWishlist(numericId)}
-                    className={`inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 text-[11px] font-bold uppercase tracking-[0.1em] transition sm:h-12 sm:px-5 sm:text-xs sm:tracking-[0.12em] ${
+                    className={`inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 text-xs font-semibold uppercase tracking-[0.1em] transition ${
                       isWishlisted
                         ? "border-[#17171B] bg-[#17171B] text-[#78D94F]"
                         : "border-gray-200 bg-[#F7F8F5] text-[#17171B] hover:border-[#17171B]"
@@ -1094,7 +1066,7 @@ function ProductDetailsContent() {
                   You May Also Like
                 </p>
                 <h2
-                  className={`${head} mt-2.5 text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
+                  className={`${head} mt-2.5 text-2xl font-semibold uppercase tracking-tight text-[#17171B] sm:text-3xl`}
                 >
                   Related <span className="text-[#78D94F]">Creations.</span>
                 </h2>
@@ -1102,79 +1074,159 @@ function ProductDetailsContent() {
 
               <Link
                 href={`/shop?collection=${encodeURIComponent(product.collection)}`}
-                className={`${head} inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#17171B] no-underline transition hover:text-[#78D94F] ${focus}`}
+                className={`${head} inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#17171B] no-underline transition hover:text-[#78D94F] ${focus}`}
               >
                 Explore {product.collection}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3.5 sm:gap-6 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {relatedProducts.map((item) => {
                 const itemDiscount = Math.round(
                   ((item.oldPrice - item.price) / item.oldPrice) * 100
                 );
+                const numericId = Number(item.id);
+                const isLiked = Number.isFinite(numericId)
+                  ? wishlist.includes(numericId)
+                  : false;
+                const isRelatedAdded = relatedAddedId === item.id;
+
                 return (
-                  <Link
+                  <article
                     key={item.id}
-                    href={`/products/${item.id}`}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white no-underline transition duration-500 hover:-translate-y-1.5 hover:border-[#17171B]/20 hover:shadow-[0_22px_50px_-14px_rgba(23,23,27,0.14)] sm:rounded-3xl"
+                    className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200/75 bg-white shadow-[0_2px_14px_rgba(23,23,27,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-[#17171B]/20 hover:shadow-[0_18px_40px_-12px_rgba(23,23,27,0.12)] sm:rounded-3xl"
                   >
-                    <div className="relative aspect-[4/4.6] overflow-hidden bg-[#ECEEE9]">
+                    <div className="relative aspect-[4/4.2] overflow-hidden bg-[#F3F4F1]">
+                      <Link
+                        href={`/products/${item.id}`}
+                        className="block h-full w-full"
+                      >
+                        <LoadingImage
+                          src={item.image}
+                          alt={item.name}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                      </Link>
+
                       {item.badge && (
-                        <span
-                          className={`${head} absolute left-2.5 top-2.5 z-10 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.14em] text-[#17171B] sm:left-4 sm:top-4 sm:px-3.5 sm:text-[10px]`}
-                        >
+                        <span className="pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-[#78D94F] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#17171B] shadow-sm sm:left-3.5 sm:top-3.5 sm:px-3 sm:text-[10px]">
                           {item.badge}
                         </span>
                       )}
-                      <LoadingImage
-                        src={item.image}
-                        alt={item.name}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
+
+                      {itemDiscount > 0 && (
+                        <span className="pointer-events-none absolute bottom-2.5 left-2.5 rounded-full bg-[#17171B]/80 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white backdrop-blur-sm sm:bottom-3.5 sm:left-3.5">
+                          {itemDiscount}% OFF
+                        </span>
+                      )}
+
+                      <button
+                        type="button"
+                        aria-label={`${isLiked ? "Remove" : "Add"} ${item.name} ${
+                          isLiked ? "from" : "to"
+                        } wishlist`}
+                        aria-pressed={isLiked}
+                        onClick={() => {
+                          if (Number.isFinite(numericId)) {
+                            toggleStoreWishlist(numericId);
+                          }
+                        }}
+                        className={`absolute right-2.5 top-2.5 grid h-8 w-8 cursor-pointer place-items-center rounded-full border-0 shadow-sm backdrop-blur-md transition duration-300 hover:scale-110 sm:right-3.5 sm:top-3.5 sm:h-9 sm:w-9 ${focus} ${
+                          isLiked
+                            ? "bg-[#78D94F] text-[#17171B]"
+                            : "bg-white/90 text-[#17171B]"
+                        }`}
+                      >
+                        <Heart
+                          className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`}
+                          aria-hidden="true"
+                        />
+                      </button>
                     </div>
 
                     <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-5">
                       <div>
                         <div className="flex items-center justify-between gap-2">
-                          <span className="line-clamp-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+                          <p className="m-0 truncate text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400">
                             {item.collection}
-                          </span>
-                          <span
-                            className={`${valueFont} inline-flex items-center gap-1 text-[11px] font-bold text-[#17171B]`}
-                          >
-                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                          </p>
+                          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-50/80 px-2 py-0.5 text-[11px] font-medium tabular-nums text-amber-700">
+                            <Star
+                              className="h-3 w-3 fill-amber-400 text-amber-400"
+                              aria-hidden="true"
+                            />
                             {item.rating}
                           </span>
                         </div>
 
-                        <h3
-                          className={`${head} mt-1.5 line-clamp-2 text-sm font-extrabold leading-snug text-[#17171B] transition-colors group-hover:text-[#78D94F] sm:text-base`}
+                        <Link
+                          href={`/products/${item.id}`}
+                          className="no-underline"
                         >
-                          {item.name}
-                        </h3>
+                          <h3
+                            className={`${head} m-0 mt-1.5 line-clamp-2 text-[13px] font-semibold leading-snug text-[#17171B] transition-colors duration-300 group-hover:text-emerald-700 sm:text-[15px]`}
+                          >
+                            {item.name}
+                          </h3>
+                        </Link>
                       </div>
 
-                      <div className="mt-3 flex items-baseline gap-2 border-t border-gray-100 pt-3">
-                        <span
-                          className={`${valueFont} text-base font-extrabold text-[#17171B] sm:text-lg`}
+                      <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-gray-100 pt-3">
+                        <div
+                          className={`${valueFont} flex items-baseline gap-1.5 tabular-nums`}
                         >
-                          {rupee(item.price)}
-                        </span>
-                        <span
-                          className={`${valueFont} text-xs text-gray-400 line-through`}
+                          <span className="text-sm font-semibold text-[#17171B] sm:text-lg">
+                            {rupee(item.price)}
+                          </span>
+                          <span className="text-[11px] font-normal text-gray-400 line-through sm:text-xs">
+                            {rupee(item.oldPrice)}
+                          </span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addToStoreCart(
+                              {
+                                id: Number.isFinite(numericId) ? numericId : 0,
+                                name: item.name,
+                                category: item.category,
+                                price: item.price,
+                                oldPrice: item.oldPrice,
+                                image: item.image,
+                              },
+                              1
+                            );
+                            setRelatedAddedId(item.id);
+                            setTimeout(() => {
+                              setRelatedAddedId((curr) =>
+                                curr === item.id ? null : curr
+                              );
+                            }, 1600);
+                          }}
+                          aria-label={`Add ${item.name} to cart`}
+                          className={`inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border-0 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] transition-all duration-300 sm:px-3.5 sm:py-2 sm:text-[11px] ${focus} ${
+                            isRelatedAdded
+                              ? "bg-[#78D94F] text-[#17171B]"
+                              : "bg-[#17171B] text-white hover:bg-[#78D94F] hover:text-[#17171B]"
+                          }`}
                         >
-                          {rupee(item.oldPrice)}
-                        </span>
-                        <span
-                          className={`${valueFont} ml-auto rounded-full bg-[#78D94F]/20 px-2 py-0.5 text-[10px] font-extrabold text-[#17171B]`}
-                        >
-                          -{itemDiscount}%
-                        </span>
+                          {isRelatedAdded ? (
+                            <>
+                              <Check className="h-3 w-3" aria-hidden="true" />
+                              <span className="hidden sm:inline">Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="h-3 w-3" aria-hidden="true" />
+                              <span>Add</span>
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
-                  </Link>
+                  </article>
                 );
               })}
             </div>

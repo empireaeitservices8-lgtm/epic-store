@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import LoadingImage from "@/components/LoadingImage";
@@ -18,13 +18,14 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -44,7 +45,7 @@ type Category = {
 const initialCategories: Category[] = [
   {
     id: 1,
-    name: "Metal Posters (A4, A3, A2)",
+    name: "Metal Posters",
     slug: "metal-posters",
     description:
       "HD glossy and matte aluminium metal wall posters in A4, A3, and A2 sizes.",
@@ -79,7 +80,7 @@ const emptyForm = {
   status: "Active" as "Active" | "Inactive",
 };
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -255,7 +256,7 @@ export default function AdminCategoriesPage() {
 
   return (
     <div
-      className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+      className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
     >
       <AdminSidebar
         mobileOpen={mobileMenuOpen}

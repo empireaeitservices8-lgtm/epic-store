@@ -1,15 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -48,7 +49,7 @@ const testimonials = [
 ];
 
 const INTERVAL = 7000;
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 
 export default function Testimonials() {
   const [index, setIndex] = useState(0);
@@ -88,7 +89,7 @@ export default function Testimonials() {
 
   return (
     <section
-      className={`${syne.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-6 sm:py-14 lg:px-10 lg:py-16`}
+      className={`${montserrat.variable} ${inter.variable} relative overflow-hidden bg-[#17171B] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-6 sm:py-14 lg:px-10 lg:py-16`}
     >
       {/* Decoration */}
       <div className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-[#78D94F]/10 blur-3xl" />
@@ -109,7 +110,7 @@ export default function Testimonials() {
           </p>
 
           <h2
-            className={`${head} text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl`}
+            className={`${head} text-2xl font-semibold leading-[1.06] tracking-tight text-white sm:text-3xl lg:text-4xl`}
           >
             Loved by Our Customers<span className="text-[#78D94F]">.</span>
           </h2>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   ArrowRight,
   Check,
@@ -15,13 +15,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LoadingImage from "@/components/LoadingImage";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -57,7 +58,7 @@ const steps = [
   ["04", "Confirm Your Order", "Proceed after the details and price are agreed."],
 ];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 const card =
@@ -160,7 +161,7 @@ export default function CustomPrintsPage() {
 
       <main
         ref={pageRef}
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
       >
         {/* ================= HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-5 py-12 text-center md:py-16">
@@ -188,7 +189,7 @@ export default function CustomPrintsPage() {
 
             <h1
               {...reveal(200)}
-              className={`${revealCls} ${head} mt-4 text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl`}
+              className={`${revealCls} ${head} mt-4 text-3xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:text-4xl md:text-5xl`}
             >
               Your Ideas.
               <span className="block text-[#78D94F]">Your Prints.</span>
@@ -227,7 +228,7 @@ export default function CustomPrintsPage() {
               </p>
 
               <h2
-                className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B] md:text-4xl`}
+                className={`${head} m-0 mt-3 text-2xl font-semibold text-[#17171B] md:text-3xl`}
               >
                 Turn Your Ideas Into Something Special
               </h2>
@@ -291,7 +292,7 @@ export default function CustomPrintsPage() {
             </p>
 
             <h2
-              className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B] md:text-4xl`}
+              className={`${head} m-0 mt-3 text-2xl font-semibold text-[#17171B] md:text-3xl`}
             >
               Explore Custom Print Options
             </h2>
@@ -338,7 +339,7 @@ export default function CustomPrintsPage() {
             </p>
 
             <h2
-              className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B] md:text-4xl`}
+              className={`${head} m-0 mt-3 text-2xl font-semibold text-[#17171B] md:text-3xl`}
             >
               How Custom Printing Works
             </h2>
@@ -383,7 +384,7 @@ export default function CustomPrintsPage() {
               </p>
 
               <h2
-                className={`${head} m-0 mt-3 text-3xl font-extrabold text-[#17171B] md:text-4xl`}
+                className={`${head} m-0 mt-3 text-2xl font-semibold text-[#17171B] md:text-3xl`}
               >
                 Tell Us What You Have in Mind
               </h2>
@@ -597,7 +598,7 @@ export default function CustomPrintsPage() {
 
             <div className="relative">
               <h2
-                className={`${head} m-0 text-3xl font-extrabold uppercase tracking-tight text-white md:text-4xl`}
+                className={`${head} m-0 text-2xl font-semibold uppercase tracking-tight text-white md:text-3xl`}
               >
                 Have a <span className="text-[#78D94F]">Different Idea?</span>
               </h2>

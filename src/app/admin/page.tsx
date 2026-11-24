@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import { Calendar, Plus } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
@@ -17,13 +17,14 @@ import TopProducts, {
   type TopProductItem,
 } from "@/components/admin/TopProducts";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -100,7 +101,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div
-      className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+      className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
     >
       <AdminSidebar
         mobileOpen={mobileMenuOpen}
@@ -121,7 +122,7 @@ export default function AdminDashboardPage() {
                 <span className="h-0.5 w-6 bg-[#78D94F]" />
                 Admin Panel
               </p>
-              <h1 className="m-0 mt-2 font-[family-name:var(--font-syne)] text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl">
+              <h1 className="m-0 mt-2 font-[family-name:var(--font-montserrat)] text-2xl font-extrabold uppercase tracking-tight text-[#17171B] sm:text-3xl">
                 Dashboard Overview
               </h1>
               <p className="m-0 mt-1.5 text-sm text-gray-500">

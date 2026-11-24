@@ -67,7 +67,7 @@ export default function RecentOrders({
     <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.03)]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 p-6">
         <div>
-          <h2 className="m-0 font-[family-name:var(--font-syne)] text-xl font-extrabold text-[#17171B]">
+          <h2 className="m-0 font-[family-name:var(--font-montserrat)] text-xl font-extrabold text-[#17171B]">
             Recent Orders
           </h2>
           <p className="m-0 mt-1 text-sm text-gray-500">

@@ -54,7 +54,7 @@ export default function SalesChart() {
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)] sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="m-0 font-[family-name:var(--font-syne)] text-xl font-extrabold text-[#17171B]">
+          <h2 className="m-0 font-[family-name:var(--font-montserrat)] text-xl font-extrabold text-[#17171B]">
             Sales Overview
           </h2>
           <p className="m-0 mt-1 text-sm text-gray-500">

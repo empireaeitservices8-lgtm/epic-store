@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -20,7 +21,7 @@ const inter = Inter({
 
 const categories = [
   {
-    name: "Metal Posters (A4, A3, A2)",
+    name: "Metal Posters",
     subtitle: "HD glossy & matte aluminium wall posters in A4, A3 & A2",
     image:
       "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85",
@@ -47,7 +48,7 @@ const categories = [
   },
 ];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 
 /* Cursor spotlight + subtle 3D tilt (no re-renders) */
 function onCardMove(e: React.MouseEvent<HTMLAnchorElement>) {
@@ -87,7 +88,7 @@ export default function CategorySection() {
   return (
     <section
       id="categories"
-      className={`${syne.variable} ${inter.variable} w-full overflow-hidden bg-[#fafaf7] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
+      className={`${montserrat.variable} ${inter.variable} w-full overflow-hidden bg-[#fafaf7] px-4 py-10 font-[family-name:var(--font-inter)] sm:px-8 sm:py-14 lg:px-16 lg:py-16`}
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Heading */}
@@ -99,7 +100,7 @@ export default function CategorySection() {
             </p>
 
             <h2
-              className={`${head} text-3xl font-extrabold leading-[1.04] tracking-tight text-[#17171B] sm:text-4xl lg:text-5xl`}
+              className={`${head} text-2xl font-semibold leading-[1.06] tracking-tight text-[#17171B] sm:text-3xl lg:text-4xl`}
             >
               SHOP BY <span className="text-[#78D94F]">CATEGORY.</span>
             </h2>
@@ -144,30 +145,23 @@ export default function CategorySection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/5 transition-colors duration-300 group-hover:from-black/95" />
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(120,217,79,0.22),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-              {/* Number */}
-              <span
-                className={`${head} absolute right-3 top-3 rounded-full border border-white/40 bg-black/25 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm transition-colors duration-300 group-hover:border-[#78D94F] group-hover:bg-[#78D94F] group-hover:text-[#17171B] sm:right-4 sm:top-4 sm:px-3 sm:text-xs`}
-              >
-                {c.number}
-              </span>
-
               {/* Details */}
               <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-5">
-                <p className="mb-1 hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-[#78D94F] sm:block">
+                <p className="mb-1 hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#78D94F] sm:block">
                   EPIC COLLECTION
                 </p>
 
                 <h3
-                  className={`${head} m-0 text-base font-extrabold text-white transition-transform duration-500 group-hover:-translate-y-0.5 sm:text-2xl`}
+                  className={`${head} m-0 text-base font-semibold text-white transition-transform duration-500 group-hover:-translate-y-0.5 sm:text-xl`}
                 >
                   {c.name}
                 </h3>
 
-                <p className="m-0 mt-1 hidden text-xs text-white/75 sm:block">
+                <p className="m-0 mt-1 hidden text-xs font-normal text-white/75 sm:block">
                   {c.subtitle}
                 </p>
 
-                <div className="mt-2 flex items-center gap-2 text-[10px] font-bold tracking-[0.12em] text-white sm:mt-3 sm:gap-2.5 sm:text-xs">
+                <div className="mt-2 flex items-center gap-2 text-[10px] font-medium tracking-[0.12em] text-white sm:mt-3 sm:gap-2.5 sm:text-xs">
                   <span className="relative h-px w-5 bg-white/50 transition-all duration-500 group-hover:w-10 group-hover:bg-[#78D94F] sm:w-7" />
                   EXPLORE
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-[#78D94F] text-xs text-[#17171B] transition duration-300 group-hover:translate-x-1.5 group-hover:bg-white sm:h-7 sm:w-7 sm:text-sm">

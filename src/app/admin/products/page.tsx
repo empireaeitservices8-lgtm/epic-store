@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   Plus,
   Search,
@@ -22,13 +22,14 @@ import AdminHeader from "@/components/admin/AdminHeader";
 import LoadingImage from "@/components/LoadingImage";
 import CloudinaryImageUpload from "@/components/admin/CloudinaryImageUpload";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -54,7 +55,7 @@ const initialProducts: Product[] = [
     id: 1,
     name: "Football Legends Metal Poster (A3)",
     sku: "EP-MET-001",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     price: 699,
     stock: 45,
     status: "Active",
@@ -86,7 +87,7 @@ const initialProducts: Product[] = [
     id: 4,
     name: "Anime Shonen Edition Metal Poster (A2)",
     sku: "EP-MET-004",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     price: 999,
     stock: 22,
     status: "Active",
@@ -118,7 +119,7 @@ const initialProducts: Product[] = [
 ];
 
 const categories = [
-  "Metal Posters (A4, A3, A2)",
+  "Metal Posters",
   "Desk Pad",
   "Signed Jersey Frame",
 ];
@@ -126,14 +127,14 @@ const categories = [
 const emptyForm = {
   name: "",
   sku: "",
-  category: "Metal Posters (A4, A3, A2)",
+  category: "Metal Posters",
   price: "",
   stock: "",
   status: "Active" as ProductStatus,
   image: "",
 };
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -321,7 +322,7 @@ export default function AdminProductsPage() {
 
   return (
     <div
-      className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+      className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
     >
       <AdminSidebar
         mobileOpen={mobileMenuOpen}
@@ -404,7 +405,7 @@ export default function AdminProductsPage() {
                 </div>
               </div>
               <h2
-                className="m-0 mt-3 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
+                className="m-0 mt-3 font-[family-name:var(--font-montserrat)] text-3xl font-extrabold tabular-nums tracking-tight text-[#17171B]"
               >
                 {products.length}
               </h2>
@@ -415,7 +416,7 @@ export default function AdminProductsPage() {
                 Active Products
               </p>
               <h2
-                className="m-0 mt-4 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-green-700"
+                className="m-0 mt-4 font-[family-name:var(--font-montserrat)] text-3xl font-extrabold tabular-nums tracking-tight text-green-700"
               >
                 {activeCount}
               </h2>
@@ -426,7 +427,7 @@ export default function AdminProductsPage() {
                 Out of Stock
               </p>
               <h2
-                className="m-0 mt-4 font-[family-name:var(--font-inter)] text-3xl font-extrabold tabular-nums tracking-tight text-red-600"
+                className="m-0 mt-4 font-[family-name:var(--font-montserrat)] text-3xl font-extrabold tabular-nums tracking-tight text-red-600"
               >
                 {outOfStockCount}
               </h2>

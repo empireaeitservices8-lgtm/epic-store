@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -11,13 +11,14 @@ import {
   useStoreWishlist,
 } from "@/lib/store";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -29,7 +30,7 @@ const products = [
   {
     id: 1,
     name: "Football Stadium Legends Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Football",
     price: 699,
     oldPrice: 999,
@@ -65,7 +66,7 @@ const products = [
   {
     id: 4,
     name: "Marvel & DC Superhero Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Movie, Series & Characters (DC, Marvel)",
     price: 999,
     oldPrice: 1399,
@@ -77,7 +78,7 @@ const products = [
   {
     id: 5,
     name: "Anime Shonen Neon Metal Poster (A4)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Anime",
     price: 499,
     oldPrice: 799,
@@ -113,7 +114,7 @@ const products = [
   {
     id: 8,
     name: "Gym & Motivation Mindset Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Gym and Motivation",
     price: 649,
     oldPrice: 949,
@@ -125,7 +126,7 @@ const products = [
   {
     id: 9,
     name: "Lady Boss Executive Statement Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Lady Boss",
     price: 699,
     oldPrice: 999,
@@ -137,7 +138,7 @@ const products = [
   {
     id: 10,
     name: "Championship Cricket Victory Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Cricket",
     price: 899,
     oldPrice: 1299,
@@ -173,7 +174,7 @@ const products = [
   {
     id: 13,
     name: "Supercar GT Carbon Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Cars, Bike & F1",
     price: 949,
     oldPrice: 1349,
@@ -185,7 +186,7 @@ const products = [
   {
     id: 14,
     name: "Next-Gen Open World Character Metal Poster (A3)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Games and Characters",
     price: 699,
     oldPrice: 999,
@@ -209,7 +210,7 @@ const products = [
   {
     id: 16,
     name: "Relentless Hustle Gym Metal Poster (A2)",
-    category: "Metal Posters (A4, A3, A2)",
+    category: "Metal Posters",
     collection: "Gym and Motivation",
     price: 899,
     oldPrice: 1299,
@@ -222,7 +223,7 @@ const products = [
 
 const categories = [
   "All Products",
-  "Metal Posters (A4, A3, A2)",
+  "Metal Posters",
   "Desk Pad",
   "Signed Jersey Frame",
 ];
@@ -241,7 +242,7 @@ const collectionsList = [
 
 /* URL slug -> category name (matches the links used on the home page) */
 const slugToCategory: Record<string, string> = {
-  "metal-posters": "Metal Posters (A4, A3, A2)",
+  "metal-posters": "Metal Posters",
   "desk-pad": "Desk Pad",
   "signed-jersey-frame": "Signed Jersey Frame",
 };
@@ -277,13 +278,15 @@ function resolveCollectionParam(raw: string | null): string | null {
 const MIN_PRICE = 300;
 const MAX_PRICE = 2000;
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
 export default function ShopPage() {
   const [category, setCategory] = useState("All Products");
   const [collection, setCollection] = useState("All Collections");
+  const [sizeFilter, setSizeFilter] = useState("All");
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("featured");
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
@@ -357,19 +360,29 @@ export default function ShopPage() {
   );
 
   const filteredProducts = useMemo(() => {
-    let result = products.filter(
-      (p) =>
+    let result = products.filter((p) => {
+      const matchSize =
+        sizeFilter === "All"
+          ? true
+          : sizeFilter === "XXL"
+            ? p.category === "Desk Pad"
+            : sizeFilter === "Frame"
+              ? p.category === "Signed Jersey Frame"
+              : p.name.includes(`(${sizeFilter})`);
+      return (
         (category === "All Products" || p.category === category) &&
         (collection === "All Collections" || p.collection === collection) &&
+        matchSize &&
         (p.name.toLowerCase().includes(search.trim().toLowerCase()) ||
           p.collection.toLowerCase().includes(search.trim().toLowerCase())) &&
         p.price <= maxPrice
-    );
+      );
+    });
     if (sort === "price-low") result = [...result].sort((a, b) => a.price - b.price);
     else if (sort === "price-high") result = [...result].sort((a, b) => b.price - a.price);
     else if (sort === "rating") result = [...result].sort((a, b) => b.rating - a.rating);
     return result;
-  }, [category, collection, search, sort, maxPrice]);
+  }, [category, collection, sizeFilter, search, sort, maxPrice]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { "All Products": products.length };
@@ -386,12 +399,14 @@ export default function ShopPage() {
   const activeCount =
     (category !== "All Products" ? 1 : 0) +
     (collection !== "All Collections" ? 1 : 0) +
+    (sizeFilter !== "All" ? 1 : 0) +
     (maxPrice < MAX_PRICE ? 1 : 0) +
     (search.trim() ? 1 : 0);
 
   const resetAll = () => {
     setCategory("All Products");
     setCollection("All Collections");
+    setSizeFilter("All");
     setMaxPrice(MAX_PRICE);
     setSearch("");
     setSort("featured");
@@ -414,7 +429,7 @@ export default function ShopPage() {
   const filterPanel = (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className={`${head} text-lg font-extrabold text-[#17171B]`}>Filters</h3>
+        <h3 className={`${head} text-lg font-semibold text-[#17171B]`}>Filters</h3>
         <button
           type="button"
           onClick={resetAll}
@@ -424,9 +439,58 @@ export default function ShopPage() {
         </button>
       </div>
 
-      <div className="mt-7">
-        <h4 className="text-sm font-bold text-[#17171B]">Categories</h4>
-        <div className="mt-3 space-y-1">
+      <div className="mt-4">
+        <div className="flex items-center justify-between gap-2">
+          <h4 className="text-sm font-semibold text-[#17171B]">Size</h4>
+          <button
+            type="button"
+            onClick={() => setSizeGuideOpen(true)}
+            className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50/70 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-700 transition hover:border-[#78D94F] hover:bg-[#78D94F] hover:text-[#17171B]"
+          >
+            Size Chart ↗
+          </button>
+        </div>
+
+        <div className="mt-2.5 grid grid-cols-3 gap-1.5">
+          {[
+            { value: "All", label: "All", sub: "16" },
+            { value: "A4", label: "A4", sub: "8×12″" },
+            { value: "A3", label: "A3", sub: "12×17″" },
+            { value: "A2", label: "A2", sub: "17×23″" },
+            { value: "XXL", label: "XXL", sub: "Pad" },
+            { value: "Frame", label: "Frame", sub: "32×24″" },
+          ].map((s) => {
+            const on = sizeFilter === s.value;
+            return (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => setSizeFilter(s.value)}
+                className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border px-1.5 py-1.5 text-center transition ${focus} ${
+                  on
+                    ? "border-[#17171B] bg-[#17171B] text-white shadow-sm"
+                    : "border-gray-200 bg-[#F7F8F5]/70 text-[#17171B] hover:border-[#17171B]/40 hover:bg-white"
+                }`}
+              >
+                <span className="text-[11px] font-semibold leading-tight">{s.label}</span>
+                <span
+                  className={`mt-0.5 text-[9px] font-normal leading-tight tabular-nums ${
+                    on ? "text-[#78D94F]" : "text-gray-400"
+                  }`}
+                >
+                  {s.sub}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="my-4 h-px bg-gray-100" />
+
+      <div>
+        <h4 className="text-sm font-semibold text-[#17171B]">Categories</h4>
+        <div className="mt-2 space-y-1">
           {categories.map((item) => {
             const on = category === item;
             return (
@@ -435,8 +499,8 @@ export default function ShopPage() {
                 type="button"
                 onClick={() => setCategory(item)}
                 aria-pressed={on}
-                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2.5 text-left text-sm transition duration-300 ${focus} ${on
-                    ? "bg-[#17171B] font-bold text-white"
+                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2 text-left text-sm transition duration-300 ${focus} ${on
+                    ? "bg-[#17171B] font-semibold text-white"
                     : "bg-transparent text-gray-600 hover:bg-[#F7F8F5] hover:text-[#17171B]"
                   }`}
               >
@@ -458,11 +522,11 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div className="my-6 h-px bg-gray-100" />
+      <div className="my-4 h-px bg-gray-100" />
 
       <div>
-        <h4 className="text-sm font-bold text-[#17171B]">Collections</h4>
-        <div className="mt-3 space-y-1">
+        <h4 className="text-sm font-semibold text-[#17171B]">Collections</h4>
+        <div className="mt-2 space-y-0.5">
           {collectionsList.map((item) => {
             const on = collection === item;
             return (
@@ -471,9 +535,9 @@ export default function ShopPage() {
                 type="button"
                 onClick={() => setCollection(item)}
                 aria-pressed={on}
-                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-2 text-left text-xs transition duration-300 ${focus} ${
+                className={`group flex w-full cursor-pointer items-center justify-between rounded-xl border-0 px-3 py-1.5 text-left text-xs transition duration-300 ${focus} ${
                   on
-                    ? "bg-[#17171B] font-bold text-white"
+                    ? "bg-[#17171B] font-semibold text-white"
                     : "bg-transparent text-gray-600 hover:bg-[#F7F8F5] hover:text-[#17171B]"
                 }`}
               >
@@ -528,7 +592,7 @@ export default function ShopPage() {
       <Header />
 
       <main
-        className={`${syne.variable} ${inter.variable} min-h-screen bg-white font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} min-h-screen bg-white font-[family-name:var(--font-inter)]`}
       >
         {/* ================= SHOP HERO ================= */}
         <section className="relative overflow-hidden bg-[#17171B] px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
@@ -570,7 +634,7 @@ export default function ShopPage() {
             </p>
 
             <h1
-              className={`${head} text-4xl font-extrabold uppercase leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl`}
+              className={`${head} text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:text-3xl lg:text-4xl`}
             >
               Explore Our <span className="text-[#78D94F]">Store.</span>
             </h1>
@@ -597,7 +661,7 @@ export default function ShopPage() {
 
         {/* ================= PRODUCTS ================= */}
         <section className="px-4 py-10 sm:px-6 lg:px-10 lg:py-14">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-[1380px]">
             {/* Heading + search */}
             <div className="mb-8 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
               <div>
@@ -606,7 +670,7 @@ export default function ShopPage() {
                   Our Products
                 </span>
                 <h2
-                  className={`${head} mt-2 text-3xl font-extrabold text-[#17171B] sm:text-4xl`}
+                  className={`${head} mt-2 text-2xl font-semibold text-[#17171B] sm:text-3xl`}
                 >
                   {collection !== "All Collections"
                     ? `${collection} Collection`
@@ -643,7 +707,7 @@ export default function ShopPage() {
               </div>
             </div>
 
-            <div className="grid gap-9 lg:grid-cols-[250px_1fr]">
+            <div className="grid gap-7 lg:grid-cols-[230px_1fr]">
               {/* Desktop sidebar */}
               <aside className="hidden h-fit rounded-2xl border border-gray-200 bg-white p-6 lg:sticky lg:top-28 lg:block">
                 {filterPanel}
@@ -675,17 +739,27 @@ export default function ShopPage() {
                     </p>
                   </div>
 
-                  <select
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                    aria-label="Sort products"
-                    className="h-11 cursor-pointer rounded-full border border-gray-200 bg-white px-5 text-sm text-[#17171B] outline-none transition focus:border-[#78D94F]"
-                  >
-                    <option value="featured">Sort: Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Top Rated</option>
-                  </select>
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setSizeGuideOpen(true)}
+                      className={`inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 text-xs font-semibold text-[#17171B] transition hover:border-[#78D94F] hover:bg-[#78D94F]/15 ${focus}`}
+                    >
+                      Size Chart ↗
+                    </button>
+
+                    <select
+                      value={sort}
+                      onChange={(e) => setSort(e.target.value)}
+                      aria-label="Sort products"
+                      className="h-11 cursor-pointer rounded-full border border-gray-200 bg-white px-5 text-sm text-[#17171B] outline-none transition focus:border-[#78D94F]"
+                    >
+                      <option value="featured">Sort: Featured</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="rating">Top Rated</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Active filter chips */}
@@ -711,6 +785,17 @@ export default function ShopPage() {
                         Collection: {collection}
                         <span aria-hidden="true">✕</span>
                         <span className="sr-only">Remove collection filter</span>
+                      </button>
+                    )}
+                    {sizeFilter !== "All" && (
+                      <button
+                        type="button"
+                        onClick={() => setSizeFilter("All")}
+                        className={`group inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#78D94F]/50 bg-[#78D94F]/10 px-4 py-1.5 text-xs font-semibold text-[#17171B] transition hover:bg-[#78D94F] ${focus}`}
+                      >
+                        Size: {sizeFilter}
+                        <span aria-hidden="true">✕</span>
+                        <span className="sr-only">Remove size filter</span>
                       </button>
                     )}
                     {maxPrice < MAX_PRICE && (
@@ -747,7 +832,7 @@ export default function ShopPage() {
 
                 {/* Product grid */}
                 <div
-                  className={`grid grid-cols-2 gap-x-3 gap-y-5 transition-opacity duration-200 sm:gap-x-5 sm:gap-y-8 xl:grid-cols-3 ${
+                  className={`grid grid-cols-2 gap-x-3 gap-y-5 transition-opacity duration-200 sm:gap-x-4 sm:gap-y-6 md:grid-cols-3 xl:grid-cols-4 ${
                     fade ? "opacity-40" : "opacity-100"
                   }`}
                 >
@@ -759,13 +844,13 @@ export default function ShopPage() {
                       <article
                         key={product.id}
                         style={{ transitionDelay: ready ? `${Math.min(i, 8) * 60}ms` : "0ms" }}
-                        className={`group flex flex-col justify-between rounded-2xl border border-gray-200/80 bg-white p-2 shadow-[0_4px_16px_rgba(0,0,0,0.03)] transition-all duration-700 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none ${
+                        className={`group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-200/75 bg-white p-2 shadow-[0_2px_14px_rgba(23,23,27,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-[#17171B]/20 hover:shadow-[0_18px_40px_-12px_rgba(23,23,27,0.12)] sm:rounded-3xl sm:p-3 ${
                           ready ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                         }`}
                       >
                         <div>
                           {/* Image */}
-                          <div className="relative overflow-hidden rounded-xl bg-[#F5F5F5] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-shadow duration-300 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] sm:rounded-2xl">
+                          <div className="relative overflow-hidden rounded-xl bg-[#F3F4F1] sm:rounded-2xl">
                             <Link
                               href={`/products/${product.id}`}
                               aria-label={product.name}
@@ -776,19 +861,19 @@ export default function ShopPage() {
                                 src={product.image}
                                 alt={product.name}
                                 loading="lazy"
-                                className="aspect-square w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105 sm:aspect-[4/5]"
+                                className="aspect-[4/4.2] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-105"
                               />
                             </Link>
 
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                             {product.badge && (
-                              <span className="absolute left-2 top-2 rounded-full bg-[#78D94F] px-2 py-0.5 text-[9px] font-extrabold tracking-wider text-[#17171B] sm:left-4 sm:top-4 sm:px-3 sm:py-1.5 sm:text-[10px]">
+                              <span className="absolute left-2 top-2 rounded-full bg-[#78D94F] px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#17171B] shadow-sm sm:left-3.5 sm:top-3.5 sm:px-3 sm:py-1 sm:text-[10px]">
                                 {product.badge}
                               </span>
                             )}
 
-                            <span className="absolute bottom-2 left-2 rounded-full bg-[#17171B]/90 px-2 py-0.5 text-[9px] font-bold text-white transition-opacity duration-300 sm:bottom-4 sm:left-4 sm:bg-[#17171B] sm:px-3 sm:py-1.5 sm:text-xs lg:group-hover:opacity-0">
+                            <span className="absolute bottom-2 left-2 rounded-full bg-[#17171B]/80 px-2 py-0.5 text-[9px] font-medium text-white backdrop-blur-sm transition-opacity duration-300 sm:bottom-3.5 sm:left-3.5 sm:px-2.5 sm:py-1 sm:text-[11px] lg:group-hover:opacity-0">
                               {off}% OFF
                             </span>
 
@@ -835,14 +920,14 @@ export default function ShopPage() {
                           </div>
 
                           {/* Details */}
-                          <div className="mt-2.5 px-0.5 sm:mt-4 sm:px-0">
-                            <p className="m-0 truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-400 sm:text-[11px] sm:tracking-[0.15em]">
+                          <div className="mt-2.5 px-1 sm:mt-3.5 sm:px-1.5">
+                            <p className="m-0 truncate text-[9px] font-medium uppercase tracking-[0.12em] text-gray-400 sm:text-[10px]">
                               {product.collection} · {product.category}
                             </p>
 
                             <Link
                               href={`/products/${product.id}`}
-                              className={`${head} mt-1 line-clamp-1 block text-xs font-bold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-green-700 sm:mt-1.5 sm:text-base ${focus}`}
+                              className={`${head} mt-1 line-clamp-2 block text-[13px] font-semibold leading-snug text-[#17171B] no-underline transition-colors duration-300 hover:text-emerald-700 sm:mt-1.5 sm:text-[15px] ${focus}`}
                             >
                               {product.name}
                             </Link>
@@ -871,15 +956,15 @@ export default function ShopPage() {
                           </div>
                         </div>
 
-                        <div className="mt-2 px-0.5 sm:mt-3 sm:px-0">
+                        <div className="mt-2.5 border-t border-gray-100 px-1 pt-2.5 sm:mt-3 sm:px-1.5 sm:pt-3">
                           <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2.5 sm:gap-y-1">
-                            <span className={`${head} text-sm font-extrabold text-[#17171B] sm:text-xl`}>
+                            <span className="text-sm font-semibold tabular-nums text-[#17171B] sm:text-lg">
                               ₹{product.price}
                             </span>
                             <span className="text-[11px] text-gray-400 line-through sm:text-sm">
                               ₹{product.oldPrice}
                             </span>
-                            <span className="hidden rounded bg-green-50 px-2 py-0.5 text-[11px] font-bold text-green-700 sm:inline-block">
+                            <span className="ml-auto hidden rounded-full bg-[#78D94F]/15 px-2 py-0.5 text-[10px] font-medium text-emerald-800 sm:inline-block">
                               Save ₹{product.oldPrice - product.price}
                             </span>
                           </div>
@@ -888,7 +973,7 @@ export default function ShopPage() {
                           <button
                             type="button"
                             onClick={() => addToCart(product.id)}
-                            className={`mt-2 w-full cursor-pointer rounded-full border-0 py-2 text-[10px] font-bold tracking-[0.1em] transition duration-300 sm:mt-3.5 sm:py-2.5 sm:text-xs sm:tracking-[0.14em] lg:hidden ${focus} ${
+                            className={`mt-2 w-full cursor-pointer rounded-full border-0 py-2 text-[10px] font-semibold tracking-[0.08em] transition duration-300 sm:mt-3 sm:py-2.5 sm:text-xs lg:hidden ${focus} ${
                               added
                                 ? "bg-[#78D94F] text-[#17171B]"
                                 : "bg-[#17171B] text-white"
@@ -920,7 +1005,7 @@ export default function ShopPage() {
                         <path d="m20 20-3.5-3.5" />
                       </svg>
                     </span>
-                    <h3 className={`${head} mt-5 text-xl font-bold text-[#17171B]`}>
+                    <h3 className={`${head} mt-5 text-xl font-semibold text-[#17171B]`}>
                         No products found
                       </h3>
                       <p className="mt-2 text-sm text-gray-500">
@@ -954,7 +1039,7 @@ export default function ShopPage() {
         role="dialog"
         aria-label="Filters"
         aria-modal="true"
-        className={`${syne.variable} ${inter.variable} fixed inset-x-0 bottom-0 z-[70] max-h-[85svh] overflow-y-auto rounded-t-3xl bg-white p-6 font-[family-name:var(--font-inter)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] lg:hidden ${filtersOpen ? "visible translate-y-0" : "invisible translate-y-full"
+        className={`${montserrat.variable} ${inter.variable} fixed inset-x-0 bottom-0 z-[70] max-h-[85svh] overflow-y-auto rounded-t-3xl bg-white p-6 font-[family-name:var(--font-inter)] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] lg:hidden ${filtersOpen ? "visible translate-y-0" : "invisible translate-y-full"
           }`}
       >
         <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-gray-200" />
@@ -968,11 +1053,139 @@ export default function ShopPage() {
         </button>
       </div>
 
+      {/* Modern Size Chart Modal */}
+      {sizeGuideOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Product Size Chart"
+          className={`${montserrat.variable} ${inter.variable} fixed inset-0 z-[80] flex items-center justify-center bg-black/55 p-4 font-[family-name:var(--font-inter)] backdrop-blur-sm`}
+          onClick={() => setSizeGuideOpen(false)}
+        >
+          <div
+            className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-gray-200 bg-white p-5 shadow-2xl sm:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-gray-100 pb-4">
+              <div>
+                <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                  Epic Store Guide
+                </p>
+                <h3
+                  className={`${head} m-0 mt-1 text-xl font-semibold text-[#17171B] sm:text-2xl`}
+                >
+                  Size Chart &amp; Dimensions
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(false)}
+                aria-label="Close size chart"
+                className="grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-gray-200 bg-[#F7F8F5] text-sm font-semibold text-[#17171B] transition hover:bg-[#17171B] hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Metal Posters Visual Scale */}
+            <div className="mt-6">
+              <div className="flex items-center justify-between">
+                <h4 className={`${head} m-0 text-sm font-semibold uppercase tracking-wider text-[#17171B]`}>
+                  Metal Posters
+                </h4>
+                <span className="text-xs text-gray-500">1.15mm Brushed Aluminum • Magnetic Mount</span>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-3">
+                {[
+                  {
+                    code: "A4",
+                    inches: "8.3 × 11.7 in",
+                    cm: "21 × 29.7 cm",
+                    fit: "Desk & Shelf",
+                    boxCls: "h-12 w-9",
+                  },
+                  {
+                    code: "A3",
+                    inches: "11.7 × 16.5 in",
+                    cm: "29.7 × 42 cm",
+                    fit: "Bedroom & Studio",
+                    boxCls: "h-16 w-12",
+                  },
+                  {
+                    code: "A2",
+                    inches: "16.5 × 23.4 in",
+                    cm: "42 × 59.4 cm",
+                    fit: "Statement Wall",
+                    boxCls: "h-20 w-14",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.code}
+                    className="flex flex-col items-center rounded-2xl border border-gray-200/80 bg-[#F7F8F5] p-3.5 text-center"
+                  >
+                    <div className="flex h-24 items-end justify-center">
+                      <div
+                        className={`${item.boxCls} grid place-items-center rounded-lg border-2 border-[#17171B] bg-white text-xs font-semibold text-[#17171B] shadow-sm`}
+                      >
+                        {item.code}
+                      </div>
+                    </div>
+                    <p className="m-0 mt-3 text-xs font-semibold tabular-nums text-[#17171B]">
+                      {item.inches}
+                    </p>
+                    <p className="m-0 mt-0.5 text-[11px] tabular-nums text-gray-500">
+                      {item.cm}
+                    </p>
+                    <span className="mt-2 rounded-full bg-[#78D94F]/20 px-2.5 py-0.5 text-[10px] font-medium text-emerald-800">
+                      {item.fit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desk Pad & Signed Jersey Frame */}
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-gray-200/80 bg-[#F7F8F5] p-4">
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  Desk Pad
+                </p>
+                <h4 className={`${head} m-0 mt-1 text-base font-semibold text-[#17171B]`}>
+                  XXL Extended Mat
+                </h4>
+                <p className="m-0 mt-2 text-xs font-medium tabular-nums text-[#17171B]">
+                  900 × 400 × 4 mm (35.4 × 15.7 in)
+                </p>
+                <p className="m-0 mt-1 text-xs text-gray-500">
+                  Fits full-size keyboard + mouse with 4mm cushioned rubber base.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200/80 bg-[#F7F8F5] p-4">
+                <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  Signed Jersey Frame
+                </p>
+                <h4 className={`${head} m-0 mt-1 text-base font-semibold text-[#17171B]`}>
+                  Collector Shadowbox
+                </h4>
+                <p className="m-0 mt-2 text-xs font-medium tabular-nums text-[#17171B]">
+                  32 × 24 × 1.5 in (81 × 61 × 3.8 cm)
+                </p>
+                <p className="m-0 mt-1 text-xs text-gray-500">
+                  Full-size hardwood display frame with UV-filtering acrylic glass.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Cart feedback (bottom-left so it doesn't cover the back-to-top button) */}
       <div
         role="status"
         aria-live="polite"
-        className={`${inter.variable} fixed bottom-5 left-5 z-50 flex items-center gap-4 rounded-2xl bg-[#17171B] px-5 py-4 font-[family-name:var(--font-inter)] text-sm font-semibold text-white shadow-2xl transition-all duration-300 ${cart.length > 0
+        className={`${montserrat.variable} ${inter.variable} fixed bottom-5 left-5 z-50 flex items-center gap-4 rounded-2xl bg-[#17171B] px-5 py-4 font-[family-name:var(--font-inter)] text-sm font-semibold text-white shadow-2xl transition-all duration-300 ${cart.length > 0
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0"
           }`}

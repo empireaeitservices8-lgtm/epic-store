@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,10 +14,10 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-const syne = Syne({
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -28,7 +28,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const head = `${syne.className} font-[family-name:var(--font-syne)]`;
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
 
   return (
     <main
-      className={`${syne.variable} ${inter.variable} ${inter.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0D0D10] px-4 py-10 font-[family-name:var(--font-inter)] text-white sm:px-6`}
+      className={`${montserrat.variable} ${inter.variable} ${inter.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0D0D10] px-4 py-10 font-[family-name:var(--font-inter)] text-white sm:px-6`}
     >
       {/* Ambient background effects */}
       <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#78D94F]/10 blur-3xl" />

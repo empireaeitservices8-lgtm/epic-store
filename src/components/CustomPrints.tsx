@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
+import { ArrowRight, Check, RotateCcw, Upload } from "lucide-react";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -20,25 +22,31 @@ const inter = Inter({
 
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1000&q=85";
+const WALL_TEXTURE_IMAGE = "/Home-page/custom-wall-bg.jpg";
 
-/* Preview sizes (edit to match the sizes you actually sell) */
+/* Preview sizes */
 const sizes = [
-  { id: "A4", label: "A4", dims: "21 × 29.7 cm", scale: "scale-[0.78]" },
-  { id: "A3", label: "A3", dims: "29.7 × 42 cm", scale: "scale-[0.9]" },
+  { id: "A4", label: "A4", dims: "21 × 29.7 cm", scale: "scale-[0.8]" },
+  { id: "A3", label: "A3", dims: "29.7 × 42 cm", scale: "scale-[0.92]" },
   { id: "A2", label: "A2", dims: "42 × 59.4 cm", scale: "scale-100" },
 ];
 
+const finishes = ["Matte", "Glossy"] as const;
+
 const features = [
   "Upload your own photos",
-  "Choose your print size",
-  "Personalize your design",
-  "Made just for you",
+  "HD brushed aluminum",
+  "Matte or glossy finish",
+  "Ready to mount",
 ];
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
+const focus =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
 export default function CustomPrints() {
   const [size, setSize] = useState("A3");
+  const [finish, setFinish] = useState<(typeof finishes)[number]>("Matte");
   const [photo, setPhoto] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -80,211 +88,235 @@ export default function CustomPrints() {
 
   const reveal = (delay: number) => ({
     style: { transitionDelay: visible ? `${delay}ms` : "0ms" },
-    className: `transition-all duration-700 ${
-      visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-    }`,
+    className: `transition-all duration-700 ${visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      }`,
   });
 
   return (
     <section
-      className={`${syne.variable} ${inter.variable} flex items-center overflow-hidden bg-[#F7F8F5] px-4 py-6 font-[family-name:var(--font-inter)] sm:px-6 sm:py-10 lg:min-h-[calc(100svh-5rem)] lg:px-10 lg:py-8`}
+      className={`${montserrat.variable} ${inter.variable} overflow-hidden bg-[#F7F8F5] px-4 py-12 font-[family-name:var(--font-inter)] sm:px-8 sm:py-16 lg:px-16 lg:py-20`}
     >
       <div
         ref={sectionRef}
-        className="mx-auto grid w-full max-w-7xl items-center gap-5 sm:gap-8 lg:grid-cols-2 lg:gap-14"
+        className="mx-auto grid w-full max-w-7xl items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-14"
       >
-        {/* Left: Live preview */}
+        {/* Left: Studio Wall Preview */}
         <div
           {...reveal(0)}
-          className={`relative mx-auto w-full max-w-xl ${reveal(0).className}`}
+          className={`relative mx-auto w-full max-w-xl lg:col-span-6 ${reveal(0).className}`}
         >
-          <div className="absolute -left-5 -top-5 h-24 w-24 rounded-full bg-[#78D94F]/25 blur-2xl sm:h-32 sm:w-32" />
+          <div className="relative overflow-hidden rounded-3xl border border-gray-200/80 bg-white p-4 shadow-[0_20px_50px_-15px_rgba(23,23,27,0.1)] sm:p-6">
+            {/* Top Preview Bar */}
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <span className="inline-flex items-center rounded-full bg-[#78D94F] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#17171B]">
+                100% Personalised
+              </span>
 
-          {/* Wall */}
-          <div className="relative overflow-hidden rounded-2xl bg-[#E9ECE4] px-4 pb-2.5 pt-4 shadow-xl sm:rounded-3xl sm:px-10 sm:pb-5 sm:pt-8">
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/[0.06] to-transparent sm:h-16" />
+              <span className="rounded-full border border-gray-200 bg-[#F7F8F5] px-3 py-1 text-[11px] font-medium tabular-nums text-gray-600">
+                {current.label} · {current.dims}
+              </span>
+            </div>
 
-            {/* Framed print */}
-            <div className="flex min-h-[165px] items-center justify-center sm:min-h-[340px] lg:min-h-[min(430px,50svh)]">
-              <div
-                className={`origin-center transition-transform duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${current.scale}`}
-              >
-                <div className="w-[120px] rounded-sm bg-white p-2 shadow-[0_20px_40px_rgba(0,0,0,0.22)] ring-1 ring-black/5 transition-transform duration-500 hover:-rotate-1 sm:w-[240px] sm:p-3 lg:w-[min(270px,29svh)]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={photo ?? DEFAULT_IMAGE}
-                    alt="Personalized wall art preview"
-                    className="aspect-[4/5] w-full object-cover"
-                  />
+            {/* Aesthetic Wall Stage */}
+              <div className="relative flex aspect-[4/3] w-full items-start justify-center overflow-hidden rounded-2xl bg-[#1D1F22] px-4 pb-16 pt-7 sm:pb-24 sm:pt-10">
+                {/* Aesthetic Interior Wall Backdrop */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={WALL_TEXTURE_IMAGE}
+                  alt="Minimalist charcoal studio wall"
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                />
+                {/* Soft ambient lighting vignette */}
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_35%,rgba(0,0,0,0.22)_100%)]" />
+
+                {/* Single Metal Poster Mounted Flush on the Wall */}
+                <div
+                  className={`relative origin-center transition-transform duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${current.scale}`}
+                >
+                  <div className="relative w-[130px] overflow-hidden rounded-[4px] border-[3px] border-[#0E0F12] bg-white shadow-[0_22px_42px_rgba(0,0,0,0.72),0_4px_12px_rgba(0,0,0,0.45)] ring-1 ring-white/15 transition-transform duration-500 hover:-translate-y-0.5 sm:w-[180px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photo ?? DEFAULT_IMAGE}
+                      alt="Personalized metal poster preview"
+                      className="aspect-[4/5] w-full object-cover"
+                    />
+
+                    {/* Glossy sheen overlay */}
+                    {finish === "Glossy" && (
+                      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0.08)_38%,transparent_60%)]" />
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Bottom Studio Spec Strip */}
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-gray-500">
+                <span className="font-medium text-[#17171B]">
+                  Your Personal Metal Print
+                </span>
+                <span className="text-[11px] text-gray-500">
+                  {finish} Finish • Magnetic Wall Mount
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Content & Live Controls */}
+          <div className="max-w-xl lg:col-span-6">
+            <div {...reveal(100)} className={reveal(100).className}>
+              <span className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em] text-green-700 sm:tracking-[0.24em]">
+                <span className="h-0.5 w-8 bg-[#78D94F] sm:w-10" />
+                Create Something Unique
+              </span>
+
+              <h2
+                className={`${head} mt-3 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-[#17171B] sm:text-3xl lg:text-4xl`}
+              >
+                Your Photos.{" "}
+                <span className="sm:block">Your Style.</span>
+                <br className="sm:hidden" />
+                <span className="text-[#78D94F] sm:block">Your Print.</span>
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-gray-600 sm:mt-4 sm:text-base sm:leading-7">
+                Turn your favourite photos, memories, and artwork into archival HD
+                metal prints. Preview your image in real time, pick your size and
+                finish, and we&apos;ll craft it to order.
+              </p>
             </div>
 
-            {/* Size readout */}
-            <p className="mt-1 text-center text-[10px] font-semibold tracking-[0.18em] text-gray-500 sm:mt-0 sm:text-xs sm:tracking-[0.2em]">
-              {current.label} · {current.dims}
-            </p>
-          </div>
-
-          {/* Caption card */}
-          <div className="absolute bottom-2 left-2 rounded-xl bg-white/95 px-3 py-1.5 shadow-lg backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1 sm:-bottom-5 sm:-left-6 sm:bg-white sm:px-5 sm:py-4 sm:shadow-xl">
-            <p className="text-[9px] font-semibold tracking-widest text-gray-400 sm:text-xs">
-              YOUR MEMORIES
-            </p>
-            <p className={`${head} mt-0.5 text-xs font-extrabold text-[#17171B] sm:mt-1 sm:text-lg`}>
-              Your Personal Art.
-            </p>
-          </div>
-
-          {/* Floating label */}
-          <div className="absolute right-2 top-2 rounded-xl bg-[#78D94F] px-2.5 py-1.5 shadow-md transition-transform duration-500 hover:rotate-3 sm:-right-5 sm:-top-5 sm:rounded-2xl sm:px-5 sm:py-4 sm:shadow-lg">
-            <p className="text-[8px] font-bold uppercase tracking-wider text-[#17171B] sm:text-xs">
-              Made for you
-            </p>
-            <p className={`${head} text-sm font-extrabold leading-tight text-[#17171B] sm:mt-1 sm:text-2xl`}>
-              100%
-            </p>
-            <p className="text-[9px] font-medium text-[#17171B] sm:text-xs">Personalised</p>
-          </div>
-        </div>
-
-        {/* Right: Content */}
-        <div className="max-w-xl">
-          <div {...reveal(100)} className={reveal(100).className}>
-            <span className="inline-flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-green-700 sm:gap-3 sm:text-xs sm:tracking-[0.25em]">
-              <span className="h-0.5 w-6 bg-[#78D94F] sm:w-10" />
-              Create Something Unique
-            </span>
-
-            <h2
-              className={`${head} mt-2 text-2xl font-extrabold uppercase leading-[1.05] tracking-tight text-[#17171B] sm:mt-4 sm:text-4xl lg:text-[clamp(36px,6.4svh,58px)]`}
+            {/* Interactive Try-It Card */}
+            <div
+              {...reveal(200)}
+              className={`mt-5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_4px_20px_rgba(23,23,27,0.04)] sm:mt-6 sm:rounded-3xl sm:p-5 ${reveal(200).className}`}
             >
-              Your Photos.{" "}
-              <span className="sm:block">Your Style.</span>
-              <br className="sm:hidden" />
-              <span className="text-[#78D94F] sm:block">Your Print.</span>
-            </h2>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="m-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+                  Live Studio Preview
+                </p>
 
-            <p className="mt-2 text-xs leading-5 text-gray-600 sm:mt-4 sm:text-base sm:leading-7">
-              Turn your favourite photos, memories, and creative ideas into
-              beautiful custom prints. Choose your design, select your size,
-              and make something that is truly yours.
-            </p>
-          </div>
+                {/* Finish Toggle */}
+                <div
+                  role="radiogroup"
+                  aria-label="Choose finish"
+                  className="inline-flex rounded-full border border-gray-200 bg-[#F7F8F5] p-0.5"
+                >
+                  {finishes.map((f) => (
+                    <button
+                      key={f}
+                      type="button"
+                      role="radio"
+                      aria-checked={finish === f}
+                      onClick={() => setFinish(f)}
+                      className={`cursor-pointer rounded-full border-0 px-3 py-1 text-[11px] font-semibold transition ${focus} ${finish === f
+                        ? "bg-[#17171B] text-white"
+                        : "bg-transparent text-gray-500 hover:text-[#17171B]"
+                        }`}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          {/* Try it: size + upload */}
-          <div
-            {...reveal(200)}
-            className={`mt-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm sm:mt-5 sm:p-4 ${reveal(200).className}`}
-          >
-            <p className="mb-2 text-[10px] font-bold tracking-[0.18em] text-gray-400 sm:mb-3 sm:text-[11px] sm:tracking-[0.2em]">
-              TRY IT NOW
-            </p>
+              <div className="mt-3.5 flex flex-wrap items-center gap-2 sm:gap-2.5">
+                {/* Size Pills */}
+                <div
+                  role="radiogroup"
+                  aria-label="Choose print size"
+                  className="flex items-center gap-1.5 sm:gap-2"
+                >
+                  {sizes.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={size === s.id}
+                      onClick={() => setSize(s.id)}
+                      className={`cursor-pointer rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.1em] transition duration-300 ${focus} ${size === s.id
+                        ? "border-[#17171B] bg-[#17171B] text-white"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
+                        }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+
+                <span className="mx-0.5 hidden h-5 w-px bg-gray-200 sm:block" />
+
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={onFile}
+                  className="sr-only"
+                  aria-label="Upload a photo to preview"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  className={`inline-flex cursor-pointer items-center gap-2 rounded-full border border-dashed border-[#78D94F] bg-[#78D94F]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-[#17171B] transition duration-300 hover:bg-[#78D94F] ${focus}`}
+                >
+                  <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+                  {photo ? "Change Photo" : "Preview Photo"}
+                </button>
+
+                {photo && (
+                  <button
+                    type="button"
+                    onClick={() => setPhoto(null)}
+                    className={`inline-flex cursor-pointer items-center gap-1 rounded-full border-0 bg-transparent px-2.5 py-2 text-xs font-medium text-gray-500 transition hover:text-[#17171B] ${focus}`}
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                    Reset
+                  </button>
+                )}
+              </div>
+
+              <p className="mt-3 text-[11px] text-gray-400">
+                Preview only. Your photo stays on your device until you start an order.
+              </p>
+            </div>
+
+            {/* Features */}
+            <div
+              {...reveal(300)}
+              className={`mt-5 grid grid-cols-2 gap-2.5 sm:gap-3 ${reveal(300).className}`}
+            >
+              {features.map((f) => (
+                <div key={f} className="group flex items-center gap-2.5">
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#78D94F]/20 text-[#17171B] transition duration-300 group-hover:scale-110 group-hover:bg-[#78D94F]">
+                    <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
+                  </span>
+                  <span className="text-xs font-medium text-gray-700 sm:text-sm">
+                    {f}
+                  </span>
+                </div>
+              ))}
+            </div>
 
             <div
-              role="radiogroup"
-              aria-label="Choose print size"
-              className="flex flex-wrap items-center gap-1.5 sm:gap-2.5"
+              {...reveal(400)}
+              className={`mt-6 flex flex-wrap items-center gap-4 sm:gap-5 ${reveal(400).className}`}
             >
-              {sizes.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={size === s.id}
-                  onClick={() => setSize(s.id)}
-                  className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-[11px] font-bold tracking-[0.12em] transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F] sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.14em] ${
-                    size === s.id
-                      ? "border-[#17171B] bg-[#17171B] text-white"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-[#78D94F] hover:text-[#17171B]"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-
-              <span className="mx-1 hidden h-5 w-px bg-gray-200 sm:block" />
-
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                onChange={onFile}
-                className="sr-only"
-                aria-label="Upload a photo to preview"
-              />
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-[#78D94F] bg-[#78D94F]/10 px-3.5 py-1.5 text-[11px] font-bold tracking-[0.1em] text-[#17171B] transition duration-300 hover:bg-[#78D94F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F] sm:gap-2 sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.14em]"
+              <Link
+                href="/custom-prints"
+                className={`group inline-flex items-center gap-2.5 rounded-full bg-[#17171B] px-7 py-3.5 text-xs font-bold uppercase tracking-[0.12em] text-white no-underline transition duration-300 hover:-translate-y-0.5 hover:bg-[#78D94F] hover:text-[#17171B] sm:text-sm ${focus}`}
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                Start Creating
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
                   aria-hidden="true"
-                >
-                  <path d="M12 16V4M6 10l6-6 6 6M4 20h16" />
-                </svg>
-                {photo ? "CHANGE PHOTO" : "PREVIEW PHOTO"}
-              </button>
+                />
+              </Link>
 
-              {photo && (
-                <button
-                  type="button"
-                  onClick={() => setPhoto(null)}
-                  className="cursor-pointer rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-gray-500 underline-offset-4 transition hover:text-[#17171B] hover:underline sm:px-3 sm:py-2.5 sm:text-xs"
-                >
-                  Reset
-                </button>
-              )}
-            </div>
-
-            <p className="mt-2 text-[10px] text-gray-400 sm:mt-3 sm:text-[11px]">
-              Preview only. Your photo stays on your device until you start an order.
-            </p>
-          </div>
-
-          {/* Features */}
-          <div
-            {...reveal(300)}
-            className={`mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3 ${reveal(300).className}`}
-          >
-            {features.map((f) => (
-              <div key={f} className="group flex items-center gap-2 sm:gap-3">
-                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#78D94F]/20 text-[11px] font-bold text-[#17171B] transition duration-300 group-hover:scale-110 group-hover:bg-[#78D94F] sm:h-7 sm:w-7 sm:text-sm">
-                  ✓
-                </span>
-                <span className="text-xs font-medium text-gray-700 sm:text-sm">{f}</span>
-              </div>
-            ))}
-          </div>
-
-          <div
-            {...reveal(400)}
-            className={`mt-4 flex flex-wrap items-center gap-4 sm:mt-6 sm:gap-5 ${reveal(400).className}`}
-          >
-            <Link
-              href="/custom-prints"
-              className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-[#17171B] px-6 py-3 text-xs font-bold tracking-[0.1em] text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#78D94F] hover:text-[#17171B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F] sm:gap-3 sm:px-8 sm:py-4 sm:text-sm"
-            >
-              START CREATING
-              <span className="text-base transition-transform duration-300 group-hover:translate-x-1.5 sm:text-lg">
-                →
+              <span className="text-xs font-medium text-gray-500 sm:text-sm">
+                Ships across India
               </span>
-            </Link>
-
-            <span className="text-xs font-medium text-gray-500 sm:text-sm">
-              Make it yours.
-            </span>
+            </div>
           </div>
         </div>
-      </div>
     </section>
   );
 }

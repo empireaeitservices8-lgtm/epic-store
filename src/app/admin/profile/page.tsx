@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import {
@@ -19,13 +19,14 @@ import {
   X,
 } from "lucide-react";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -35,7 +36,7 @@ const inter = Inter({
 
 type Feedback = { type: "success" | "error"; text: string } | null;
 
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#78D94F]";
 
@@ -113,7 +114,7 @@ export default function AdminProfilePage() {
 
   return (
     <div
-      className={`${syne.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
+      className={`${montserrat.variable} ${inter.variable} min-h-screen bg-[#F7F8F5] font-[family-name:var(--font-inter)]`}
     >
       <AdminSidebar
         mobileOpen={mobileMenuOpen}
@@ -177,7 +178,7 @@ export default function AdminProfilePage() {
             {/* Profile Summary Card */}
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.03)] sm:p-7">
               <div className="flex flex-col items-center text-center">
-                <div className="grid h-24 w-24 place-items-center rounded-full bg-[#17171B] font-[family-name:var(--font-syne)] text-2xl font-extrabold text-[#78D94F]">
+                <div className="grid h-24 w-24 place-items-center rounded-full bg-[#17171B] font-[family-name:var(--font-inter)] text-2xl font-extrabold text-[#78D94F]">
                   {profile.name
                     .split(" ")
                     .map((part) => part[0])

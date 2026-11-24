@@ -2,17 +2,18 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -59,7 +60,7 @@ const benefits = [
 ];
 
 /* Shared class strings */
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const focus =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#78D94F]";
 /* Scroll-reveal: an observer sets data-in="1" on [data-reveal] elements */
@@ -117,7 +118,7 @@ export default function AboutPage() {
 
       <main
         ref={pageRef}
-        className={`${syne.variable} ${inter.variable} bg-white font-[family-name:var(--font-inter)]`}
+        className={`${montserrat.variable} ${inter.variable} bg-white font-[family-name:var(--font-inter)]`}
       >
         {/* ================= HERO ================= */}
         <section
@@ -176,7 +177,7 @@ export default function AboutPage() {
               <h1
                 data-reveal
                 style={delay(160)}
-                className={`${rv} ${head} mt-6 text-5xl font-extrabold uppercase leading-[1] tracking-tight text-white sm:text-6xl lg:text-7xl`}
+                className={`${rv} ${head} mt-6 text-3xl font-semibold uppercase leading-[1.05] tracking-tight text-white sm:text-4xl lg:text-5xl`}
               >
                 More Than
                 <br />
@@ -257,7 +258,7 @@ export default function AboutPage() {
               <h2
                 data-reveal
                 style={delay(80)}
-                className={`${rv} ${head} mt-5 text-4xl font-extrabold uppercase leading-[1.03] tracking-tight text-[#17171B] sm:text-5xl`}
+                className={`${rv} ${head} mt-5 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-[#17171B] sm:text-3xl lg:text-4xl`}
               >
                 Creativity That
                 <br />
@@ -324,7 +325,7 @@ export default function AboutPage() {
                 </span>
 
                 <h2
-                  className={`${head} relative mt-6 text-3xl font-extrabold leading-tight text-white sm:text-4xl`}
+                  className={`${head} relative mt-6 text-2xl font-semibold leading-tight text-white sm:text-3xl`}
                 >
                   Make Creativity Part of Everyday Life.
                 </h2>
@@ -357,7 +358,7 @@ export default function AboutPage() {
                 </span>
 
                 <h2
-                  className={`${head} relative mt-6 text-3xl font-extrabold leading-tight text-[#17171B] sm:text-4xl`}
+                  className={`${head} relative mt-6 text-2xl font-semibold leading-tight text-[#17171B] sm:text-3xl`}
                 >
                   A World Filled With Personal Expression.
                 </h2>
@@ -384,7 +385,7 @@ export default function AboutPage() {
               <h2
                 data-reveal
                 style={delay(80)}
-                className={`${rv} ${head} mt-5 text-4xl font-extrabold uppercase leading-[1.03] tracking-tight text-[#17171B] sm:text-5xl`}
+                className={`${rv} ${head} mt-5 text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-[#17171B] sm:text-3xl lg:text-4xl`}
               >
                 Designed Around
                 <br />
@@ -577,7 +578,7 @@ export default function AboutPage() {
               </span>
 
               <h2
-                className={`${head} mx-auto mt-3 max-w-2xl text-2xl font-extrabold uppercase leading-[1.06] tracking-tight text-white sm:mt-4 sm:text-4xl md:max-w-3xl lg:text-5xl`}
+                className={`${head} mx-auto mt-3 max-w-2xl text-2xl font-semibold uppercase leading-[1.06] tracking-tight text-white sm:mt-4 sm:text-3xl md:max-w-3xl lg:text-4xl`}
               >
                 Find Something That
                 <span className="text-[#78D94F]"> Speaks to You.</span>

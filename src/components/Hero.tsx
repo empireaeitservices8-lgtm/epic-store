@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
-/* Fonts: Syne for headings, Inter for body/UI */
-const syne = Syne({
+/* Fonts: Montserrat for headings, Inter for body/UI */
+const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-syne",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -81,7 +81,7 @@ const ticker = [
 ];
 
 /* Reusable class strings (kept in this file) */
-const head = "font-[family-name:var(--font-syne)]";
+const head = `${montserrat.className} font-[family-name:var(--font-montserrat)]`;
 const reveal =
   "opacity-0 animate-[rise_0.8s_cubic-bezier(0.2,0.7,0.2,1)_forwards] motion-reduce:animate-none motion-reduce:opacity-100";
 
@@ -139,7 +139,7 @@ export default function Hero() {
 
   return (
     <div
-      className={`${syne.variable} ${inter.variable} bg-[#111114] font-[family-name:var(--font-inter)] text-white [&_*]:box-border`}
+      className={`${montserrat.variable} ${inter.variable} bg-[#111114] font-[family-name:var(--font-inter)] text-white [&_*]:box-border`}
     >
       {/* Keyframes only: Tailwind has no built-in equivalents */}
       <style>{`
@@ -195,7 +195,7 @@ export default function Hero() {
           <h1
             key={`h-${index}`}
             aria-live="polite"
-            className={`${head} mb-4 text-[clamp(36px,10.5vw,56px)] font-extrabold uppercase leading-none tracking-[-0.035em] sm:mb-5 sm:text-[clamp(46px,6.4vw,96px)]`}
+            className={`${head} mb-4 text-[clamp(28px,8vw,42px)] font-semibold uppercase leading-[1.04] tracking-[-0.02em] sm:mb-5 sm:text-[clamp(36px,4.5vw,66px)]`}
           >
             <span className={`${reveal} block [animation-delay:80ms]`}>
               {slide.line1}

@@ -332,7 +332,7 @@ export default function AdminHeader({
         </div>
 
         <div className="md:hidden">
-          <h2 className="m-0 font-[family-name:var(--font-syne)] text-lg font-extrabold text-[#17171B]">
+          <h2 className="m-0 font-[family-name:var(--font-montserrat)] text-lg font-extrabold text-[#17171B]">
             Dashboard
           </h2>
         </div>
