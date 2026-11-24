@@ -10,6 +10,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { ChevronDown } from "lucide-react";
 import { Inter, Montserrat } from "next/font/google";
 import { useStoreCart, useStoreWishlist } from "@/lib/store";
 
@@ -43,6 +44,38 @@ const links = [
   { label: "About", href: "/about", id: "about" },
   { label: "Contact", href: "/contact", id: "contact" },
 ];
+
+const categoryDropdownItems = [
+  {
+    name: "Metal Posters",
+    subtitle: "HD glossy & matte wall prints",
+    href: "/shop?category=Metal%20Posters",
+  },
+  {
+    name: "Desk Pad",
+    subtitle: "XXL anti-fray micro-weave mats",
+    href: "/shop?category=Desk%20Pad",
+  },
+  {
+    name: "Signed Jersey Frame",
+    subtitle: "Museum-grade shadow-box displays",
+    href: "/shop?category=Signed%20Jersey%20Frame",
+  },
+];
+
+const collectionDropdownItems = [
+  "Football",
+  "Cricket",
+  "Movie, Series & Characters (DC, Marvel)",
+  "Anime",
+  "Cars, Bike & F1",
+  "Games and Characters",
+  "Lady Boss",
+  "Gym and Motivation",
+].map((name) => ({
+  name,
+  href: `/shop?collection=${encodeURIComponent(name)}`,
+}));
 
 const popular = ["Abstract", "Typography", "Minimal", "Nature", "Custom Prints"];
 
@@ -133,6 +166,12 @@ export default function Header({
   const [msg, setMsg] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<
+    "categories" | "collections" | null
+  >(null);
+  const [mobileAccordion, setMobileAccordion] = useState<
+    "categories" | "collections" | null
+  >(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("home");
@@ -219,6 +258,7 @@ export default function Header({
       if (e.key === "Escape") {
         setMenuOpen(false);
         setSearchOpen(false);
+        setOpenDropdown(null);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -299,9 +339,7 @@ export default function Header({
               priority
               unoptimized
               className={`w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_16px_rgba(120,217,79,0.35)] ${
-                scrolled
-                  ? "h-9 sm:h-11"
-                  : "h-11 sm:h-14 lg:h-16"
+                scrolled ? "h-9 sm:h-11" : "h-11 sm:h-14 lg:h-16"
               }`}
             />
           </Link>
@@ -311,19 +349,112 @@ export default function Header({
             aria-label="Main navigation"
             className="hidden items-center gap-5 text-[12px] font-medium uppercase tracking-[0.11em] lg:flex xl:gap-7 xl:text-[13px]"
           >
-            {links.map((l) => (
-              <Link
-                key={l.id}
-                href={l.href}
-                className={`relative whitespace-nowrap px-0.5 py-2 no-underline transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:rounded after:bg-[#78d94f] after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 ${focus} ${
-                  routeActive === l.id
-                    ? "text-white after:scale-x-100"
-                    : "text-[#c9c9d0] after:scale-x-0"
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) => {
+              const isDropdown = l.id === "categories" || l.id === "collections";
+              const isOpen = isDropdown && openDropdown === l.id;
+
+              if (!isDropdown) {
+                return (
+                  <Link
+                    key={l.id}
+                    href={l.href}
+                    className={`relative whitespace-nowrap px-0.5 py-2 no-underline transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:rounded after:bg-[#78d94f] after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 ${focus} ${
+                      routeActive === l.id
+                        ? "text-white after:scale-x-100"
+                        : "text-[#c9c9d0] after:scale-x-0"
+                    }`}
+                  >
+                    {l.label}
+                  </Link>
+                );
+              }
+
+              return (
+                <div
+                  key={l.id}
+                  className="relative"
+                  onMouseEnter={() =>
+                    setOpenDropdown(l.id as "categories" | "collections")
+                  }
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <Link
+                    href={l.href}
+                    aria-expanded={isOpen}
+                    onClick={() => setOpenDropdown(null)}
+                    className={`relative inline-flex items-center gap-1 whitespace-nowrap px-0.5 py-2 no-underline transition-colors duration-300 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-left after:rounded after:bg-[#78d94f] after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 ${focus} ${
+                      routeActive === l.id || isOpen
+                        ? "text-white after:scale-x-100"
+                        : "text-[#c9c9d0] after:scale-x-0"
+                    }`}
+                  >
+                    {l.label}
+                    <ChevronDown
+                      size={13}
+                      className={`transition-transform duration-200 ${
+                        isOpen ? "rotate-180 text-[#78d94f]" : ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </Link>
+
+                  {/* Dropdown Panel */}
+                  <div
+                    className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3 transition-all duration-200 ${
+                      isOpen
+                        ? "visible translate-y-0 opacity-100"
+                        : "pointer-events-none invisible -translate-y-2 opacity-0"
+                    } ${l.id === "collections" ? "w-[460px]" : "w-[300px]"}`}
+                  >
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#17171B]/95 p-3 shadow-[0_24px_50px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+                      {l.id === "categories" ? (
+                        <div className="space-y-1">
+                          {categoryDropdownItems.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              onClick={() => setOpenDropdown(null)}
+                              className={`block rounded-xl px-3.5 py-2.5 no-underline transition hover:bg-white/[0.06] ${focus}`}
+                            >
+                              <p className="m-0 text-xs font-semibold tracking-[0.08em] text-white">
+                                {item.name}
+                              </p>
+                              <p className="m-0 mt-0.5 text-[11px] font-normal normal-case tracking-normal text-gray-400">
+                                {item.subtitle}
+                              </p>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1">
+                          {collectionDropdownItems.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              onClick={() => setOpenDropdown(null)}
+                              className={`rounded-xl px-3 py-2 text-[11px] font-semibold normal-case tracking-normal text-gray-200 no-underline transition hover:bg-white/[0.06] hover:text-[#78D94F] ${focus}`}
+                            >
+                              <span className="line-clamp-1">{item.name}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="mt-2 border-t border-white/10 pt-2">
+                        <Link
+                          href={l.href}
+                          onClick={() => setOpenDropdown(null)}
+                          className={`flex items-center justify-between rounded-xl px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#78D94F] no-underline transition hover:bg-[#78D94F]/10 ${focus}`}
+                        >
+                          <span>View All {l.label}</span>
+                          <span>→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </nav>
 
           {/* Actions */}
@@ -490,25 +621,76 @@ export default function Header({
         </div>
 
         <nav className="flex flex-1 flex-col overflow-y-auto px-7">
-          {links.map((l, i) => (
-            <div
-              key={l.id}
-              style={{ transitionDelay: menuOpen ? `${150 + i * 60}ms` : "0ms" }}
-              className={`border-b border-white/[0.07] transition-all duration-500 ${
-                menuOpen ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
-              }`}
-            >
-              <Link
-                href={l.href}
-                onClick={() => setMenuOpen(false)}
-                className={`${head} block py-4 text-[22px] font-bold tracking-tight no-underline transition-[color,padding] duration-300 hover:pl-2 hover:text-[#78d94f] sm:py-5 sm:text-[26px] ${focus} ${
-                  routeActive === l.id ? "text-[#78d94f]" : "text-white"
+          {links.map((l, i) => {
+            const isDropdown = l.id === "categories" || l.id === "collections";
+            const expanded = isDropdown && mobileAccordion === l.id;
+            const subItems =
+              l.id === "categories"
+                ? categoryDropdownItems
+                : l.id === "collections"
+                  ? collectionDropdownItems
+                  : [];
+
+            return (
+              <div
+                key={l.id}
+                style={{ transitionDelay: menuOpen ? `${150 + i * 60}ms` : "0ms" }}
+                className={`border-b border-white/[0.07] transition-all duration-500 ${
+                  menuOpen ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
                 }`}
               >
-                {l.label}
-              </Link>
-            </div>
-          ))}
+                <div className="flex items-center justify-between gap-2">
+                  <Link
+                    href={l.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`${head} block flex-1 py-4 text-[22px] font-bold tracking-tight no-underline transition-[color,padding] duration-300 hover:pl-2 hover:text-[#78d94f] sm:py-5 sm:text-[26px] ${focus} ${
+                      routeActive === l.id ? "text-[#78d94f]" : "text-white"
+                    }`}
+                  >
+                    {l.label}
+                  </Link>
+
+                  {isDropdown && (
+                    <button
+                      type="button"
+                      aria-label={`Toggle ${l.label} submenu`}
+                      aria-expanded={expanded}
+                      onClick={() =>
+                        setMobileAccordion((curr) =>
+                          curr === l.id
+                            ? null
+                            : (l.id as "categories" | "collections")
+                        )
+                      }
+                      className={`grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-full border border-white/15 bg-white/5 text-white transition ${focus}`}
+                    >
+                      <ChevronDown
+                        size={16}
+                        className={`transition-transform duration-300 ${
+                          expanded ? "rotate-180 text-[#78D94F]" : ""
+                        }`}
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {isDropdown && expanded && (
+                  <div className="mb-3 space-y-1 pl-3">
+                    {subItems.map((sub) => (
+                      <Link
+                        key={sub.name}
+                        href={sub.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-sm font-medium text-gray-300 no-underline transition hover:bg-white/5 hover:text-[#78D94F]"
+                      >
+                        {sub.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         <div className="border-t border-white/10 px-7 py-6">

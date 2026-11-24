@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import {
+  ensureHomeEventsTable,
   ensureSeededDatabase,
   getAdminDataFromDb,
   getDbConfig,
@@ -255,6 +256,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (entity === "home_event") {
+      await ensureHomeEventsTable();
       if (action === "create") {
         const [res] = await runInAppDatabase([
           `INSERT INTO home_events (title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order) VALUES (

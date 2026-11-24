@@ -719,10 +719,100 @@ export type HomeEventRecord = {
   sortOrder: number;
 };
 
+export const DEFAULT_HOME_EVENTS: HomeEventRecord[] = [
+  {
+    id: 1,
+    title: "Epic Wall Drop 2026",
+    eyebrow: "DISCOVER YOUR STYLE",
+    headlineLine1: "MAKE YOUR",
+    headlineLine2: "WALLS EPIC.",
+    description:
+      "Transform your space with premium metal posters, creative wall art and unique collections. Find something that speaks to you.",
+    ctaLabel: "SHOP NOW",
+    ctaHref: "/shop",
+    badgeText: "ART THAT INSPIRES",
+    bannerImage: "/Home-page/hero-slide-1.jpg",
+    tickerText:
+      "PREMIUM POSTERS, CREATIVE WALL ART, MINIMAL PRINTS, BOLD TYPOGRAPHY, NEW DROPS, SHIPPING ACROSS INDIA",
+    active: true,
+    sortOrder: 1,
+  },
+  {
+    id: 2,
+    title: "Curated Collections Showcase",
+    eyebrow: "CURATED COLLECTIONS",
+    headlineLine1: "FRAME YOUR",
+    headlineLine2: "STORY.",
+    description:
+      "From bold typography to calm minimal prints, explore collections made to fit the way you live.",
+    ctaLabel: "EXPLORE COLLECTIONS",
+    ctaHref: "/collections",
+    badgeText: "MADE TO BE SEEN",
+    bannerImage: "/Home-page/hero-slide-2.jpg",
+    tickerText:
+      "CURATED COLLECTIONS, METAL POSTERS, DESK PADS, SIGNED JERSEY FRAMES, FREE PAN-INDIA SHIPPING",
+    active: true,
+    sortOrder: 2,
+  },
+  {
+    id: 3,
+    title: "Matchday & Motorsport Fest",
+    eyebrow: "LIMITED SEASONAL EVENT",
+    headlineLine1: "MATCHDAY",
+    headlineLine2: "LEGENDS DROP.",
+    description:
+      "Celebrate iconic football, cricket, and Formula 1 moments with limited-edition metallic wall art and signed jersey frames.",
+    ctaLabel: "SHOP SPORTS DROP",
+    ctaHref: "/shop?collection=Football",
+    badgeText: "EVENT SPECIAL",
+    bannerImage: "/Home-page/hero-slide-3.jpg",
+    tickerText:
+      "MATCHDAY DROP, FOOTBALL & CRICKET, F1 TELEMETRY, 3-PIECE BUNDLE SAVINGS, LIMITED EDITION",
+    active: false,
+    sortOrder: 3,
+  },
+];
+
+let homeEventsReady = false;
+
+export async function ensureHomeEventsTable(): Promise<void> {
+  if (homeEventsReady) return;
+  await runInAppDatabase([
+    `CREATE TABLE IF NOT EXISTS home_events (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(180) NOT NULL,
+      eyebrow VARCHAR(120) NOT NULL DEFAULT '',
+      headline_line1 VARCHAR(120) NOT NULL DEFAULT '',
+      headline_line2 VARCHAR(120) NOT NULL DEFAULT '',
+      description TEXT,
+      cta_label VARCHAR(80) NOT NULL DEFAULT 'SHOP NOW',
+      cta_href VARCHAR(255) NOT NULL DEFAULT '/shop',
+      badge_text VARCHAR(80) NOT NULL DEFAULT '',
+      banner_image TEXT,
+      ticker_text VARCHAR(255) NOT NULL DEFAULT '',
+      active TINYINT(1) NOT NULL DEFAULT 1,
+      sort_order INT NOT NULL DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+  ]);
+  const [countRes] = await runInAppDatabase([
+    "SELECT COUNT(*) AS c FROM home_events",
+  ]);
+  if (Number(countRes?.rows?.[0]?.c ?? 0) === 0) {
+    await runInAppDatabase([
+      `INSERT IGNORE INTO home_events (title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order) VALUES
+      ('Epic Wall Drop 2026', 'DISCOVER YOUR STYLE', 'MAKE YOUR', 'WALLS EPIC.', 'Transform your space with premium metal posters, creative wall art and unique collections. Find something that speaks to you.', 'SHOP NOW', '/shop', 'ART THAT INSPIRES', '/Home-page/hero-slide-1.jpg', 'PREMIUM POSTERS, CREATIVE WALL ART, MINIMAL PRINTS, BOLD TYPOGRAPHY, NEW DROPS, SHIPPING ACROSS INDIA', 1, 1),
+      ('Curated Collections Showcase', 'CURATED COLLECTIONS', 'FRAME YOUR', 'STORY.', 'From bold typography to calm minimal prints, explore collections made to fit the way you live.', 'EXPLORE COLLECTIONS', '/collections', 'MADE TO BE SEEN', '/Home-page/hero-slide-2.jpg', 'CURATED COLLECTIONS, METAL POSTERS, DESK PADS, SIGNED JERSEY FRAMES, FREE PAN-INDIA SHIPPING', 1, 2),
+      ('Matchday & Motorsport Fest', 'LIMITED SEASONAL EVENT', 'MATCHDAY', 'LEGENDS DROP.', 'Celebrate iconic football, cricket, and Formula 1 moments with limited-edition metallic wall art and signed jersey frames.', 'SHOP SPORTS DROP', '/shop?collection=Football', 'EVENT SPECIAL', '/Home-page/hero-slide-3.jpg', 'MATCHDAY DROP, FOOTBALL & CRICKET, F1 TELEMETRY, 3-PIECE BUNDLE SAVINGS, LIMITED EDITION', 0, 3)`,
+    ]);
+  }
+  homeEventsReady = true;
+}
+
 export async function getHomeEventsFromDb(
   onlyActive = false
 ): Promise<HomeEventRecord[]> {
-  await ensureSeededDatabase();
+  await ensureHomeEventsTable();
   const where = onlyActive ? "WHERE active = 1" : "";
   const [res] = await runInAppDatabase([
     `SELECT id, title, eyebrow, headline_line1, headline_line2, description, cta_label, cta_href, badge_text, banner_image, ticker_text, active, sort_order FROM home_events ${where} ORDER BY sort_order ASC, id ASC`,
